@@ -43,7 +43,7 @@ public class SwerveSubsystem extends SubsystemBase {
         private final SwerveModule bLSwerve = new SwerveModule(17, 16, 21, true, true, 0.172);
         private final SwerveModule bRSwerve = new SwerveModule(11, 10, 18, true, true, -0.429);
 
-        private static AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+        private AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
         private LinearFilter hitFilter = LinearFilter.movingAverage(30);
 
@@ -61,7 +61,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 // if (!AutoAlignTags.running) {
                 // var st = Thread.currentThread().getStackTrace();
                 // for (var s : st) {
-                //         System.out.println(s + "\n");
+                // System.out.println(s + "\n");
                 // }
 
                 // }
@@ -100,17 +100,17 @@ public class SwerveSubsystem extends SubsystemBase {
 
         }
 
-        public double getDriveMotorVelocity(){
+        public double getDriveMotorVelocity() {
                 return hitFilter.calculate(fLSwerve.driveMotor.getEncoder().getVelocity());
         }
 
         public boolean uh = false;
 
-        public boolean hasHitSomething(){
-                if(Math.abs(getDriveMotorVelocity()) > 1.3){
+        public boolean hasHitSomething() {
+                if (Math.abs(getDriveMotorVelocity()) > 1.3) {
                         uh = true;
                 }
-                if(uh == true && Math.abs(getDriveMotorVelocity()) < 0.4){
+                if (uh == true && Math.abs(getDriveMotorVelocity()) < 0.4) {
                         return true;
                 } else {
                         return false;
@@ -129,7 +129,6 @@ public class SwerveSubsystem extends SubsystemBase {
                                         bRSwerve.getPosition()
                         });
 
-
         public Rotation2d getRotation() {
                 return gyro.getRotation2d().minus(yawOffset);
         }
@@ -145,10 +144,10 @@ public class SwerveSubsystem extends SubsystemBase {
                 var aprilRotation = LimelightHelpers.getBotPose2d("limelight-back").getRotation();
                 if (aprilRotation.getDegrees() == 0) {
                         return;
-                } 
+                }
                 yawOffset = gyro.getRotation2d().minus(aprilRotation);
         }
-        
+
         @Override
         public void periodic() {
                 // TODO Auto-generated method stub
@@ -168,7 +167,6 @@ public class SwerveSubsystem extends SubsystemBase {
         public Pose2d getPose() {
                 return ometry.getPoseMeters();
         }
-
 
         public void resetOmetry(Pose2d pose) {
                 ometry.resetPosition(
@@ -233,14 +231,15 @@ public class SwerveSubsystem extends SubsystemBase {
                                         driveStates(swerveModuleStates);
                                 }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                                 new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live
-                                                                 // in your
-                                                                 // Constants class
+                                                                // in your
+                                                                // Constants class
                                                 new PIDConstants(.5, 0.0, 0.0), // Translation PID constants
                                                 new PIDConstants(3, 0.0, 0.0) // Rotation PID constants
-                                                 // Max module speed, in m/s // Drive base radius in meters. Distance from robot center to
-                                                     // furthest module.
-                                                // Default path replanning config. See the API
-                                                                       // for the options here
+                                // Max module speed, in m/s // Drive base radius in meters. Distance from robot
+                                // center to
+                                // furthest module.
+                                // Default path replanning config. See the API
+                                // for the options here
                                 ),
                                 config,
                                 () -> {
@@ -258,9 +257,12 @@ public class SwerveSubsystem extends SubsystemBase {
                                 this // Reference to this subsystem to set requirements
                 );
                 Shuffleboard.getTab("Debug").addDouble("drive velocity", this::getDriveMotorVelocity);
-                Shuffleboard.getTab("Debug").addDouble("drive velocity unfiltered", () -> fLSwerve.driveMotor.getEncoder().getVelocity());
-                Shuffleboard.getTab("Debug").addDouble("robot angle from april tags", () -> LimelightHelpers.getBotPose2d("limelight-back").getRotation().getDegrees());
-                Shuffleboard.getTab("Debug").addDouble("robot angle from navx", () -> gyro.getRotation2d().getDegrees());
+                Shuffleboard.getTab("Debug").addDouble("drive velocity unfiltered",
+                                () -> fLSwerve.driveMotor.getEncoder().getVelocity());
+                Shuffleboard.getTab("Debug").addDouble("robot angle from april tags",
+                                () -> LimelightHelpers.getBotPose2d("limelight-back").getRotation().getDegrees());
+                Shuffleboard.getTab("Debug").addDouble("robot angle from navx",
+                                () -> gyro.getRotation2d().getDegrees());
                 Shuffleboard.getTab("Debug").addDouble("yaw offset", () -> yawOffset.getDegrees());
 
         }

@@ -11,16 +11,15 @@ public class DefaultSwerve extends Command {
 
     private Joystick joy;
     private SwerveSubsystem swerveSub;
-    Boolean slow = false;
+    boolean slow = false;
 
     public DefaultSwerve(Joystick joy, SwerveSubsystem swerveSub) {
-
         addRequirements(swerveSub);
         this.swerveSub = swerveSub;
         this.joy = joy;
     }
 
-    private double signedPow(double a, double pow){
+    private double signedPow(double a, double pow) {
         return Math.copySign(Math.pow(a, pow), a);
     }
 
@@ -36,7 +35,6 @@ public class DefaultSwerve extends Command {
         // rotation is right joystick
 
         // adding deadbands
-        
 
         var xSpeed = (MathUtil.applyDeadband(-joy.getY(), 0.1));
         var ySpeed = (MathUtil.applyDeadband(-joy.getX(), 0.1));
@@ -51,7 +49,7 @@ public class DefaultSwerve extends Command {
             ySpeed *= 0.5;
             rot *= 0.4;
         } else {
-            rot *= 0.6 ;
+            rot *= 0.6;
             xSpeed *= 0.8;
             ySpeed *= 0.8;
         }
@@ -61,7 +59,7 @@ public class DefaultSwerve extends Command {
             ySpeed *= 0.75;
             rot *= 0.25;
         }
-  
+
         if (joy.getRawButton(12)) {
             swerveSub.zeroYaw();
         }

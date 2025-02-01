@@ -32,12 +32,12 @@ public class ConfigSystem extends Command {
 
     }
 
-    public void Configure(int choice) {
-        ConfigOption configOption  = positionList.get(choice);
+    public void configure(int choice) {
+        ConfigOption configOption = positionList.get(choice);
 
-        CoralArm.setCoralWristSetpoint(configOption.coralAngle);
-        Elevator.setElevatorLevels(configOption.elevatorSetpoint);
-        AlgaeSub.setAlgaeSetpoint(configOption.algaeAngle);
+        coralArm.setCoralWristSetpoint(configOption.coralAngle);
+        elevatorSub.setPosition(configOption.elevatorSetpoint);
+        algaeSub.setAlgaeSetpoint(configOption.algaeAngle);
     }
-    
+
 }
