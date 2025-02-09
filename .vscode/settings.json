@@ -59,6 +59,7 @@
     "edu.wpi.first.math.**.proto.*",
     "edu.wpi.first.math.**.struct.*",
   ],
-  "editor.formatOnSave": true,
-  "files.autoSave": "onFocusChange"
+  "editor.formatOnSave": false,
+  "files.autoSave": "onFocusChange",
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
 }

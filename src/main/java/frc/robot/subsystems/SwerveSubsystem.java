@@ -1,11 +1,11 @@
 package frc.robot.subsystems;
 
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -18,12 +18,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.LimelightHelpers;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.LimelightHelpers;
+import frc.robot.subsystems.swerve.CanCoderConfig;
+import frc.robot.subsystems.swerve.SwerveModule;
 //import frc.robot.command.autolime.AutoAlignTags;
 
 //add motor channel numbers later
@@ -38,10 +39,14 @@ public class SwerveSubsystem extends SubsystemBase {
         private final Translation2d backLeftLocation = new Translation2d(-0.381, 0.381);
         private final Translation2d backRightLocation = new Translation2d(-0.381, -0.381);
 
-        private final SwerveModule fLSwerve = new SwerveModule(15, 14, 20, true, true, -0.137);
-        private final SwerveModule fRSwerve = new SwerveModule(13, 12, 19, true, true, 0);
-        private final SwerveModule bLSwerve = new SwerveModule(17, 16, 21, true, true, 0.172);
-        private final SwerveModule bRSwerve = new SwerveModule(11, 10, 18, true, true, -0.429);
+        private final SwerveModule fLSwerve = new SwerveModule(15, 14, true, true,
+                        new CanCoderConfig(20, -0.137), 0.66);
+        private final SwerveModule fRSwerve = new SwerveModule(13, 12, true, true,
+                        new CanCoderConfig(19, 0), .533);
+        private final SwerveModule bLSwerve = new SwerveModule(17, 16, true, true,
+                        new CanCoderConfig(21, 0.172), 0.039);
+        private final SwerveModule bRSwerve = new SwerveModule(11, 10, true, true,
+                        new CanCoderConfig(18, -0.429), 1.856);
 
         private AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 

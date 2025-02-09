@@ -4,25 +4,37 @@
 
 package frc.robot;
 
+import org.littletonrobotics.urcl.URCL;
+
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.autos.AutoNav;
+import frc.robot.commands.DefaultSwerve;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
   Joystick primaryJoy = new Joystick(0);
   XboxController secondaryController = new XboxController(1);
 
+  SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  Elevator elevatorSub = new Elevator();
+
+  DefaultSwerve swerve = new DefaultSwerve(primaryJoy, swerveSubsystem);
+
   // AutoNav autoNav = new AutoNav();
 
-  Elevator elevator = new Elevator();
+  // Elevator elevator = new Elevator();
 
   public RobotContainer() {
-    // configureBindings(){
+    URCL.start();    
+
+    swerveSubsystem.setDefaultCommand(swerve);
+    configureBindings();
 
     // dependent on the alliance color
     // have to rotate to face april tag at each pos
@@ -37,11 +49,17 @@ public class RobotContainer {
     // new JoystickButton(primaryJoy, 0).onTrue(AutoNav.goTo(1));
 
     new JoystickButton(secondaryController, XboxController.Button.kY.value)
-        .onTrue(Commands.run(elevator::stow));
+        .onTrue(elevatorSub.stow());
     new JoystickButton(secondaryController, XboxController.Button.kA.value)
-        .onTrue(Commands.run(elevator::l1));
+        .onTrue(elevatorSub.l1());
+    new JoystickButton(secondaryController, XboxController.Button.kB.value)
+        .onTrue(elevatorSub.l2());
+    new JoystickButton(secondaryController, XboxController.Button.kX.value)
+        .onTrue(elevatorSub.l3());
+    new JoystickButton(secondaryController, XboxController.Button.kStart.value)
+        .onTrue(elevatorSub.l4());
     // secondaryController.getPOV()
-
+    
   }
 
   public Command getAutonomousCommand() {
