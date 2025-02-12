@@ -39,7 +39,7 @@ public class Elevator extends SubsystemBase {
     public Elevator() {
         SparkMaxConfig configLead = new SparkMaxConfig();
         configLead
-                .inverted(true)
+                .inverted(false)
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
         configLead.encoder.positionConversionFactor(1.0/5.0);
         configLead.closedLoop
@@ -86,8 +86,8 @@ public class Elevator extends SubsystemBase {
     public void setPosition(double setpoint) {
         currentSetpoint = setpoint;
         System.out.println("Setting elevator setpoint to " + setpoint);
-        elevatorController.setReference(setpoint, ControlType.kMAXMotionPositionControl);
-        elevatorController2.setReference(setpoint, ControlType.kMAXMotionPositionControl);
+        elevatorController.setReference(setpoint, ControlType.kPosition);
+        elevatorController2.setReference(setpoint, ControlType.kPosition);
     }
 
     public Command stow() {

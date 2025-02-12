@@ -20,8 +20,8 @@ public class ClimbSub extends SubsystemBase {
     // guy waas here
 
     // Motor pushArm = new Motor();
-    SparkMax climbMotorOne = new SparkMax(0, MotorType.kBrushless);
-    SparkMax climbMotorTwo = new SparkMax(0, MotorType.kBrushless);
+    //SparkMax climbMotorOne = new SparkMax(102, MotorType.kBrushless);
+    //SparkMax climbMotorTwo = new SparkMax(103, MotorType.kBrushless);
 
     double climbSetpoint;
     SparkClosedLoopController climbController;
@@ -39,24 +39,26 @@ public class ClimbSub extends SubsystemBase {
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
         configLeader.smartCurrentLimit(30, 30);
         configLeader.secondaryCurrentLimit(35);
+        configLeader.encoder.positionConversionFactor(1/60);
         configLeader.closedLoop
                 .pid(0, 0, 0)
                 .outputRange(-1, 1);
-        climbMotorOne.configure(configLeader, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        //climbMotorOne.configure(configLeader, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
         SparkMaxConfig configFollower = new SparkMaxConfig();
         configFollower
                 .inverted(false)
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
+        configFollower.encoder.positionConversionFactor(1/60);
         configFollower.smartCurrentLimit(30, 30);
         configFollower.secondaryCurrentLimit(35);
-        configFollower.follow(climbMotorOne);
-        climbMotorTwo.configure(configFollower, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        //configFollower.follow(climbMotorOne);
+        //climbMotorTwo.configure(configFollower, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
-        climbController = climbMotorOne.getClosedLoopController();
+        //climbController = climbMotorOne.getClosedLoopController();
 
         // climbMotorTwo.setControl(new Follower(climbMotorOne.getDeviceId(),true));
-        climbController.setReference(0, ControlType.kPosition);
+        //climbController.setReference(0, ControlType.kPosition);
     }
 
     public void pushUp() {

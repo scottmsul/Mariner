@@ -12,20 +12,20 @@ public class AlgaeAutos {
             this.algaeSub = algaeSub;
         }
 
-        @Override
-        public void execute() {
-            algaeSub.grab();
-        }
+        // @Override
+        // public void execute() {
+        //     algaeSub.grab();
+        // }
 
-        @Override
-        public void end(boolean interrupted) {
-            algaeSub.stop();
-        }
+        // @Override
+        // public void end(boolean interrupted) {
+        //     algaeSub.stop();
+        // }
 
-        @Override
-        public boolean isFinished() {
-            return algaeSub.hasAlgae();
-        }
+        // @Override
+        // public boolean isFinished() {
+        //     return algaeSub.hasAlgae();
+        // }
     }
 
     public class AutoScoreAlgae extends Command {
@@ -38,17 +38,17 @@ public class AlgaeAutos {
 
         @Override
         public void execute() {
-            algaeSub.release();
+            // algaeSub.release();
         }
 
         @Override
         public void end(boolean interrupted) {
-            algaeSub.stop();
+            // algaeSub.stop();
         }
 
-        @Override
-        public boolean isFinished() {
-            return !algaeSub.hasAlgae();
-        }
+        // @Override
+        // public boolean isFinished() {
+        //     // return !algaeSub.hasAlgae();
+        // }
     }
 }
