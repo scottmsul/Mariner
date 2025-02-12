@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -29,8 +31,8 @@ public class CoralArm extends SubsystemBase {
 
     //SparkMax coralWheel = new SparkMax(100, MotorType.kBrushless);
     //SparkMax coralWrist = new SparkMax(1001, MotorType.kBrushless);
-    TalonSRX coralWheel = new TalonSRX(0);
-    TalonSRX coralWrist = new TalonSRX(0);
+    TalonSRX coralWheel = new TalonSRX(11);
+    VictorSPX coralWrist = new VictorSPX(10);
 
     private final PIDController coralWristPID = new PIDController(0, 0, 0);
 
@@ -61,7 +63,7 @@ public class CoralArm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        coralWrist.set(TalonSRXControlMode.PercentOutput, coralWristPID.calculate(coralWristSetpoint));
+        coralWrist.set(VictorSPXControlMode.PercentOutput, coralWristPID.calculate(coralWristSetpoint));
     }
 
     public void intakeCoral() {

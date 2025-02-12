@@ -22,7 +22,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 public class AlgaeSub extends SubsystemBase {
     // motors
     SparkMax algaeWrist = new SparkMax(56, MotorType.kBrushless);
-    TalonSRX algaeSpinner = new TalonSRX(0);
+    TalonSRX algaeSpinner = new TalonSRX(13);
     //SparkMax algaeSpinMotor = new SparkMax(0, MotorType.kBrushless);
     private SparkClosedLoopController algaeWristController;
     // pincher1
@@ -100,8 +100,12 @@ public class AlgaeSub extends SubsystemBase {
         return run(() -> setAlgaeSetpoint(Constants.SetpointConstants.AlgaeArmAngles.down));
     }
 
-    public Command algaeReset(){
-        return run(()-> setAlgaeSetpoint(0));
+    public Command algaeArmUp(){
+        return run(()-> setAlgaeSetpoint(3));
+    }
+
+    public Command algaeArmStop(){
+        return run(() -> stop());
     }
 
     // public Command algaeArmStop(){
@@ -115,5 +119,7 @@ public class AlgaeSub extends SubsystemBase {
     // stop()
     // pincher1.set(0)
     // pincher2.set(0)
+
+
 
 }

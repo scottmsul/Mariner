@@ -68,7 +68,9 @@ public class RobotContainer {
     new JoystickButton(secondaryController, XboxController.Button.kX.value)
       .onTrue(algaeSub.algaeArmDown());
     new JoystickButton(secondaryController, XboxController.Button.kB.value)
-      .onTrue(algaeSub.algaeArmDown());
+      .onTrue(algaeSub.algaeArmUp());
+    new JoystickButton(secondaryController, XboxController.Button.kBack.value)
+      .onTrue(algaeSub.algaeArmStop());
     // new JoystickButton(secondaryController, XboxController.Button.kB.value)
     //   .onTrue(algaeSub.algaeArmStop());
     // secondaryController.getPOV()
