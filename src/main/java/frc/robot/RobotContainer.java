@@ -28,6 +28,7 @@ public class RobotContainer {
   //CoralArm coralArm = new CoralArm();
   AlgaeSub algaeSub = new AlgaeSub();
   //ClimbSub climbSub = new ClimbSub();
+  CoralArm coralArm = new CoralArm();
 
   DefaultSwerve swerve = new DefaultSwerve(primaryJoy, swerveSubsystem);
 
@@ -68,9 +69,30 @@ public class RobotContainer {
     new JoystickButton(secondaryController, XboxController.Button.kX.value)
       .onTrue(algaeSub.algaeArmDown());
     new JoystickButton(secondaryController, XboxController.Button.kB.value)
-      .onTrue(algaeSub.algaeArmUp());
+      .onTrue(algaeSub.algaeArmStop());
     new JoystickButton(secondaryController, XboxController.Button.kBack.value)
       .onTrue(algaeSub.algaeArmStop());
+
+    new JoystickButton(primaryJoy, 11)
+      .onTrue(algaeSub.algaeSpinIn())
+      .onFalse(algaeSub.algaeSpinStop());
+    new JoystickButton(primaryJoy, 12)
+      .onTrue(algaeSub.algaeSpinOut())
+      .onFalse(algaeSub.algaeSpinStop());
+
+    new JoystickButton(primaryJoy, 9)
+      .onTrue(coralArm.intakeCoralCommand())
+      .onFalse(coralArm.stopCoralSpin());
+    new JoystickButton(primaryJoy, 10)
+      .onTrue(coralArm.outtakeCoral())
+      .onFalse(coralArm.stopCoralSpin());
+
+    new JoystickButton(primaryJoy, 7)
+      .onTrue(coralArm.l1())
+      .onFalse(coralArm.stopWrist());
+    new JoystickButton(primaryJoy, 8)
+      .onTrue(coralArm.stopWrist());
+    
     // new JoystickButton(secondaryController, XboxController.Button.kB.value)
     //   .onTrue(algaeSub.algaeArmStop());
     // secondaryController.getPOV()

@@ -34,7 +34,7 @@ public class CoralArm extends SubsystemBase {
     TalonSRX coralWheel = new TalonSRX(11);
     VictorSPX coralWrist = new VictorSPX(10);
 
-    private final PIDController coralWristPID = new PIDController(0, 0, 0);
+    private final PIDController coralWristPID = new PIDController(0.1, 0, 0);
 
     public CoralArm() {
         // SparkMaxConfig configWrist = new SparkMaxConfig();
@@ -78,6 +78,10 @@ public class CoralArm extends SubsystemBase {
         coralWheel.set(TalonSRXControlMode.PercentOutput, 0);
     }
 
+    public void stopCoralWrist() {
+        coralWrist.set(VictorSPXControlMode.PercentOutput,0);
+    }
+
     public void setCoralWristSetpoint(double setpoint) {
         coralWristSetpoint = setpoint;
     }
@@ -97,5 +101,20 @@ public class CoralArm extends SubsystemBase {
     }
     public Command l4() {
             return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l4));
+    }
+    public Command stopWrist() {
+            return run(() -> setCoralWristSetpoint(0));
+    }
+    // public Command backwards() {
+    //         return run(() -> setCoralWristSetpoint(-1));
+    // }
+    public Command intakeCoralCommand() {
+        return run(()-> intakeCoral());
+    }
+    public Command outtakeCoral() {
+        return run(()-> releaseCoral());
+    }
+    public Command stopCoralSpin() {
+        return run(()-> stopCoralRoller());
     }
 }

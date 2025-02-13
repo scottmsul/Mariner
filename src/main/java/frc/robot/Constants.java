@@ -163,9 +163,9 @@ public final class Constants {
 
     public class CoralPivotAngles {
       // angle of release
-      public static double l1 = 6; // reef l1
-      public static double lmid = 4; // reef l2 and l3
-      public static double l4 = 6; // reef l4
+      public static double l1 = 1; // reef l1
+      public static double lmid = 1; // reef l2 and l3
+      public static double l4 = 1; // reef l4
       public static double CoralSt = 2; // pointing up to recieve coral from hp
       public static double up = 0; // out of the way for intaking algae
     }

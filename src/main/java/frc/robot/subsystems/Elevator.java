@@ -39,7 +39,7 @@ public class Elevator extends SubsystemBase {
     public Elevator() {
         SparkMaxConfig configLead = new SparkMaxConfig();
         configLead
-                .inverted(false)
+                .inverted(true)
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
         configLead.encoder.positionConversionFactor(1.0/5.0);
         configLead.closedLoop
@@ -52,7 +52,7 @@ public class Elevator extends SubsystemBase {
         elevator1.configure(configLead, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         SparkMaxConfig configFollow = new SparkMaxConfig();
         configFollow
-                .inverted(true)
+                .inverted(false)
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
         configFollow.encoder.positionConversionFactor(1.0/5.0);
         configFollow.closedLoop
@@ -69,9 +69,9 @@ public class Elevator extends SubsystemBase {
         // Constants.configPIDMotor(elevator2, false, 0, 0, 0);
 
         elevatorController = elevator1.getClosedLoopController();
-        elevatorController.setReference(0, ControlType.kMAXMotionPositionControl);
+        elevatorController.setReference(0, ControlType.kPosition);
         elevatorController2 = elevator2.getClosedLoopController();
-        elevatorController2.setReference(0, ControlType.kMAXMotionPositionControl);
+        elevatorController2.setReference(0, ControlType.kPosition);
 
         elevator1.getEncoder().setPosition(0);
         elevator2.getEncoder().setPosition(0);

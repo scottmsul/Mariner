@@ -38,7 +38,7 @@ public class AlgaeSub extends SubsystemBase {
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
         configAlgaeWrist.encoder.positionConversionFactor(1.0/125.0);
         configAlgaeWrist.closedLoop
-                .pid(0.01, 0, 0)
+                .pid(0.15, 0, 0)
                 .outputRange(-0.25, 0.25);
         algaeWrist.configure(configAlgaeWrist, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         // Constants.configPIDMotor(algaeWrist,true, 0,0,0);
@@ -52,7 +52,7 @@ public class AlgaeSub extends SubsystemBase {
         //algaeSpinMotor.configure(configAlgaeSpin, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         
         algaeWristController = algaeWrist.getClosedLoopController();
-        algaeWristController.setReference(0, ControlType.kMAXMotionPositionControl);
+        algaeWristController.setReference(0, ControlType.kPosition);
 
         algaeWrist.getEncoder().setPosition(0);
 
@@ -79,6 +79,10 @@ public class AlgaeSub extends SubsystemBase {
        algaeSpinner.set(TalonSRXControlMode.PercentOutput, 0);
     }
 
+    public void stopWrist() {
+        algaeWrist.set(0);
+    }
+
     public void setAlgaeSetpoint(double setpoint) {
         algaeWristController.setReference(setpoint, ControlType.kPosition);
     }
@@ -100,12 +104,24 @@ public class AlgaeSub extends SubsystemBase {
         return run(() -> setAlgaeSetpoint(Constants.SetpointConstants.AlgaeArmAngles.down));
     }
 
-    public Command algaeArmUp(){
-        return run(()-> setAlgaeSetpoint(3));
-    }
+    // public Command algaeArmUp(){
+    //     return run(()-> setAlgaeSetpoint(3));
+    // }
 
     public Command algaeArmStop(){
-        return run(() -> stop());
+        return run(() -> stopWrist());
+    }
+
+    public Command algaeSpinIn(){
+        return run(() -> grab());
+    }
+
+    public Command algaeSpinOut(){
+        return run(()-> release());
+    }
+
+    public Command algaeSpinStop(){
+        return run(()-> stop());
     }
 
     // public Command algaeArmStop(){
