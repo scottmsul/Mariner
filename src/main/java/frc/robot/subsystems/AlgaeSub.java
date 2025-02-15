@@ -27,7 +27,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 public class AlgaeSub extends SubsystemBase {
     // motors
     SparkMax algaeWrist = new SparkMax(56, MotorType.kBrushless);
-    TalonSRX algaeSpinner = new TalonSRX(13);
+    TalonSRX algaeSpinner = new TalonSRX(41);
     //SparkMax algaeSpinMotor = new SparkMax(0, MotorType.kBrushless);
     TrapezoidProfile trapezoidProfile = new TrapezoidProfile(new Constraints(1, 4));
     private SparkClosedLoopController algaeWristController;

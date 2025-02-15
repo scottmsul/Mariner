@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -94,6 +95,7 @@ public class SwerveModule {
                                 .positionConversionFactor(drivePositionConversionFactor)
                                 .velocityConversionFactor(drivePositionConversionFactor / 60);
                 driveConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .pid(1.0, 0, 0.1)
                                 .outputRange(-1, 1);
                 driveMotor.configure(driveConfig, SparkBase.ResetMode.kNoResetSafeParameters,
@@ -122,7 +124,7 @@ public class SwerveModule {
                 // turningEncoder.setPosition(encoder.getAbsAngle().getRadians());
                 double scaledTurnPosition = scale(turningMotor.getAnalog().getVoltage() - voltageOffset, 0, 3.365, 0,
                                 2 * Math.PI);
-                turningEncoder.setPosition(scaledTurnPosition);
+                // turningEncoder.setPosition(scaledTurnPosition);
 
                 pidController = turningMotor.getClosedLoopController();
 

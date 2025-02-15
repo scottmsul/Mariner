@@ -24,7 +24,7 @@ public class CoralArm extends SubsystemBase {
     // wheelmotor
     // SparkMaxConfig coralWristConfig;
     // SparkMaxConfig coralWheelConfig;
-    // coralWristController;
+    SparkClosedLoopController coralWristController;
 
     // sensor coralSensor = new Sensor();
 
@@ -32,22 +32,22 @@ public class CoralArm extends SubsystemBase {
 
     //SparkMax coralWheel = new SparkMax(100, MotorType.kBrushless);
     //SparkMax coralWrist = new SparkMax(1001, MotorType.kBrushless);
-    TalonSRX coralWheel = new TalonSRX(11);
-    SparkMax coralWrist = new SparkMax(10, MotorType.kBrushed);
+    TalonSRX coralWheel = new TalonSRX(40);
+    SparkMax coralWrist = new SparkMax(55, MotorType.kBrushed);
 
     private final PIDController coralWristPID = new PIDController(0.1, 0, 0);
 
     public CoralArm() {
         Shuffleboard.getTab("PID").add("Coral", coralWristPID);
-        // SparkMaxConfig configWrist = new SparkMaxConfig();
-        // configWrist
-        //         .inverted(false)
-        //         .idleMode(SparkMaxConfig.IdleMode.kBrake);
-        //         configWrist.encoder.positionConversionFactor(1.0/100.0);
-        // configWrist.closedLoop
-        //         .pid(0.01, 0, 0)
-        //         .outputRange(-0.25, 0.25);
-        //coralWrist.configure(configWrist, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        SparkMaxConfig configWrist = new SparkMaxConfig();
+        configWrist
+                .inverted(false)
+                .idleMode(SparkMaxConfig.IdleMode.kBrake);
+                configWrist.encoder.positionConversionFactor(1.0/100.0);
+        configWrist.closedLoop
+                .pid(0.75, 0, 0)
+                .outputRange(-0.45, 0.45);
+        coralWrist.configure(configWrist, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
 
         // SparkMaxConfig configWheel = new SparkMaxConfig();
@@ -59,14 +59,14 @@ public class CoralArm extends SubsystemBase {
         // Constants.configPIDMotor(coralWrist, false, 0, 0,0);
         // Constants.configMotor(coralWheel, true);
 
-        //coralWristController = coralWrist.getClosedLoopController();
-        //coralWristController.setReference(0, ControlType.kMAXMotionPositionControl);
+        coralWristController = coralWrist.getClosedLoopController();
+        coralWristController.setReference(0, ControlType.kMAXMotionPositionControl);
     }
 
-    @Override
-    public void periodic() {
-        coralWrist.set(VictorSPXControlMode.PercentOutput, coralWristPID.calculate(coralWrist.getSelectedSensorPosition()));
-    }
+    // @Override
+    // public void periodic() {
+    //     coralWrist.set(coralWristPID.calculate(coralWrist.getSelectedSensorPosition()));
+    // }
 
     public void intakeCoral() {
         coralWheel.set(TalonSRXControlMode.PercentOutput, 0.5);
@@ -85,7 +85,7 @@ public class CoralArm extends SubsystemBase {
     }
 
     public void setCoralWristSetpoint(double setpoint) {
-        coralWristSetpoint = setpoint;
+        coralWristController.setReference(setpoint, ControlType.kPosition);
     }
     
     public boolean hasCoral() {

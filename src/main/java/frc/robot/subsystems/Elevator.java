@@ -12,10 +12,12 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.ExponentialProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.SetpointConstants;
 
 public class Elevator extends SubsystemBase {
     private SparkMax elevator1 = new SparkMax(60, MotorType.kBrushless);
@@ -24,6 +26,9 @@ public class Elevator extends SubsystemBase {
     private SparkClosedLoopController elevatorController;
     private SparkClosedLoopController elevatorController2;
     private double currentSetpoint;
+    private TrapezoidProfile trapezoidProfile = new TrapezoidProfile(new Constraints(1, 4));
+
+    TrapezoidProfile.State trapezoidSetpoint = new TrapezoidProfile.State();
 
     public SparkMaxConfig configElevatorMotor(boolean Inverted, double kP, double kI, double kD) {
         SparkMaxConfig config = new SparkMaxConfig();
@@ -41,11 +46,11 @@ public class Elevator extends SubsystemBase {
         configLead
                 .inverted(true)
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
-        configLead.encoder.positionConversionFactor(1.0/5.0);
+        configLead.encoder.positionConversionFactor((1.0 / 5.0)*Math.PI*1.0);
         configLead.closedLoop
                 .pid(0.3, 0, 0)
                 .outputRange(-0.25, 0.4);
-                // .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        // .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         configLead.closedLoop.maxMotion
                 .maxVelocity(1)
                 .maxAcceleration(1);
@@ -54,14 +59,11 @@ public class Elevator extends SubsystemBase {
         configFollow
                 .inverted(false)
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
-        configFollow.encoder.positionConversionFactor(1.0/5.0);
+        configFollow.encoder.positionConversionFactor((1.0 / 5.0)*Math.PI*1.0);
         configFollow.closedLoop
                 .pid(0.3, 0, 0)
                 .outputRange(-0.25, 0.4);
-                // .feedbackSensor(FeedbackSensor.`);
-        configFollow.closedLoop.maxMotion
-                .maxVelocity(1)
-                .maxAcceleration(1);
+        // .feedbackSensor(FeedbackSensor.`);
         // configFollow.follow(elevator1, true);
         elevator2.configure(configFollow, ResetMode.kResetSafeParameters,
                 PersistMode.kNoPersistParameters);
@@ -86,8 +88,16 @@ public class Elevator extends SubsystemBase {
     public void setPosition(double setpoint) {
         currentSetpoint = setpoint;
         System.out.println("Setting elevator setpoint to " + setpoint);
-        elevatorController.setReference(setpoint, ControlType.kPosition);
-        elevatorController2.setReference(setpoint, ControlType.kPosition);
+        // elevatorController.setReference(setpoint, ControlType.kPosition);
+        // elevatorController2.setReference(setpoint, ControlType.kPosition);
+    }
+
+    @Override
+    public void periodic() {
+        trapezoidSetpoint = trapezoidProfile.calculate(0.2, trapezoidSetpoint,
+                new TrapezoidProfile.State(currentSetpoint, 0));
+        elevatorController.setReference(currentSetpoint, ControlType.kPosition);
+        elevatorController2.setReference(currentSetpoint, ControlType.kPosition);
     }
 
     public Command stow() {
@@ -110,4 +120,3 @@ public class Elevator extends SubsystemBase {
         return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.l4));
     }
 }
-
