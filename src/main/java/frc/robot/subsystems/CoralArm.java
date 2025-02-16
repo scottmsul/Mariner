@@ -11,8 +11,11 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,8 +33,8 @@ public class CoralArm extends SubsystemBase {
 
     private double coralWristSetpoint;
 
-    //SparkMax coralWheel = new SparkMax(100, MotorType.kBrushless);
-    //SparkMax coralWrist = new SparkMax(1001, MotorType.kBrushless);
+    // SparkMax coralWheel = new SparkMax(100, MotorType.kBrushless);
+    // SparkMax coralWrist = new SparkMax(1001, MotorType.kBrushless);
     TalonSRX coralWheel = new TalonSRX(40);
     SparkMax coralWrist = new SparkMax(55, MotorType.kBrushed);
 
@@ -43,19 +46,21 @@ public class CoralArm extends SubsystemBase {
         configWrist
                 .inverted(false)
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
-                configWrist.encoder.positionConversionFactor(1.0/100.0);
+        configWrist.encoder.positionConversionFactor(1.0 / 100.0);
         configWrist.closedLoop
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .pid(0.75, 0, 0)
                 .outputRange(-0.45, 0.45);
         coralWrist.configure(configWrist, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-
+        Shuffleboard.getTab("Debug").addDouble("CoralEncoder", () -> coralWrist.getAbsoluteEncoder().getPosition());
 
         // SparkMaxConfig configWheel = new SparkMaxConfig();
         // configWheel
-        //         .inverted(false)
-        //         .idleMode(SparkMaxConfig.IdleMode.kBrake);
-        //         configWheel.encoder.positionConversionFactor(1/10);
-        //coralWheel.configure(configWheel, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        // .inverted(false)
+        // .idleMode(SparkMaxConfig.IdleMode.kBrake);
+        // configWheel.encoder.positionConversionFactor(1/10);
+        // coralWheel.configure(configWheel, ResetMode.kResetSafeParameters,
+        // PersistMode.kNoPersistParameters);
         // Constants.configPIDMotor(coralWrist, false, 0, 0,0);
         // Constants.configMotor(coralWheel, true);
 
@@ -65,7 +70,7 @@ public class CoralArm extends SubsystemBase {
 
     // @Override
     // public void periodic() {
-    //     coralWrist.set(coralWristPID.calculate(coralWrist.getSelectedSensorPosition()));
+    // coralWrist.set(coralWristPID.calculate(coralWrist.getSelectedSensorPosition()));
     // }
 
     public void intakeCoral() {
@@ -87,36 +92,42 @@ public class CoralArm extends SubsystemBase {
     public void setCoralWristSetpoint(double setpoint) {
         coralWristController.setReference(setpoint, ControlType.kPosition);
     }
-    
+
     public boolean hasCoral() {
-            // true if has coral
-            // false if not
-            return true;
+        // true if has coral
+        // false if not
+        return true;
     }
-    
+
     public Command l1() {
-            return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l1));
+        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l1));
     }
+
     // out
     public Command lmid() {
-            return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.lmid));
+        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.lmid));
     }
+
     public Command l4() {
-            return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l4));
+        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l4));
     }
+
     public Command stopWrist() {
-            return run(() -> setCoralWristSetpoint(0));
+        return run(() -> setCoralWristSetpoint(0));
     }
+
     // public Command backwards() {
-    //         return run(() -> setCoralWristSetpoint(-1));
+    // return run(() -> setCoralWristSetpoint(-1));
     // }
     public Command intakeCoralCommand() {
-        return run(()-> intakeCoral());
+        return run(() -> intakeCoral());
     }
+
     public Command outtakeCoral() {
-        return run(()-> releaseCoral());
+        return run(() -> releaseCoral());
     }
+
     public Command stopCoralSpin() {
-        return run(()-> stopCoralRoller());
+        return run(() -> stopCoralRoller());
     }
 }

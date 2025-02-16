@@ -18,6 +18,7 @@ import frc.robot.subsystems.CoralArm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AlgaeSub;
+import frc.robot.subsystems.ClimbSub;
 
 public class RobotContainer {
 
@@ -26,9 +27,9 @@ public class RobotContainer {
 
   SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   Elevator elevatorSub = new Elevator();
-  //CoralArm coralArm = new CoralArm();
+  // CoralArm coralArm = new CoralArm();
   AlgaeSub algaeSub = new AlgaeSub();
-  //ClimbSub climbSub = new ClimbSub();
+  // ClimbSub climbSub = new ClimbSub();
   CoralArm coralArm = new CoralArm();
 
   DefaultSwerve swerve = new DefaultSwerve(primaryJoy, swerveSubsystem);

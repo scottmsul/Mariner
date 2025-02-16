@@ -26,7 +26,8 @@ public class Elevator extends SubsystemBase {
     private SparkClosedLoopController elevatorController;
     private SparkClosedLoopController elevatorController2;
     private double currentSetpoint;
-    private TrapezoidProfile trapezoidProfile = new TrapezoidProfile(new Constraints(1, 4));
+    private TrapezoidProfile trapezoidProfile = new TrapezoidProfile(new Constraints(10, 1.5));
+    private double positionFactor = (1.0 / 5.0)*Math.PI*1.0*0.0254;
 
     TrapezoidProfile.State trapezoidSetpoint = new TrapezoidProfile.State();
 
@@ -46,9 +47,9 @@ public class Elevator extends SubsystemBase {
         configLead
                 .inverted(true)
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
-        configLead.encoder.positionConversionFactor((1.0 / 5.0)*Math.PI*1.0);
+        configLead.encoder.positionConversionFactor(positionFactor);
         configLead.closedLoop
-                .pid(0.3, 0, 0)
+                .pid(0.5, 0, 0)
                 .outputRange(-0.25, 0.4);
         // .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         configLead.closedLoop.maxMotion
@@ -59,9 +60,9 @@ public class Elevator extends SubsystemBase {
         configFollow
                 .inverted(false)
                 .idleMode(SparkMaxConfig.IdleMode.kBrake);
-        configFollow.encoder.positionConversionFactor((1.0 / 5.0)*Math.PI*1.0);
+        configFollow.encoder.positionConversionFactor(positionFactor);
         configFollow.closedLoop
-                .pid(0.3, 0, 0)
+                .pid(0.5, 0, 0)
                 .outputRange(-0.25, 0.4);
         // .feedbackSensor(FeedbackSensor.`);
         // configFollow.follow(elevator1, true);
@@ -78,8 +79,8 @@ public class Elevator extends SubsystemBase {
         elevator1.getEncoder().setPosition(0);
         elevator2.getEncoder().setPosition(0);
 
-        Shuffleboard.getTab("Debug").addDouble("Current Setpoint", () -> currentSetpoint);
-        Shuffleboard.getTab("Debug").addDouble("Currenet position", () -> elevator1.getEncoder().getPosition());
+        Shuffleboard.getTab("Debug").addDouble("Current Elevator Setpoint", () -> currentSetpoint);
+        Shuffleboard.getTab("Debug").addDouble("Current elevator position", () -> elevator1.getEncoder().getPosition());
         // Shuffleboard.getTab("Debug").addDouble("Current Setpoint",
         // elevatorController.);
     }
@@ -87,7 +88,6 @@ public class Elevator extends SubsystemBase {
     // may set motors to follow eachother if there are two motors
     public void setPosition(double setpoint) {
         currentSetpoint = setpoint;
-        System.out.println("Setting elevator setpoint to " + setpoint);
         // elevatorController.setReference(setpoint, ControlType.kPosition);
         // elevatorController2.setReference(setpoint, ControlType.kPosition);
     }
@@ -96,8 +96,8 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         trapezoidSetpoint = trapezoidProfile.calculate(0.2, trapezoidSetpoint,
                 new TrapezoidProfile.State(currentSetpoint, 0));
-        elevatorController.setReference(currentSetpoint, ControlType.kPosition);
-        elevatorController2.setReference(currentSetpoint, ControlType.kPosition);
+        elevatorController.setReference(trapezoidSetpoint.position, ControlType.kPosition);
+        elevatorController2.setReference(trapezoidSetpoint.position, ControlType.kPosition);
     }
 
     public Command stow() {
