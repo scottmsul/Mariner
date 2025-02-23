@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -39,6 +40,8 @@ public class CoralArm extends SubsystemBase {
     TalonSRX coralWheel = new TalonSRX(40);
     SparkMax coralWrist = new SparkMax(55, MotorType.kBrushless);
 
+    //LimitSwitch coralLimitSwitch = coralWheel.LimitSwitch;
+
     private final PIDController coralWristPID = new PIDController(0.1, 0, 0);
 
     public CoralArm() {
@@ -50,8 +53,8 @@ public class CoralArm extends SubsystemBase {
         configWrist.encoder.positionConversionFactor(1.0 / 100.0);
         configWrist.closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .pid(0.8, 0, 0)
-                .outputRange(-0.8, 0.6);
+                .pid(1.3, 0, 0)
+                .outputRange(-0.8, 0.7);
         coralWrist.configure(configWrist, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         Shuffleboard.getTab("Debug").addDouble("CoralEncoder", () -> coralWrist.getAbsoluteEncoder().getPosition());
 
@@ -74,7 +77,7 @@ public class CoralArm extends SubsystemBase {
         // coralWheel.getSensorCollection().getp
 
         Shuffleboard.getTab("Debug").addDouble("Coral Wrist Setpoint", () -> coralWristSetpoint);
-        Shuffleboard.getTab("Debug").addDouble("Coral Wrist Current", () -> coralWheel.getSelectedSensorPosition());
+        Shuffleboard.getTab("Debug").addDouble("Coral Wrist Current", () -> coralWrist.getEncoder().getPosition());
         Shuffleboard.getTab("Debug").addDouble("Coral Wrist Power", () -> coralWrist.getAppliedOutput());
     }
 
@@ -102,16 +105,20 @@ public class CoralArm extends SubsystemBase {
     }
 
     public void setCoralWristSetpoint(double setpoint) {
-        // coralWristSetpoint = setpoint;
+        coralWristSetpoint = setpoint;
         // coralWristPID.setSetpoint(setpoint);
         coralWristController.setReference(setpoint, ControlType.kPosition);
     }
 
-    public boolean hasCoral() {
+    //public boolean hasCoral() {
         // true if has coral
         // false if not
-        return true;
-    }
+        //return coralLimitSwitch.isPressed();
+    //}
+
+    // public boolean hasNoCoral() {
+    //     //return !coralLimitSwitch.isPressed();
+    // }
 
     public Command l1() {
         return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l1));
@@ -141,7 +148,7 @@ public class CoralArm extends SubsystemBase {
         return run(() -> intakeCoral());
     }
 
-    public Command outtakeCoral() {
+    public Command outtakeCoralCommand() {
         return run(() -> releaseCoral());
     }
 

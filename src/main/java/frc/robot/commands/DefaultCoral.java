@@ -19,19 +19,19 @@ public class DefaultCoral extends Command{
 
     //what is the meaning of this
 
-    public void intakeCoral(){
-        while(!coralArm.hasCoral()){
-            coralArm.intakeCoral();
-        }
-        coralArm.stopCoralRoller();
-    }
+    // public void intakeCoral(){
+    //     while(!coralArm.hasCoral()){
+    //         coralArm.intakeCoral();
+    //     }
+    //     coralArm.stopCoralRoller();
+    // }
 
-    public void releaseCoral(){
-        while(coralArm.hasCoral()){
-            coralArm.releaseCoral();
-        }
-        coralArm.stopCoralRoller();
-    }
+    // public void releaseCoral(){
+    //     while(coralArm.hasCoral()){
+    //         coralArm.releaseCoral();
+    //     }
+    //     coralArm.stopCoralRoller();
+    // }
 
 
     //methods

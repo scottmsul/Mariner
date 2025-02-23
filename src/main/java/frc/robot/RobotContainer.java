@@ -118,7 +118,7 @@ public class RobotContainer {
       .onTrue(coralArm.intakeCoralCommand())
       .onFalse(coralArm.stopCoralSpin());
     new JoystickButton(secondaryController, XboxController.Button.kY.value)
-      .onTrue(coralArm.outtakeCoral())
+      .onTrue(coralArm.outtakeCoralCommand())
       .onFalse(coralArm.stopCoralSpin());
 
     new JoystickButton(primaryJoy, 7)
@@ -127,8 +127,8 @@ public class RobotContainer {
       .onTrue(new ConfigSystem(Constants.SetpointConstants.Options.l3Left, coralArm, elevatorSub, algaeArm));
     new JoystickButton(primaryJoy, 11)
       .onTrue(new ConfigSystem(Constants.SetpointConstants.Options.l2Left, coralArm, elevatorSub, algaeArm));
-    new JoystickButton(primaryJoy, 4)
-      .onTrue(new ConfigSystem(Constants.SetpointConstants.Options.l1, coralArm, elevatorSub, algaeArm));
+    //new JoystickButton(primaryJoy, 4)
+    //  .onTrue(new ConfigSystem(Constants.SetpointConstants.Options.l1, coralArm, elevatorSub, algaeArm));
 
     new JoystickButton(primaryJoy, 10)
       .onTrue(new ConfigSystem(Constants.SetpointConstants.Options.algaeLow, coralArm, elevatorSub, algaeArm));
@@ -145,8 +145,9 @@ public class RobotContainer {
      // .onTrue(new ConfigSystem(Constants.SetpointConstants.OptionArrays.positionList, 0, coralArm, elevatorSub, algaeSub));
 
     new JoystickButton(primaryJoy, 5)
-      .onTrue(climbSub.climb())
-      .onFalse(climbSub.climbStopCommand());
+      .onTrue(climbSub.climb());
+    new JoystickButton(primaryJoy, 4)
+      .onTrue(climbSub.climbStopCommand());
     new JoystickButton(primaryJoy, 6).and(algaeArm::hasAlgae)
      .onTrue(new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevatorSub, algaeArm));
     new JoystickButton(primaryJoy, 6).and(() -> !algaeArm.hasAlgae())

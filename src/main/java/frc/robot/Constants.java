@@ -152,7 +152,7 @@ public final class Constants {
       public static double groundLevel = 0;
       public static double algaeLow = 0.8;
       public static double algaeHigh = 1.1;
-      public static double coralStation = 0.33;
+      public static double coralStation = 0.31;
       public static double processor = 0.289;
 
     }
@@ -167,7 +167,7 @@ public final class Constants {
       // angle of release
       public static double l1 = 0.3; // reef l1
       public static double lmid = 0.3; // reef l2 and l3
-      public static double l4 = 0.37; // reef l4
+      public static double l4 = 0.22; // reef l4
       public static double CoralSt = 0.12; // pointing up to recieve coral from hp
       public static double up = 0; // out of the way for intaking algae
     }

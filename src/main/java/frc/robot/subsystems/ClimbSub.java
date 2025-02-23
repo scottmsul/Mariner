@@ -42,7 +42,7 @@ public class ClimbSub extends SubsystemBase {
         configLeader
                 .inverted(true)
                 .idleMode(SparkMaxConfig.IdleMode.kCoast);
-        configLeader.closedLoop.pid(0,0, 0).outputRange(0, 0);
+        configLeader.closedLoop.pid(0.5,0, 0).outputRange(0, 0.7);
         configLeader.smartCurrentLimit(30, 30);
         configLeader.secondaryCurrentLimit(35);
         configLeader.encoder.positionConversionFactor(1.0/60.0);
@@ -52,7 +52,7 @@ public class ClimbSub extends SubsystemBase {
         configFollower
                 .inverted(false)
                 .idleMode(SparkMaxConfig.IdleMode.kCoast);
-        configFollower.closedLoop.pid(0,0, 0).outputRange(0, 0);
+        configFollower.closedLoop.pid(0.5,0, 0).outputRange(0, 0.7);
         configFollower.encoder.positionConversionFactor(1.0/60.0);
         configFollower.smartCurrentLimit(30, 30);
         configFollower.secondaryCurrentLimit(35);
@@ -72,8 +72,8 @@ public class ClimbSub extends SubsystemBase {
 
     public void climbDown() {
         // set climb motors to down
-        climb1.set(0.6);
-        climb2.set(0.6);
+        climb1.set(0.8);
+        climb2.set(0.8);
     }
 
     // public void climbUp() {
@@ -89,7 +89,7 @@ public class ClimbSub extends SubsystemBase {
 
     public void setClimbSetpoint(double Setpoint){
         climbController.setReference(Setpoint, ControlType.kPosition);
-        climbController.setReference(Setpoint, ControlType.kPosition);
+        climbController2.setReference(Setpoint, ControlType.kPosition);
     }
     // i wonder still
     // we could have it push down until it reaches a setpoint

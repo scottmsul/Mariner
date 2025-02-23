@@ -21,10 +21,10 @@ import frc.robot.subsystems.CoralArm;
             coralArm.stopCoralRoller();
         }
 
-        @Override
-        public boolean isFinished() {
-            return coralArm.hasCoral();
-        }
+        // @Override
+        // public boolean isFinished() {
+        //     // return coralArm.hasCoral();
+        // }
     }
 
 

@@ -21,8 +21,8 @@ public class AutoCoralScore extends Command{
             coralArm.stopCoralRoller();
         }
 
-        @Override
-        public boolean isFinished() {
-            return !coralArm.hasCoral();
-        }
+        // @Override
+        // public boolean isFinished() {
+        //     return !coralArm.hasCoral();
+        // }
 }

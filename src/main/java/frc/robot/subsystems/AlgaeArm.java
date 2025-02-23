@@ -29,7 +29,7 @@ public class AlgaeArm extends SubsystemBase {
     TrapezoidProfile trapezoidProfile = new TrapezoidProfile(new Constraints(30, 10));
     private SparkClosedLoopController algaeWristController;
     private double setpoint = 0;
-    SparkLimitSwitch limitSwitch = algaeSpinner.getForwardLimitSwitch();
+    SparkLimitSwitch algaeLimitSwitch = algaeSpinner.getForwardLimitSwitch();
     // pincher1
     // pivotmotor
     // DigitalInput topLimitSwitch = new DigitalInput(0);
@@ -47,7 +47,7 @@ public class AlgaeArm extends SubsystemBase {
                 .positionConversionFactor(1.0/125.0)
                 .velocityConversionFactor((1.0/125.0)/60.0);
             configAlgaeWrist.closedLoop
-                    .pid(4, 0, 0)
+                    .pid(4.2, 0, 0)
                     .outputRange(-1, 1);
             algaeWrist.configure(configAlgaeWrist, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
@@ -132,7 +132,11 @@ public class AlgaeArm extends SubsystemBase {
     // }
 
     public boolean hasAlgae(){
-        return limitSwitch.isPressed();
+        return algaeLimitSwitch.isPressed();
+    }
+
+    public boolean hasNoAlgae(){
+        return !algaeLimitSwitch.isPressed();
     }
 
     public Command algaeArmDown(){
@@ -152,7 +156,7 @@ public class AlgaeArm extends SubsystemBase {
     }
 
     public Command algaeSpinOut(){
-        return run(()-> release()).until(() -> !hasAlgae());
+        return run(()-> release()).until(this::hasNoAlgae);
     }
 
     public Command algaeSpinStop(){

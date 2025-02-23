@@ -49,7 +49,7 @@ public class Elevator extends SubsystemBase {
                 .idleMode(SparkMaxConfig.IdleMode.kCoast);
         configLead.encoder.positionConversionFactor(positionFactor);
         configLead.closedLoop
-                .pid(2.2, 0, 0)
+                .pid(4, 0, 0)
                 .outputRange(-0.25, 0.4);
         // .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         configLead.closedLoop.maxMotion
@@ -62,7 +62,7 @@ public class Elevator extends SubsystemBase {
                 .idleMode(SparkMaxConfig.IdleMode.kCoast);
         configFollow.encoder.positionConversionFactor(positionFactor);
         configFollow.closedLoop
-                .pid(2.2, 0, 0)
+                .pid(4, 0, 0)
                 .outputRange(-0.25, 0.4);
         // .feedbackSensor(FeedbackSensor.`);
         // configFollow.follow(elevator1, true);
