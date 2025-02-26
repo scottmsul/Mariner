@@ -145,15 +145,15 @@ public final class Constants {
 
     public class ElevatorSetpoints {
       public static double l1 = 0.31;
-      public static double l2 = 0.44;
-      public static double l3 = 0.74;
-      public static double l4 = 1.24;
+      public static double l2 = 0.38;
+      public static double l3 = 0.69;
+      public static double l4 = 1.19;
 
       public static double groundLevel = 0;
-      public static double algaeLow = 0.8;
-      public static double algaeHigh = 1.1;
-      public static double coralStation = 0.30;
-      public static double processor = 0.2;
+      public static double algaeLow = 0.83;
+      public static double algaeHigh = 1.12;
+      public static double coralStation = 0.15;
+      public static double processor = 0.23;
 
     }
     // lowest level
