@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CoralArm;
 
 public class AutoCoralScore extends Command{
-     private CoralArm coralArm = new CoralArm();
+     private CoralArm coralArm;
 
         public AutoCoralScore(CoralArm coralArm) {
             addRequirements(coralArm);

@@ -110,6 +110,11 @@ public class CoralArm extends SubsystemBase {
         coralWristController.setReference(setpoint, ControlType.kPosition);
     }
 
+    public boolean isReady(){
+        double coralPosition = coralWrist.getEncoder().getPosition();
+        return coralPosition > (coralWristSetpoint - 0.1) && coralPosition < (coralWristSetpoint + 0.1);
+    }
+
     //public boolean hasCoral() {
         // true if has coral
         // false if not

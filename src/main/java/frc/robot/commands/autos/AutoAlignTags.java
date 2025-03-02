@@ -23,38 +23,30 @@ import edu.wpi.first.math.geometry.Pose3d;
 public class AutoAlignTags extends Command {
 
     private SwerveSubsystem swerveSub;
-    private ProfiledPIDController xPID;
+    private ProfiledPIDController strafePID;
     private ProfiledPIDController distancePID;
-    private boolean turnOff = false;
-    private double backTagID;
-    private double frontTagID;
-    private int tagChoice;
+    private ProfiledPIDController rotationPID;
+    private double strafeGoal;
+    private double distanceGoal;
+    private double rotationGoal;
+    private boolean lowSpeed;
     // private static double rot;
-    // private static double yOff;
+    // private static double distanceSpeed;
 
     // static double getZontal() {
-    //     return (LimelightHelpers.getTX("limelight-back") / 27);
-    //     // return (x.getDouble(160)/160)-1;
-    //     // horizontal offset
+    // return (LimelightHelpers.getTX("limelight-back") / 27);
+    // // return (x.getDouble(160)/160)-1;
+    // // horizontal offset
     // }
 
-    static final Optional<Pose3d> getSpace() {
-        // return Optional.ofNullable((LimelightHelpers.getTargetPose3d_CameraSpace("limelight-back")));
-
-
-        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
-        var target = Stream.of(llresults.targets_Fiducials)
-            //.filter(f-> (f.fiducialID == 4) || (f.fiducialID==7))
-            .findFirst() ;
-
-        if(target.isPresent()) {
-            return Optional.of(target.get().getTargetPose_RobotSpace());  
+    static final Optional<Pose3d> getTargetPose() {
+        if (LimelightHelpers.getTV(Constants.ReefLimelightName)) {
+            return Optional.of(LimelightHelpers.getTargetPose3d_RobotSpace("limelight-front"));
         } else {
             return Optional.empty();
         }
 
-
-        //Streamllresults.targets_Fiducials[0].getTargetPose_RobotSpace();
+        // Streamllresults.targets_Fiducials[0].getTargetPose_RobotSpace();
         // return (x.getDouble(160)/160)-1;
         // whatever the distance is
         // returns the specific distance value we want so we can pid it???
@@ -62,101 +54,111 @@ public class AutoAlignTags extends Command {
     }
 
     public static boolean speakerAimReady() {
-        return LimelightHelpers.getTV("limelight-front");
+        return LimelightHelpers.getTV(Constants.ReefLimelightName);
     }
 
-    public AutoAlignTags(SwerveSubsystem swerveSub) {
-
+    public AutoAlignTags(SwerveSubsystem swerveSub, double strafeGoal, double distanceGoal, double rotationGoal ) {
         addRequirements(swerveSub);
         this.swerveSub = swerveSub;
-        xPID = new ProfiledPIDController(3*.6, 0.8*.5, .8*.125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3/1.5));
-        distancePID = new ProfiledPIDController(3*.6, .8*.5, .8*.125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3/1.5));
+        this.strafeGoal = strafeGoal;
+        this.distanceGoal = distanceGoal;
+        this.rotationGoal = rotationGoal;
 
-        distancePID.setGoal(0.5);
+        strafePID = new ProfiledPIDController(3 * .6, .8 * .5, .8 * .125,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
+        distancePID = new ProfiledPIDController(3 * .6, .8 * .5, .8 * .125,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
+        rotationPID = new ProfiledPIDController(3 * .6, .8 * .5, .8 * .125,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3,
+                        3 / 1.5));
+
+        distancePID.setGoal(distanceGoal);
+        strafePID.setGoal(strafeGoal);
+        rotationPID.setGoal(rotationGoal);
         distancePID.setIntegratorRange(-15, 15);
-        xPID.setIntegratorRange(-15, 15);
-    }
+        strafePID.setIntegratorRange(-15, 15);
 
-    static public boolean aligned(){
-        // if (!LimelightHelpers.getTV("limelight-back")) {
-        //     return false;
-        // }
-        var target_opt = getSpace();
-        if(target_opt.isEmpty()){
-            return false;
-        }
-        var target = target_opt.get();
-        if((target.getZ()> 0.4 && target.getZ() < 0.6) && (Math.abs(target.getX()) < 0.2)){
-            return true;
-        }
-        else{
-            return false;
-        }
-        
+        Shuffleboard.getTab("Tune").add(distancePID);
+        Shuffleboard.getTab("Tune").add(strafePID);
+        Shuffleboard.getTab("Tune").add(rotationPID);
     }
 
     @Override
     public void initialize() {
-       //LimelightHelpers.SetFiducialIDFiltersOverride("limelight-back", new int[]{4,7});
+        // LimelightHelpers.SetFiducialIDFiltersOverride("limelight-back", new
+        // int[]{4,7});
         distancePID.reset(0.5);
-        xPID.reset(0);
+        strafePID.reset(0);
+        rotationPID.reset(0);
+    }
 
+    public boolean aligned() {
+        // if (!LimelightHelpers.getTV("limelight-back")) {
+        // return false;
+        // }
+        var target_opt = getTargetPose();
+        if (target_opt.isEmpty()) {
+            return false;
+        }
+        var target = target_opt.get();
+        if ((Math.abs(target.getZ()) < distanceGoal+0.1)
+                && (Math.abs(target.getX()) < strafeGoal+0.2)
+        // && (Math.abs(target.getRotation().getAngle()) < 0.5)
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean lowSpeed(){
+        return lowSpeed;
     }
 
     @Override
     public void execute() {
-       // if (LimelightHelpers.getTV("limelight-back")) {
-       //     var id = LimelightHelpers.getFiducialID("limelight-back");
-    var target_opt = getSpace();
-    System.out.println("Target present:"+target_opt.isPresent());
-    if(target_opt.isPresent()) {
-
-        System.out.println("Target:"+target_opt.get());
-    }
-        if(target_opt.isEmpty()){
-                swerveSub.drive(0, 0, 0, false);
-
+        // if (LimelightHelpers.getTV("limelight-back")) {
+        // var id = LimelightHelpers.getFiducialID("limelight-back");
+        var target_opt = getTargetPose();
+        if (target_opt.isEmpty()) {
+            swerveSub.drive(0, 0, 0, false);
             return;
         }
         var target = target_opt.get();
-            // if (!(id == 7 || id == 4)) { return; }
-            // backTagID = LimelightHelpers.getFiducialID("limelight-back");
-                        // double xOff = -xPID.calculate(getZontal());
-                        var rot = -xPID.calculate(target.getX());
-                        rot = MathUtil.clamp(rot, -DriveConstants.MaxVelocityMetersPerSecond/5, DriveConstants.MaxVelocityMetersPerSecond/5);
-                        // var xOff = 0.0;
+        var nt = NetworkTableInstance.getDefault();
 
-                        var df = NetworkTableInstance.getDefault();
-                        df.getEntry("/Shuffleboard/Tune/LimeZ").setDouble(target.getZ());
-                        double yOff = -distancePID.calculate(target.getZ());
-                        yOff = MathUtil.clamp(yOff, -DriveConstants.MaxVelocityMetersPerSecond/3.5, DriveConstants.MaxVelocityMetersPerSecond/3.5);
-                        df.getEntry("/Shuffleboard/Tune/DistancePID").setDouble(yOff);
-                        // figure out how to use an array, which value of the array am i using??
+        double distanceSpeed = -distancePID.calculate(target.getZ());
+        distanceSpeed = MathUtil.clamp(distanceSpeed, -DriveConstants.MaxVelocityMetersPerSecond / 3.5,
+                DriveConstants.MaxVelocityMetersPerSecond / 3.5);
 
-                        // double rot = -distancePID.calculate(getSpace(4));
+        double strafeSpeed = strafePID.calculate(target.getX());
+        strafeSpeed = MathUtil.clamp(strafeSpeed, -DriveConstants.MaxVelocityMetersPerSecond / 5,
+                DriveConstants.MaxVelocityMetersPerSecond / 5);
 
-                        // how do i set a different goal for the distance
+        double rot = rotationPID.calculate(target.getRotation().getZ());
+        rot = MathUtil.clamp(rot, -DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.5,
+                DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.5);
 
-                        // System.out.println(getStance());
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Distance").setDouble(target.getZ());
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Out").setDouble(distanceSpeed);
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Strafe").setDouble(target.getX());
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Out").setDouble(strafeSpeed);
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL rotation yaw").setDouble(target.getRotation().getZ());
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID rotation out").setDouble(rot);
 
-                        swerveSub.drive(yOff/DriveConstants.MaxVelocityMetersPerSecond, -rot/DriveConstants.MaxVelocityMetersPerSecond, 0/DriveConstants.MaxAngularVelocityRadiansPerSecond, false);
-                        // is x forward and backward??
-                        // wtf
-                        // is y forward?
-        
-            // else if(LimelightHelpers.getTV("limelight-front")){
-            //     if(!LimelightHelpers.getTV("limelight-back")){
-            //         swerveSub.drive(0, 0, 0.25, false);
-            //     }
-            // }
-      
+        // how do i set a different goal for the distance
+
+        // System.out.println(getStance());
+
+        swerveSub.drive(distanceSpeed / DriveConstants.MaxVelocityMetersPerSecond,
+                strafeSpeed / DriveConstants.MaxVelocityMetersPerSecond,
+                rot / DriveConstants.MaxAngularVelocityRadiansPerSecond, false);
+        // wtf why is LimelightHelpers wrong
     }
-    
+
     @Override
     public void end(boolean interrupted) {
-       //LimelightHelpers.SetFiducialIDFiltersOverride("limelight-back", new int[]{});
+        // LimelightHelpers.SetFiducialIDFiltersOverride("limelight-back", new int[]{});
         swerveSub.drive(0, 0, 0, false, 0, 0);
     }
 }

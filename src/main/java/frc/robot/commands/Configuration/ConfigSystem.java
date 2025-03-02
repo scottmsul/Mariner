@@ -19,30 +19,33 @@ public class ConfigSystem extends InstantCommand{
     int choice;
 
     CoralArm coralArm;
-    Elevator elevatorSub;
+    Elevator elevator;
     AlgaeArm algaeArm;
     Options options;
     ConfigOption configOption;
 
-    public ConfigSystem(ConfigOption configOption, CoralArm coralArm, Elevator elevatorSub, AlgaeArm algaeArm) {
+    public ConfigSystem(ConfigOption configOption, CoralArm coralArm, Elevator elevator, AlgaeArm algaeArm) {
 
         addRequirements(coralArm);
-        addRequirements(elevatorSub);
+        addRequirements(elevator);
         addRequirements(algaeArm);
 
         
         this.coralArm = coralArm;
-        this.elevatorSub = elevatorSub;
+        this.elevator = elevator;
         this.algaeArm = algaeArm;
         this.configOption = configOption;
 
     }
 
+    public boolean isConfigured(){
+        return coralArm.isReady() && algaeArm.isReady() && elevator.isReady();
+    }
+
     @Override
     public void execute() {
-    
         coralArm.setCoralWristSetpoint(configOption.coralAngle);
-        elevatorSub.setPosition(configOption.elevatorSetpoint);
+        elevator.setPosition(configOption.elevatorSetpoint);
         algaeArm.setAlgaeSetpoint(configOption.algaeAngle);
     }
 

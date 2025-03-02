@@ -1,20 +1,23 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix6.controls.Follower;
+import java.util.EnumSet;
+
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.networktables.NetworkTableEvent;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class ClimbSub extends SubsystemBase {
     // this is the climb system :0
@@ -25,11 +28,18 @@ public class ClimbSub extends SubsystemBase {
     //SparkMax climbMotorOne = new SparkMax(102, MotorType.kBrushless);
     //SparkMax climbMotorTwo = new SparkMax(103, MotorType.kBrushless);
 
-    double climbSetpoint;
-    SparkClosedLoopController climbController;
+    double climbSetpoint1 = 0;
+    double climbSetpoint2 = 0;
+    SparkClosedLoopController climbController1;
     SparkClosedLoopController climbController2;
-    private final SparkMax climb1 = new SparkMax(58, MotorType.kBrushless);
-    private final SparkMax climb2 = new SparkMax(57, MotorType.kBrushless);
+    private final SparkMax climb1 = new SparkMax(58, MotorType.kBrushless); //short arm
+    private final SparkMax climb2 = new SparkMax(57, MotorType.kBrushless); //long arm
+    TrapezoidProfile climbTrapezoidProfile1 = new TrapezoidProfile(new Constraints(.2, 40));
+    TrapezoidProfile.State climbTrapezoidSetpoint1 = new TrapezoidProfile.State();
+    TrapezoidProfile climbTrapezoidProfile2 = new TrapezoidProfile(new Constraints(.2, 40));
+    TrapezoidProfile.State climbTrapezoidSetpoint2 = new TrapezoidProfile.State();
+
+    boolean enabled = false;
 
     // either have the non pid motor follow the pid one or have 2 pid controllers
     // idk
@@ -42,38 +52,90 @@ public class ClimbSub extends SubsystemBase {
         configLeader
                 .inverted(true)
                 .idleMode(SparkMaxConfig.IdleMode.kCoast);
-        configLeader.closedLoop.pid(0.5,0, 0).outputRange(0, 0.7);
-        configLeader.smartCurrentLimit(30, 30);
-        configLeader.secondaryCurrentLimit(35);
-        configLeader.encoder.positionConversionFactor(1.0/60.0);
+        configLeader.closedLoop
+                .pid(5, 0, 0)
+                .outputRange(0, 1);
+        configLeader.smartCurrentLimit(100, 100);
+        configLeader.secondaryCurrentLimit(100);
+        configLeader.encoder.positionConversionFactor(1.0 / 60.0);
         climb1.configure(configLeader, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
-        SparkMaxConfig configFollower = new SparkMaxConfig();
-        configFollower
+        SparkMaxConfig config2 = new SparkMaxConfig();
+        config2
                 .inverted(false)
                 .idleMode(SparkMaxConfig.IdleMode.kCoast);
-        configFollower.closedLoop.pid(3.5,0, 0).outputRange(0, 0.7);
-        configFollower.encoder.positionConversionFactor(1.0/60.0);
-        configFollower.smartCurrentLimit(30, 30);
-        configFollower.secondaryCurrentLimit(35);
-        //configFollower.follow(climbMotorOne);
-        climb2.configure(configFollower, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        config2.closedLoop
+                .pid(5, 0, 0)
+                .outputRange(0, 1);
+        config2.encoder.positionConversionFactor(1.0 / 60.0);
+        config2.smartCurrentLimit(100, 100);
+        config2.secondaryCurrentLimit(100);
+        // config2.follow(climbMotorOne);
+        climb2.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
-        climbController = climb1.getClosedLoopController();
+        climbController1 = climb1.getClosedLoopController();
         climbController2 = climb2.getClosedLoopController();
 
         // climbMotorTwo.setControl(new Follower(climbMotorOne.getDeviceId(),true));
-        climbController.setReference(0, ControlType.kPosition);
-        climbController2.setReference(0, ControlType.kPosition);
+        // climbController1.setReference(0, ControlType.kPosition);
+        // climbController2.setReference(0, ControlType.kPosition);
 
-        Shuffleboard.getTab("Debug").addDouble("Climb 1 Current", () -> climb1.getEncoder().getPosition());
-        Shuffleboard.getTab("Debug").addDouble("Climb 2 Current", () -> climb2.getEncoder().getPosition());
+        // Shuffleboard.getTab("Debug").addDouble("Climb 1 Position", () ->
+        // climb1.getEncoder().getPosition());
+        // Shuffleboard.getTab("Debug").addDouble("Climb 2 Position", () ->
+        // climb2.getEncoder().getPosition());
+        Shuffleboard.getTab("Debug").add("Rezero climb encoders", Commands.runOnce(() -> {
+            climb1.getEncoder().setPosition(0);
+            climb2.getEncoder().setPosition(0);
+            climbSetpoint1 = 0;
+            climbSetpoint2 = 0;
+            climbTrapezoidSetpoint1 = new TrapezoidProfile.State();
+            climbTrapezoidSetpoint2 = new TrapezoidProfile.State();
+        }));
+    }
+
+    public void periodic() {
+        // climbTrapezoidSetpoint1 = climbTrapezoidProfile1.calculate(0.02,
+        //         climbTrapezoidSetpoint1,
+        //         new TrapezoidProfile.State(climbSetpoint1, 0));
+        // climbTrapezoidSetpoint2 = climbTrapezoidProfile2.calculate(0.02,
+        //         climbTrapezoidSetpoint2,
+        //         new TrapezoidProfile.State(climbSetpoint2, 0));
+        // // System.out.println("Setpoint " + setpoint + " goal "+ trapezoidSetpoint);
+        // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Goal1").setDouble(climbTrapezoidSetpoint1.position);
+        // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Goal2").setDouble(climbTrapezoidSetpoint2.position);
+        // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Setpoint1").setDouble(climbSetpoint1);
+        // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Setpoint2").setDouble(climbSetpoint2);
+        // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Pos1").setDouble(climb1.getEncoder().getPosition());
+        // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Pos2").setDouble(climb2.getEncoder().getPosition());
+        // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Applied1").setDouble(climb1.getAppliedOutput());
+        // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Applied2").setDouble(climb2.getAppliedOutput());
+        // if (!enabled) {
+        //     climbController1.setReference(0, ControlType.kDutyCycle);
+        //     climbController2.setReference(0, ControlType.kDutyCycle);
+        //     return;
+        // }
+        // climbController1.setReference(climbTrapezoidSetpoint1.position, ControlType.kPosition);
+        // climbController2.setReference(climbTrapezoidSetpoint2.position, ControlType.kPosition);
+
+        // var entryp1 = NetworkTableInstance.getDefault().getEntry("/Tune/ClimbPID/P");
+        // entry.setDouble(f.getDouble(thisClass));
+        // NetworkTableInstance.getDefault().addListener(entry,
+        // EnumSet.of(NetworkTableEvent.Kind.kValueRemote),
+        // e -> {
+        // try {
+        // f.set(thisClass, e.valueData.value.getDouble());
+        // } catch (IllegalArgumentException | IllegalAccessException e1) {
+        // e1.printStackTrace();
+        // }
+        // });
+
     }
 
     public void climbDown() {
-        // set climb motors to down
-        climb1.set(0.8);
-        climb2.set(0.8);
+    // set climb motors to down
+    climb1.set(0.9);
+    climb2.set(0.9);
     }
 
     // public void climbUp() {
@@ -85,11 +147,19 @@ public class ClimbSub extends SubsystemBase {
     public void climbStop(){
         climb1.set(0);
         climb2.set(0);
+        // enabled = false;
+        // climbSetpoint1 = 0;
+        // climbSetpoint2 = 0;
+        // climbController1.setReference(0, ControlType.kDutyCycle);
+        // climbController2.setReference(0, ControlType.kDutyCycle);
     }
 
-    public void setClimbSetpoint(double Setpoint){
-        climbController.setReference(Setpoint, ControlType.kPosition);
-        climbController2.setReference(Setpoint, ControlType.kPosition);
+    private void setClimbSetpoint1(double setpoint) {
+        climbSetpoint1 = setpoint;
+    }
+
+    private void setClimbSetpoint2(double setpoint) {
+        climbSetpoint2 = setpoint;
     }
     // i wonder still
     // we could have it push down until it reaches a setpoint
@@ -97,17 +167,25 @@ public class ClimbSub extends SubsystemBase {
     // freeze in place when not being moved
     // that way the drivers can tell it when to stop
 
+    // public Command climb(){
+    //     return run(() -> {
+    //         enabled = true;
+    //         setClimbSetpoint1(0.4);
+    //         setClimbSetpoint2(0.4);
+    //     });
+    // }
+
     public Command climb(){
-        return run(() -> setClimbSetpoint(1.5));
-    }
-    public Command climbManual(){
-        return run(() -> climbDown());
+    return run(() -> climbDown());
     }
     public Command climbStopManual(){
         return run(() -> climbStop());
     }
     public Command climbStopCommand(){
-        return run(() -> setClimbSetpoint(0));
+        return run(() -> {
+            setClimbSetpoint1(0);
+            setClimbSetpoint2(0);
+        });
     }
 
 }

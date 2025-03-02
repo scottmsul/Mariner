@@ -17,6 +17,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants;
@@ -123,11 +125,9 @@ public class SwerveModule {
                 REVLibError turnConfigResult  = turningMotor.configure(turnConfig, SparkMax.ResetMode.kResetSafeParameters,
                                 SparkMax.PersistMode.kNoPersistParameters);
                                 // Shuffleboard.getTab("Debug")
-                Shuffleboard.getTab("Debug").add("Turn motor set config result" + turningMotorID, turnConfigResult.value);
                 turningEncoder = turningMotor.getEncoder();
 
                 REVLibError turnSetPosResult = turningEncoder.setPosition( scaleSwerve(turningMotor.getAnalog().getVoltage() - voltageOffset));
-                Shuffleboard.getTab("Debug").add("Turn encoder set position result" +  turningMotorID, turnSetPosResult.value);
                 pidController = turningMotor.getClosedLoopController();
 
                 Shuffleboard.getTab("Debug").addDouble("SwerveTurnAbsRot " + turningMotorID,

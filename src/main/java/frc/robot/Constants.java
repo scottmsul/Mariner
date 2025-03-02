@@ -37,6 +37,8 @@ import frc.robot.subsystems.CoralArm;
  */
 
 public final class Constants {
+  public static String ReefLimelightName = "limelight-front";
+
   public static final class AutoConstants {
     public static double kPYController = 3;
     public static double kPXController = 3;
@@ -145,7 +147,7 @@ public final class Constants {
 
     public class ElevatorSetpoints {
       public static double l1 = 0;
-      public static double l2 = 0.31;
+      public static double l2 = 0.33;
       public static double l3 = 0.69;
       public static double l4 = 1.25;
 
@@ -167,30 +169,30 @@ public final class Constants {
       // angle of release
       public static double l1 = 0.25; // reef l1
       public static double lmid = 0.3; // reef l2 and l3
-      public static double l4 = 0.35; // reef l4
+      public static double l4 = 0.32; // reef l4
       public static double CoralSt = 0.12; // pointing up to recieve coral from hp
       public static double up = 0; // out of the way for intaking algae
     }
 
-    public class XOffset {
+    public class StrafeOffsets {
       //static double l1 = 0;
-      static double left = -0.05;
-      static double right = 0.05;
-      static double centered = 0;
+      public static double leftReef = 0.13;
+      public static double rightReef = -0.2;
+      public static double centerReef = 0;
       //static double CoralSt = 0;
     }
 
-    public class ZOffset {
-      static double l1 = 0;
-      static double Reef = 0;
-      static double CoralSt = 0;
-      static double Algae = 0;
+    public class DistanceOffsets {
+      public static double leftReefScore = 0.6;
+      public static double rightReefScore = 0.63;
+      public static double algaeReefGrab = 0.2;
+      public static double reefConfigure = 0.75;
     }
 
-    public class RotOffset {
-      static double l1 = 0;
-      static double none = 0;
-      static double CoralSt = 0.166;
+    public class RotOffsets {
+      public static double l1 = 0;
+      public static double none = 0;
+      public static double CoralSt = 0.166;
     }
 
     public class AlgaeArmAngles {

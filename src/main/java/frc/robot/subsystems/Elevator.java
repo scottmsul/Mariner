@@ -91,6 +91,14 @@ public class Elevator extends SubsystemBase {
         // elevatorController.setReference(setpoint, ControlType.kPosition);
         // elevatorController2.setReference(setpoint, ControlType.kPosition);
     }
+
+    public boolean isReady(){
+        double elevator1Position = elevator1.getEncoder().getPosition();
+        double elevator2Position = elevator2.getEncoder().getPosition();
+        boolean elevator1Ready = elevator1Position > (currentSetpoint - 0.1) && elevator1Position < (currentSetpoint + 0.1);
+        boolean elevator2Ready = elevator2Position > (currentSetpoint - 0.1) && elevator2Position < (currentSetpoint + 0.1);
+        return elevator1Ready && elevator2Ready;
+    }
     
     // public boolean tooHigh() {
     //     boolean tooHigh = currentSetpoint>0.5;

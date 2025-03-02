@@ -28,7 +28,7 @@ public class AlgaeArm extends SubsystemBase {
     //SparkMax algaeSpinMotor = new SparkMax(0, MotorType.kBrushless);
     TrapezoidProfile trapezoidProfile = new TrapezoidProfile(new Constraints(30, 10));
     private SparkClosedLoopController algaeWristController;
-    private double setpoint = 0;
+    private double algaeWristSetpoint = 0;
     SparkLimitSwitch algaeLimitSwitch = algaeSpinner.getForwardLimitSwitch();
     // pincher1
     // pivotmotor
@@ -73,7 +73,7 @@ public class AlgaeArm extends SubsystemBase {
             // algaeWrist.getEncoder().setPosition(0);
     
             // Shuffleboard.getTab("Debug").add("P", 0.0);
-            Shuffleboard.getTab("Debug").addDouble("Algae Wrist Setpoint", () -> setpoint);
+            Shuffleboard.getTab("Debug").addDouble("Algae Wrist Setpoint", () -> algaeWristSetpoint);
             Shuffleboard.getTab("Debug").addDouble("Algae Wrist Current", () -> algaeWrist.getEncoder().getPosition());
             Shuffleboard.getTab("Debug").addDouble("Algae Wrist Power", () -> algaeWrist.getAppliedOutput());
         }
@@ -105,14 +105,19 @@ public class AlgaeArm extends SubsystemBase {
     
         public void setAlgaeSetpoint(double setpoint) {
             // algaeWristController.setReference(setpoint, ControlType.kPosition);
-            this.setpoint = setpoint;
+            algaeWristSetpoint = setpoint;
+        }
+
+        public boolean isReady(){
+            double algaePosition = algaeWrist.getEncoder().getPosition();
+            return algaePosition > (algaeWristSetpoint - 0.1) && algaePosition < (algaeWristSetpoint + 0.1);
         }
     
         @Override
         public void periodic() {
             trapezoidSetpoint = trapezoidProfile.calculate(0.02,
                         trapezoidSetpoint,
-                        new TrapezoidProfile.State(setpoint, 0));
+                        new TrapezoidProfile.State(algaeWristSetpoint, 0));
         //System.out.println("Setpoint " + setpoint + " goal "+ trapezoidSetpoint);
         NetworkTableInstance.getDefault().getEntry("/Shuffleboard/Debug/AlgaeWristGoal").setDouble(trapezoidSetpoint.position);
         algaeWristController.setReference(trapezoidSetpoint.position, ControlType.kPosition);

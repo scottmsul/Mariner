@@ -480,8 +480,8 @@ public class LimelightHelpers {
         }
         return new Pose3d(
             new Translation3d(inData[0], inData[1], inData[2]),
-            new Rotation3d(Units.degreesToRadians(inData[3]), Units.degreesToRadians(inData[4]),
-                    Units.degreesToRadians(inData[5])));
+            new Rotation3d(Units.degreesToRadians(inData[5]), Units.degreesToRadians(inData[3]),
+                    Units.degreesToRadians(inData[4])));
     }
 
     private static Pose2d toPose2D(double[] inData){

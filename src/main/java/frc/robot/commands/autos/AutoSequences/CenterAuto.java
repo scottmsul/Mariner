@@ -12,11 +12,15 @@ import frc.robot.subsystems.CoralArm;
 import frc.robot.subsystems.Elevator;
 
 public class CenterAuto extends SequentialCommandGroup {
-    CoralArm coralArm = new CoralArm();
-    AlgaeArm algaeArm = new AlgaeArm();
-    Elevator elevator = new Elevator();
+    final CoralArm coralArm;
+    final AlgaeArm algaeArm;
+    final Elevator elevator ;
 
-    public CenterAuto() {
+    public CenterAuto(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator) {
+        this.coralArm = coralArm;
+        this.algaeArm = algaeArm;
+        this.elevator = elevator;
+
         addCommands(
         new AutoNav(0), //go to reef side
         new ConfigSystem(Constants.SetpointConstants.Options.l3, coralArm, elevator, algaeArm),
