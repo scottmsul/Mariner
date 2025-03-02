@@ -78,14 +78,6 @@ public class SwerveModule {
                 // absoluteEncoder.getConfigurator().apply(config);
                 // absoluteEncoder.getAbsolutePosition().setUpdateFrequency(100, 250);
 
-                driveMotor.setControlFramePeriodMs(100);
-                driveMotor.setControlFramePeriodMs(20);
-                driveMotor.setControlFramePeriodMs(20);
-
-                turningMotor.setControlFramePeriodMs(10);
-                turningMotor.setControlFramePeriodMs(20);
-                turningMotor.setControlFramePeriodMs(50);
-
                 driveEncoder = driveMotor.getEncoder();
                 // TODO: FIX CONSTANTS
                 double drivePositionConversionFactor = Math.PI * Constants.ModuleType.getWheelDiameter()
@@ -103,7 +95,21 @@ public class SwerveModule {
                                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .pid(1.0, 0, 0.1)
                                 .outputRange(-1, 1);
-                driveMotor.configure(driveConfig, SparkBase.ResetMode.kNoResetSafeParameters,
+                driveConfig.signals
+                                .absoluteEncoderPositionAlwaysOn(false)
+                                .absoluteEncoderVelocityAlwaysOn(false)
+                                .analogPositionAlwaysOn(false)
+                                .analogVelocityAlwaysOn(false)
+                                .analogVoltageAlwaysOn(false)
+                                .externalOrAltEncoderPositionAlwaysOn(false)
+                                .externalOrAltEncoderVelocityAlwaysOn(false)
+                                .iAccumulationAlwaysOn(false)
+                                .appliedOutputPeriodMs(100)
+                                .faultsPeriodMs(100)
+                                .primaryEncoderPositionAlwaysOn(true)
+                                .primaryEncoderVelocityAlwaysOn(true)
+                                .primaryEncoderPositionPeriodMs(20);
+                driveMotor.configure(driveConfig, SparkBase.ResetMode.kResetSafeParameters,
                                 SparkBase.PersistMode.kNoPersistParameters);
 
 
@@ -119,15 +125,31 @@ public class SwerveModule {
                 turnConfig.encoder
                                 .positionConversionFactor(turningPositionConversionFactor)
                                 .velocityConversionFactor(turningPositionConversionFactor / 60);
+                turnConfig.signals
+                                .absoluteEncoderPositionAlwaysOn(false)
+                                .absoluteEncoderVelocityAlwaysOn(false)
+                                .analogPositionAlwaysOn(false)
+                                .analogVelocityAlwaysOn(false)
+                                .analogVoltageAlwaysOn(true)// hack
+                                .analogVoltagePeriodMs(10)
+                                .externalOrAltEncoderPositionAlwaysOn(false)
+                                .externalOrAltEncoderVelocityAlwaysOn(false)
+                                .iAccumulationAlwaysOn(false)
+                                .appliedOutputPeriodMs(100)
+                                .faultsPeriodMs(100)
+                                .primaryEncoderPositionAlwaysOn(true)
+                                .primaryEncoderVelocityAlwaysOn(true)
+                                .primaryEncoderPositionPeriodMs(10);
                 turnConfig.closedLoop
                                 .pid(1.0, 0.0, 0.1)
+                                .positionWrappingEnabled(true)
+                                .positionWrappingInputRange(0, 2 * Math.PI)
                                 .outputRange(-1, 1);
-                REVLibError turnConfigResult  = turningMotor.configure(turnConfig, SparkMax.ResetMode.kResetSafeParameters,
+                turningMotor.configure(turnConfig, SparkMax.ResetMode.kResetSafeParameters,
                                 SparkMax.PersistMode.kNoPersistParameters);
-                                // Shuffleboard.getTab("Debug")
                 turningEncoder = turningMotor.getEncoder();
 
-                REVLibError turnSetPosResult = turningEncoder.setPosition( scaleSwerve(turningMotor.getAnalog().getVoltage() - voltageOffset));
+                turningEncoder.setPosition(scaleSwerve(turningMotor.getAnalog().getVoltage() - voltageOffset));
                 pidController = turningMotor.getClosedLoopController();
 
                 Shuffleboard.getTab("Debug").addDouble("SwerveTurnAbsRot " + turningMotorID,
