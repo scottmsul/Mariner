@@ -7,17 +7,19 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -68,9 +70,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
         }
 
-        public Rotation2d yawOffset = new Rotation2d();
+        private Rotation2d yawOffset = new Rotation2d();
 
-        SwerveDriveOdometry ometry = new SwerveDriveOdometry(
+        // have we ever seen a tag?
+        private boolean seenMT;
+        private final Field2d field = new Field2d();
+        private final SwerveDrivePoseEstimator ometry = new SwerveDrivePoseEstimator(
                         Constants.DriveConstants.kinematics,
                         getRotation(),
                         new SwerveModulePosition[] {
@@ -78,7 +83,11 @@ public class SwerveSubsystem extends SubsystemBase {
                                         fRSwerve.getPosition(),
                                         bLSwerve.getPosition(),
                                         bRSwerve.getPosition()
-                        });
+                        },
+                        // Starting pos
+                        new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                        VecBuilder.fill(0.1, 0.1, 0.4),
+                        VecBuilder.fill(0.9, 0.9, 0.9));
 
         public Rotation2d getRotation() {
                 return gyro.getRotation2d().minus(yawOffset);
@@ -90,16 +99,68 @@ public class SwerveSubsystem extends SubsystemBase {
                 }
         }
 
-        public void botposewithapriltag() {
-                var aprilRotation = LimelightHelpers.getBotPose2d("limelight-front").getRotation();
-                if (aprilRotation.getDegrees() == 0) {
-                        return;
+        private void doMegatag(String limelight) {
+                boolean useMegaTag2 = true; // set to false to use MegaTag1
+                boolean doRejectUpdate = false;
+                if (useMegaTag2 == false) {
+                        LimelightHelpers.PoseEstimate mt1 = LimelightHelpers
+                                        .getBotPoseEstimate_wpiBlue(limelight);
+
+                        if (mt1.tagCount == 1 && mt1.rawFiducials.length == 1) {
+                                if (mt1.rawFiducials[0] == null) {
+                                        return;
+                                }
+                                if (mt1.rawFiducials[0].ambiguity > .7) {
+                                        doRejectUpdate = true;
+                                }
+                                if (mt1.rawFiducials[0].distToCamera > 3) {
+                                        doRejectUpdate = true;
+                                }
+                        }
+                        if (mt1.tagCount == 0) {
+                                doRejectUpdate = true;
+                        }
+
+                        if (!doRejectUpdate) {
+                                seenMT = true;
+                                ometry.setVisionMeasurementStdDevs(VecBuilder.fill(2, 2, 5));
+                                ometry.addVisionMeasurement(
+                                                mt1.pose,
+                                                mt1.timestampSeconds);
+                        }
+                } else if (useMegaTag2 == true) {
+                        LimelightHelpers.SetRobotOrientation(limelight,
+                                        ometry.getEstimatedPosition().getRotation()
+                                                        .getDegrees(),
+                                        0, 0, 0, 0, 0);
+                        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers
+                                        .getBotPoseEstimate_wpiBlue_MegaTag2(limelight);
+                        // if our angular velocity is greater than 720 degrees per second,
+                        // ignore vision updates
+                        if (Math.abs(gyro.getRate()) > 720) {
+                                doRejectUpdate = true;
+                        }
+                        if (mt2.tagCount == 0) {
+                                doRejectUpdate = true;
+                        }
+                        if (!doRejectUpdate) {
+                                seenMT = true;
+                                // mine
+                                // ometry.setVisionMeasurementStdDevs(VecBuilder.fill(2, 2, 5));
+                                // limelights
+                                ometry.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+                                ometry.addVisionMeasurement(
+                                                mt2.pose,
+                                                mt2.timestampSeconds);
+
+                        }
                 }
-                yawOffset = gyro.getRotation2d().minus(aprilRotation);
         }
 
         @Override
         public void periodic() {
+                doMegatag(Constants.ReefLimelightName);
+
                 ometry.update(
                                 getRotation(),
                                 new SwerveModulePosition[] {
@@ -111,10 +172,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
                 );
 
+                field.setRobotPose(getPose());
         }
 
         public Pose2d getPose() {
-                return ometry.getPoseMeters();
+                return ometry.getEstimatedPosition();
         }
 
         public void resetOmetry(Pose2d pose) {
@@ -129,7 +191,7 @@ public class SwerveSubsystem extends SubsystemBase {
                                 pose);
         }
 
-        public SwerveModuleState[] getModuleStates() {
+        private SwerveModuleState[] getModuleStates() {
                 SwerveModuleState[] states = {
                                 fLSwerve.getState(),
                                 fRSwerve.getState(),
@@ -139,7 +201,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 return states;
         }
 
-        public ChassisSpeeds getSpeeds() {
+        private ChassisSpeeds getSpeeds() {
                 return DriveConstants.kinematics.toChassisSpeeds(getModuleStates());
         }
 
