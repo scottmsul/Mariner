@@ -24,7 +24,7 @@ public class ProcessorAlignmentSequence extends SequentialCommandGroup{
                 var configAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorScore, 0, 0.04, 0.02);
                 var scoreAlgae = new AutoAlgaeScore(algaeArm);
         addCommands(
-            new ParallelRaceGroup(
+            new ParallelCommandGroup(
                 configAlign.until(configAlign::aligned),
                 config.until(config::isConfigured)
             ),

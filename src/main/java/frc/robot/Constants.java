@@ -172,7 +172,7 @@ public final class Constants {
       public static double l1 = 0.22; // reef l1
       public static double lmid = 0.32; // reef l2 and l3
       public static double l4 = 0.33; // reef l4
-      public static double CoralSt = 0.11; // pointing up to recieve coral from hp
+      public static double CoralSt = 0.12; // pointing up to recieve coral from hp
       public static double up = 0; // out of the way for intaking algae
     }
 
