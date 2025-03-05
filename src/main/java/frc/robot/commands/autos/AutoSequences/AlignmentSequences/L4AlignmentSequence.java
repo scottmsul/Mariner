@@ -18,6 +18,7 @@ public class L4AlignmentSequence extends SequentialCommandGroup{
         var config = new ConfigSystem(Constants.SetpointConstants.Options.l4, coralArm, elevator, algaeArm);
         var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevator, algaeArm);
         var configureAlign = new AutoAlignReef(swerveSubsystem, strafeOffset, Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, 0, 0.04, 0.04);
+        var secondConfigureAlign = new AutoAlignReef(swerveSubsystem, 0 ,Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, 0, 0.04, 0.04);
         var scoreAlign = new AutoAlignReef(swerveSubsystem, strafeOffset, Constants.SetpointConstants.DistanceOffsets.leftReefScore, 0, 0.02, 0.02);
         var scoreCoral = new AutoCoralScore(coralArm);
     
@@ -28,7 +29,7 @@ public class L4AlignmentSequence extends SequentialCommandGroup{
             ),
             scoreAlign.until(scoreAlign::aligned),
             scoreCoral.withTimeout(0.5),
-            configureAlign.until(configureAlign::aligned),
+            secondConfigureAlign.until(configureAlign::aligned),
             stow.until(stow::isConfigured)
     );
     }

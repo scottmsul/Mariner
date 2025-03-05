@@ -61,7 +61,7 @@ public class CoralArm extends SubsystemBase {
                 .outputRange(-0.8, 0.7);
         coralWrist.configure(configWrist, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        coralWrist.getEncoder().setPosition(coralWrist.getAbsoluteEncoder().getPosition());
+        // coralWrist.getEncoder().setPosition(coralWrist.getAbsoluteEncoder().getPosition());
 
         // SparkMaxConfig configWheel = new SparkMaxConfig();
         // configWheel

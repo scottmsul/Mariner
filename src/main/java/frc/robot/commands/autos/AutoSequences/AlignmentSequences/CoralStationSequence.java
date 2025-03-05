@@ -1,8 +1,10 @@
 package frc.robot.commands.autos.AutoSequences.AlignmentSequences;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.LLLeds;
 import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoAlignUpper;
 import frc.robot.commands.autos.CoralAutos.AutoCoralIntake;
@@ -25,7 +27,10 @@ public class CoralStationSequence extends SequentialCommandGroup {
                 config
             ),
             intakeAlign.until(intakeAlign::aligned),
-            intakeCoral.until(coralArm::hasCoral),
+            Commands.parallel(
+                intakeCoral.until(coralArm::hasCoral),
+                LLLeds.shortBlink(Constants.UpperLimelightName)
+            ),
             stow.until(stow::isConfigured)
         );
     }

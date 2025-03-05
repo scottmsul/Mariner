@@ -149,8 +149,8 @@ public final class Constants {
 
     public class ElevatorSetpoints {
       public static double l1 = 0;
-      public static double l2 = 0.33;
-      public static double l3 = 0.69;
+      public static double l2 = 0.36;
+      public static double l3 = 0.71;
       public static double l4 = 1.25;
 
       public static double groundLevel = 0;
@@ -169,10 +169,10 @@ public final class Constants {
 
     public class CoralPivotAngles {
       // angle of release
-      public static double l1 = 0.25; // reef l1
-      public static double lmid = 0.3; // reef l2 and l3
-      public static double l4 = 0.32; // reef l4
-      public static double CoralSt = 0.14; // pointing up to recieve coral from hp
+      public static double l1 = 0.22; // reef l1
+      public static double lmid = 0.32; // reef l2 and l3
+      public static double l4 = 0.33; // reef l4
+      public static double CoralSt = 0.11; // pointing up to recieve coral from hp
       public static double up = 0; // out of the way for intaking algae
     }
 
@@ -190,9 +190,9 @@ public final class Constants {
     }
 
     public class DistanceOffsets {
-      public static double leftReefScore = 0.6;
-      public static double rightReefScore = 0.6;
-      public static double L4score= 0.55;
+      public static double leftReefScore = 0.53;
+      public static double rightReefScore = 0.53;
+      public static double L4score = 0.55;
       public static double algaeReefGrab = 0.2;
       public static double reefCoralConfigure = 0.75;
       public static double reefAlgaeConfigure = 0.85;

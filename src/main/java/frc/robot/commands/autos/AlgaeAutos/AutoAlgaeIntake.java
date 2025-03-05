@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeArm;
 
 public class AutoAlgaeIntake extends Command {
-        AlgaeArm algaeSub = new AlgaeArm();
+        AlgaeArm algaeSub;
 
         public AutoAlgaeIntake(AlgaeArm algaeSub) {
             addRequirements(algaeSub);

@@ -20,6 +20,7 @@ public class AlgaeIntakeAlignmentSequence extends SequentialCommandGroup{
                 var config = new ConfigSystem(configOption, coralArm, elevator, algaeArm);
                 var stow = new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevator, algaeArm);
                 var configureAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.centerReef,Constants.SetpointConstants.DistanceOffsets.reefAlgaeConfigure, 0, 0.04, 0.04);
+                var secondConfigureAlign = new AutoAlignReef(swerveSubsystem, 0 ,Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, 0, 0.04, 0.04);
                 var stowAlgaeAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.centerReef,Constants.SetpointConstants.DistanceOffsets.reefAlgaeStow, 0, 0.04, 0.04);
                 var intakeAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.centerReef, Constants.SetpointConstants.DistanceOffsets.algaeReefGrab, 0, 0.02, 0.02);
                 var intakeAlgae = new AutoAlgaeIntake(algaeArm);
@@ -30,7 +31,7 @@ public class AlgaeIntakeAlignmentSequence extends SequentialCommandGroup{
             ),
             intakeAlign.until(intakeAlign::aligned),
             intakeAlgae.until(algaeArm::hasAlgae),
-            configureAlign.until(configureAlign::aligned),
+            secondConfigureAlign.until(configureAlign::aligned),
             stow.until(stow::isConfigured)
         );
     }
