@@ -85,6 +85,8 @@ public class AlgaeArm extends SubsystemBase {
             Shuffleboard.getTab("Debug").addDouble("Algae Wrist Absolute",
                     () -> algaeWrist.getAbsoluteEncoder().getPosition());
             Shuffleboard.getTab("Debug").addDouble("Algae Wrist Power", () -> algaeWrist.getAppliedOutput());
+            Shuffleboard.getTab("Debug").addBoolean("has Algae", () -> hasAlgae());
+            
         }
     
         // ok plan a

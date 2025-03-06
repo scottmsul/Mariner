@@ -24,13 +24,13 @@ public class L4AlignmentSequence extends SequentialCommandGroup{
     
     addCommands(
             new ParallelCommandGroup(
-                configureAlign.until(configureAlign::aligned),
+                configureAlign,
                 config
             ),
-            scoreAlign.until(scoreAlign::aligned),
+            scoreAlign,
             scoreCoral.withTimeout(0.5),
-            secondConfigureAlign.until(configureAlign::aligned),
-            stow.until(stow::isConfigured)
+            secondConfigureAlign,
+            stow
     );
     }
 }

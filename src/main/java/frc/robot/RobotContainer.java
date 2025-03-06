@@ -22,9 +22,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultSwerve;
 import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoAlignReef;
+import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AlgaeIntakeAlignmentSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.CoralStationSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.L1AlignmentSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.L4AlignmentSequence;
@@ -91,6 +93,11 @@ public class RobotContainer {
     Utils.makeClassTunable(Constants.SetpointConstants.ElevatorSetpoints.class);
     Utils.makeClassTunable(Constants.SetpointConstants.CoralPivotAngles.class);
     Utils.makeClassTunable(Constants.SetpointConstants.AlgaeArmAngles.class);
+  }
+
+  
+  private boolean getUpperTag(){
+    return LimelightHelpers.getTV(Constants.UpperLimelightName);
   }
 
   private void configureBindings() {
@@ -217,10 +224,13 @@ public class RobotContainer {
 
     var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevatorSub, algaeArm);
 
+
+
     //leftBumper.onTrue(new AutoAlignTags(swerveSubsystem, 0.13, 0.6, 0).alongWith(Commands.print("aligning to x goal 0.11")));
     //rightBumper.onTrue(new AutoAlignTags(swerveSubsystem, -0.2, 0.63, 0).alongWith(Commands.print("aligning to -0.21")));
 
     var noBumper = leftBumper.or(rightBumper).negate();
+    var hasAlgae = new Trigger(algaeArm::hasAlgae);
 
     //xboxA.and(leftBumper).onTrue();
     //xboxA.and(noBumper).onTrue(new PrintCommand("no bumper and button pressed"));
@@ -242,16 +252,18 @@ public class RobotContainer {
       new RightAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l3));
     xboxY.and(rightBumper).onTrue(
       new L4AlignmentSequence(coralArm, algaeArm, elevatorSub,swerveSubsystem,Constants.SetpointConstants.StrafeOffsets.leftL4));
-    xboxA.and(noBumper).and(() -> algaeArm.hasAlgae()).onTrue(
-      new ProcessorAlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem));
-    xboxA.and(noBumper).onTrue(
+    // xboxA.and(noBumper).and(() -> algaeArm.hasAlgae()).and(this::getUpperTag).onTrue(
+    //   new ProcessorAlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+    xboxA.and(noBumper).and(hasAlgae).onTrue(
+      new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevatorSub, algaeArm));
+    xboxA.and(noBumper).and(hasAlgae.negate()).onTrue(
       new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevatorSub, algaeArm));
     xboxB.and(noBumper).onTrue(
         new CoralStationSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem));
     xboxX.and(noBumper).onTrue(
-        new ConfigSystem(Constants.SetpointConstants.Options.algaeLow, coralArm, elevatorSub, algaeArm));
+        new AlgaeIntakeAlignmentSequence(coralArm, elevatorSub, algaeArm, swerveSubsystem, Constants.SetpointConstants.Options.algaeLow));
     xboxY.and(noBumper).onTrue(
-        new ConfigSystem(Constants.SetpointConstants.Options.algaeHigh, coralArm, elevatorSub, algaeArm));
+        new AlgaeIntakeAlignmentSequence(coralArm, elevatorSub, algaeArm, swerveSubsystem, Constants.SetpointConstants.Options.algaeHigh));
     //leftBumper.onTrue(new ConfigSystem(, coralArm, elevatorSub, algaeArm))
     
   

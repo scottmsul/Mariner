@@ -23,15 +23,15 @@ public class CoralStationSequence extends SequentialCommandGroup {
                 var intakeCoral = new AutoCoralIntake(coralArm);
         addCommands(
             new ParallelCommandGroup(
-                configureAlign.until(configureAlign::aligned),
+                configureAlign,
                 config
             ),
-            intakeAlign.until(intakeAlign::aligned),
+            intakeAlign,
             Commands.parallel(
                 intakeCoral.until(coralArm::hasCoral),
                 LLLeds.shortBlink(Constants.UpperLimelightName)
             ),
-            stow.until(stow::isConfigured)
+            stow
         );
     }
 }

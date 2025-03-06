@@ -25,10 +25,10 @@ public class ProcessorAlignmentSequence extends SequentialCommandGroup{
                 var scoreAlgae = new AutoAlgaeScore(algaeArm);
         addCommands(
             new ParallelCommandGroup(
-                configAlign.until(configAlign::aligned),
-                config.until(config::isConfigured)
+                configAlign,
+                config
             ),
-            scoreAlign.until(scoreAlign::aligned),
+            scoreAlign,
             scoreAlgae.until(algaeArm::hasNoAlgae)
         );
     }

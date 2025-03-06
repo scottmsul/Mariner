@@ -96,7 +96,7 @@ public class AutoAlignReef extends Command {
         rotationPID.reset(rotationGoal);
     }
 
-    public boolean aligned() {
+    public boolean isAligned() {
         // if (!LimelightHelpers.getTV("limelight-back")) {
         // return false;
         // }
@@ -126,7 +126,7 @@ public class AutoAlignReef extends Command {
         // var id = LimelightHelpers.getFiducialID("limelight-back");
         var target_opt = getTargetPose();
         if (target_opt.isEmpty()) {
-            swerveSub.drive(0, 0, 0, false);
+            swerveSub.stop();
             return;
         }
         var target = target_opt.get();
@@ -162,8 +162,13 @@ public class AutoAlignReef extends Command {
     }
 
     @Override
+    public boolean isFinished() {
+        return isAligned();
+    }
+
+    @Override
     public void end(boolean interrupted) {
         // LimelightHelpers.SetFiducialIDFiltersOverride("limelight-back", new int[]{});
-        swerveSub.drive(0, 0, 0, false, 0, 0);
+        swerveSub.stop();
     }
 }

@@ -26,14 +26,14 @@ public class LeftAlignmentSequence extends SequentialCommandGroup {
                 var scoreCoral = new AutoCoralScore(coralArm);
         addCommands(
             new ParallelCommandGroup(
-                configureAlign.until(configureAlign::aligned),
+                configureAlign,
                 config
             ),
-            scoreAlign.until(scoreAlign::aligned),
+            scoreAlign,
             scoreCoral.withTimeout(0.5),
             new ParallelRaceGroup(
-                secondConfigureAlign.until(configureAlign::aligned),
-                stow.until(stow::isConfigured)
+                secondConfigureAlign,
+                stow
             )
             
         );

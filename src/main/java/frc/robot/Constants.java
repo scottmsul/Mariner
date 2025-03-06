@@ -154,7 +154,7 @@ public final class Constants {
       public static double l4 = 1.25;
 
       public static double groundLevel = 0;
-      public static double algaeLow = 0.83;
+      public static double algaeLow = 0.8;
       public static double algaeHigh = 1.12;
       public static double coralStation = 0.17;
       public static double processor = 0.23;
@@ -193,7 +193,7 @@ public final class Constants {
       public static double leftReefScore = 0.53;
       public static double rightReefScore = 0.53;
       public static double L4score = 0.55;
-      public static double algaeReefGrab = 0.2;
+      public static double algaeReefGrab = 0.4;
       public static double reefCoralConfigure = 0.75;
       public static double reefAlgaeConfigure = 0.85;
       public static double reefAlgaeStow = 1.1;

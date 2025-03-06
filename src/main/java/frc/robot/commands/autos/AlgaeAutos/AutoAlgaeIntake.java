@@ -11,15 +11,15 @@ public class AutoAlgaeIntake extends Command {
             this.algaeSub = algaeSub;
         }
 
-        // @Override
-        // public void execute() {
-        //     algaeSub.grab();
-        // }
+        @Override
+        public void execute() {
+            algaeSub.grab();
+        }
 
-        // @Override
-        // public void end(boolean interrupted) {
-        //     algaeSub.stop();
-        // }
+        @Override
+        public void end(boolean interrupted) {
+            algaeSub.stop();
+        }
 
         // @Override
         // public boolean isFinished() {

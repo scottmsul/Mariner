@@ -13,12 +13,12 @@ public class AutoAlgaeScore extends Command{
 
         @Override
         public void execute() {
-            // algaeSub.release();
+            algaeArm.release();
         }
 
         @Override
         public void end(boolean interrupted) {
-            // algaeSub.stop();
+            algaeArm.stop();
         }
 
         // @Override
