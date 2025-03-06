@@ -70,6 +70,23 @@ public class SwerveSubsystem extends SubsystemBase {
 
         }
 
+        public void stop() {
+                SwerveModuleState[] states = getModuleStates();
+                for (var state : states) {
+                        state.speedMetersPerSecond = 0;
+                }
+                driveStates(states);
+        }
+
+        public void xpattern() {
+                SwerveModuleState[] states = getModuleStates();
+                for (var i = 0; i<states.length;i++) {
+                        states[i].angle = DriveConstants.kinematics.getModules()[i].getAngle();
+                        states[i].speedMetersPerSecond = 0;
+                }
+                driveStates(states);
+        }
+
         private Rotation2d yawOffset = new Rotation2d();
 
         // have we ever seen a tag?
