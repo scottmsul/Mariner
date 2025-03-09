@@ -34,13 +34,13 @@ public class SwerveSubsystem extends SubsystemBase {
         private final SlewRateLimiter rotRateLimiter = new SlewRateLimiter(2);
 
         private final SwerveModule fLSwerve = new SwerveModule(15, 14, false, true,
-                        null, 2.336);
+                        null, 1.792);
         private final SwerveModule fRSwerve = new SwerveModule(13, 12, false, true,
-                        null, .553);
+                        null, 2.571);
         private final SwerveModule bLSwerve = new SwerveModule(17, 16, false, true,
-                        null, 1.704);
+                        null, 0.749);
         private final SwerveModule bRSwerve = new SwerveModule(11, 10, false, true,
-                        null, 0.176);
+                        null, 1.43);
 
         private AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 

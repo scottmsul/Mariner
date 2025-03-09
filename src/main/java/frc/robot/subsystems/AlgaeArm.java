@@ -44,7 +44,7 @@ public class AlgaeArm extends SubsystemBase {
             configAlgaeWrist.absoluteEncoder
                     .inverted(true)
                     .zeroCentered(true)
-                    .zeroOffset(0.915);
+                    .zeroOffset(0.16);
             configAlgaeWrist.signals
                     .absoluteEncoderPositionAlwaysOn(true)
                     .absoluteEncoderPositionPeriodMs(100);
