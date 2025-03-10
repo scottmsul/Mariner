@@ -140,20 +140,20 @@ public class CoralArm extends SubsystemBase {
     // }
 
     public Command l1() {
-        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l1));
+        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l1.get()));
     }
 
     // out
     public Command lmid() {
-        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.lmid));
+        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.lmid.get()));
     }
 
     public Command l4() {
-        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l4));
+        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l4.get()));
     }
 
     public Command coralStation(){
-        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.CoralSt));
+        return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.CoralSt.get()));
     }
 
     public Command up() {

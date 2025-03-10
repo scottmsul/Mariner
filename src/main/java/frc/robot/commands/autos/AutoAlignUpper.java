@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.LimelightHelpers;
+import frc.robot.NTDouble;
+import frc.robot.NTDouble.NTD;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,12 +28,12 @@ public class AutoAlignUpper extends Command {
     private ProfiledPIDController strafePID;
     private ProfiledPIDController distancePID;
     private ProfiledPIDController rotationPID;
-    private double strafeGoal = 0.0;
-    private double distanceGoal = 0.5;
-    private double rotationGoal;
+    private NTDouble strafeGoal = NTD.of(0.0);
+    private NTDouble distanceGoal = NTD.of(0.5);
+    private NTDouble rotationGoal;
     private boolean lowSpeed;
-    private double strafeError;
-    private double distanceError;
+    private NTDouble strafeError;
+    private NTDouble distanceError;
     // private static double rot;
     // private static double distanceSpeed;
 
@@ -59,7 +61,7 @@ public class AutoAlignUpper extends Command {
         return LimelightHelpers.getTV(Constants.UpperLimelightName);
     }
 
-    public AutoAlignUpper(SwerveSubsystem swerveSub, double strafeGoal, double distanceGoal, double rotationGoal, double strafeError, double distanceError) {
+    public AutoAlignUpper(SwerveSubsystem swerveSub, NTDouble strafeGoal, NTDouble distanceGoal, NTDouble rotationGoal, NTDouble strafeError, NTDouble distanceError) {
         addRequirements(swerveSub);
         this.swerveSub = swerveSub;
         this.strafeGoal = strafeGoal;
@@ -76,9 +78,9 @@ public class AutoAlignUpper extends Command {
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3,
                         3 / 1.5));
 
-        distancePID.setGoal(distanceGoal);
-        strafePID.setGoal(strafeGoal);
-        rotationPID.setGoal(rotationGoal);
+        distanceGoal.subscribe(goal -> distancePID.setGoal(goal));
+        strafeGoal.subscribe(goal -> strafePID.setGoal(goal));
+        rotationGoal.subscribe(goal -> rotationPID.setGoal(goal));
         distancePID.setIntegratorRange(-15, 15);
         strafePID.setIntegratorRange(-15, 15);
 
@@ -91,9 +93,9 @@ public class AutoAlignUpper extends Command {
     public void initialize() {
         // LimelightHelpers.SetFiducialIDFiltersOverride("limelight-back", new
         // int[]{4,7});
-        distancePID.reset(distanceGoal);
-        strafePID.reset(strafeGoal);
-        rotationPID.reset(rotationGoal);
+        distancePID.reset(distanceGoal.get());
+        strafePID.reset(strafeGoal.get());
+        rotationPID.reset(rotationGoal.get());
     }
 
     public boolean isAligned() {
@@ -105,9 +107,9 @@ public class AutoAlignUpper extends Command {
             return false;
         }
         var target = target_opt.get();
-        if ((Math.abs(distanceGoal - target.getZ()) < distanceError)
-                && (Math.abs(strafeGoal - target.getX()) < strafeError)
-                && (Math.abs(rotationGoal - target.getRotation().getZ()) < 0.02)
+        if ((Math.abs(distanceGoal.get() - target.getZ()) < distanceError.get())
+                && (Math.abs(strafeGoal.get() - target.getX()) < strafeError.get())
+                && (Math.abs(rotationGoal.get() - target.getRotation().getZ()) < 0.02)
         // && (Math.abs(target.getRotation().getAngle()) < 0.5)
         ) {
             return true;

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.LLLeds;
+import frc.robot.NTDouble.NTD;
 import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoAlignUpper;
 import frc.robot.commands.autos.CoralAutos.AutoCoralIntake;
@@ -18,8 +19,8 @@ public class CoralStationSequence extends SequentialCommandGroup {
     public CoralStationSequence(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerveSubsystem) {
                 var config = new ConfigSystem(Constants.SetpointConstants.Options.coralStation, coralArm, elevator, algaeArm);
                 var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevator, algaeArm);
-                var configureAlign = new AutoAlignUpper(swerveSubsystem, -0.1,0.7, 0, 0.04, 0.04);
-                var intakeAlign = new AutoAlignUpper(swerveSubsystem, -0.1, 0.6, 0, 0.02, 0.02);
+                var configureAlign = new AutoAlignUpper(swerveSubsystem, NTD.of(-0.1),NTD.of(0.7), NTD.of(0), NTD.of(0.04), NTD.of(0.04));
+                var intakeAlign = new AutoAlignUpper(swerveSubsystem, NTD.of(-0.1), NTD.of(0.6), NTD.of(0), NTD.of(0.02), NTD.of(0.02));
                 var intakeCoral = new AutoCoralIntake(coralArm);
         addCommands(
             new ParallelCommandGroup(

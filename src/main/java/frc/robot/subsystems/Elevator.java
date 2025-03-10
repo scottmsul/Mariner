@@ -118,26 +118,26 @@ public class Elevator extends SubsystemBase {
     }
 
     public Command l1() {
-        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.l1));
+        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.l1.get()));
     }
 
     public Command l2() {
-        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.l2));
+        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.l2.get()));
     }
 
     public Command l3() {
-        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.l3));
+        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.l3.get()));
     }
 
     public Command l4() {
-        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.l4));
+        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.l4.get()));
     }
 
     public Command algaeLow() {
-        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.algaeLow));
+        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.algaeLow.get()));
     }
 
     public Command algaeHigh() {
-        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.algaeHigh));
+        return run(() -> setPosition(Constants.SetpointConstants.ElevatorSetpoints.algaeHigh.get()));
     }
 }

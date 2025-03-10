@@ -12,6 +12,9 @@ public class Utils {
       var parts = thisClass.getName().split("\\$");
       var className = parts[parts.length-1];
       for (var f : thisClass.getFields()) {
+        if (f.getType() != double.class) {
+          continue;
+        }
         var entry = NetworkTableInstance.getDefault().getEntry("/Tune/" + className + "/" + f.getName());
         entry.setDouble(f.getDouble(thisClass));
         NetworkTableInstance.getDefault().addListener(entry, EnumSet.of(NetworkTableEvent.Kind.kValueRemote),

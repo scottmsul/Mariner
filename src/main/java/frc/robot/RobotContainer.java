@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.NTDouble.NTD;
 import frc.robot.commands.DefaultSwerve;
 import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoAlignReef;
@@ -90,9 +91,6 @@ public class RobotContainer {
     // right coral station (2, 1.7)
     // processor (6.3, 1.55)
     // }
-    Utils.makeClassTunable(Constants.SetpointConstants.ElevatorSetpoints.class);
-    Utils.makeClassTunable(Constants.SetpointConstants.CoralPivotAngles.class);
-    Utils.makeClassTunable(Constants.SetpointConstants.AlgaeArmAngles.class);
   }
 
   
@@ -171,7 +169,7 @@ public class RobotContainer {
       .onTrue(algaeArm.algaeSpinOut())
       .onFalse(algaeArm.algaeSpinStop());
     primaryJoy.button(10)
-      .whileTrue(new AutoAlignReef(swerveSubsystem, 0, 0.75, 0, 0.02, 0.02).alongWith(Commands.print("aligning to center")));
+      .whileTrue(new AutoAlignReef(swerveSubsystem, NTD.of(0), NTD.of(0.75), NTD.of(0), NTD.of(0.02), NTD.of(0.02)).alongWith(Commands.print("aligning to center")));
     // new JoystickButton(primaryJoy, 8)
     //   .whileTrue(new AutoAlignTags(swerveSubsystem, 0.11, 0.5, 0));
     // new JoystickButton(primaryJoy, 9)

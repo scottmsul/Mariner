@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.SetpointConstants.ConfigOption;
+import frc.robot.NTDouble.NTD;
 import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoAlignReef;
 import frc.robot.commands.autos.AutoAlignUpper;
@@ -20,8 +21,8 @@ public class ProcessorAlignmentSequence extends SequentialCommandGroup{
 
     public ProcessorAlignmentSequence(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerveSubsystem ) {
                 var config = new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevator, algaeArm);
-                var scoreAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorInitial, 0, 0.04, 0.04);
-                var configAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorScore, 0, 0.04, 0.02);
+                var scoreAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorInitial, NTD.of(0), NTD.of(0.04), NTD.of(0.04));
+                var configAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorScore, NTD.of(0), NTD.of(0.04), NTD.of(0.02));
                 var scoreAlgae = new AutoAlgaeScore(algaeArm);
         addCommands(
             new ParallelCommandGroup(

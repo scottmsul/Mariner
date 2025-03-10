@@ -49,9 +49,9 @@ public class ConfigSystem extends Command{
 
     @Override
     public void execute() {
-        coralArm.setCoralWristSetpoint(configOption.coralAngle);
-        elevator.setPosition(configOption.elevatorSetpoint);
-        algaeArm.setAlgaeSetpoint(configOption.algaeAngle);
+        coralArm.setCoralWristSetpoint(configOption.coralAngle.get());
+        elevator.setPosition(configOption.elevatorSetpoint.get());
+        algaeArm.setAlgaeSetpoint(configOption.algaeAngle.get());
     }
 
     @Override

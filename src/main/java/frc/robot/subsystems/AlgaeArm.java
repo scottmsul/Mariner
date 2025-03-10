@@ -156,11 +156,11 @@ public class AlgaeArm extends SubsystemBase {
     }
 
     public Command algaeArmDown(){
-        return run(() -> setAlgaeSetpoint(Constants.SetpointConstants.AlgaeArmAngles.down));
+        return run(() -> setAlgaeSetpoint(Constants.SetpointConstants.AlgaeArmAngles.down.get()));
     }
 
     public Command algaeArmUp() {
-        return run(() -> setAlgaeSetpoint(Constants.SetpointConstants.AlgaeArmAngles.up));
+        return run(() -> setAlgaeSetpoint(Constants.SetpointConstants.AlgaeArmAngles.up.get()));
     }
 
     public Command algaeArmStop(){
