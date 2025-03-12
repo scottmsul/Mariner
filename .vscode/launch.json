@@ -16,6 +16,13 @@
       "name": "WPILib roboRIO Debug",
       "request": "launch",
       "desktop": false,
+    },
+    {
+      "type": "java",
+      "request": "attach",
+      "name": "MARS Attach RIO",
+      "hostName": "frc-1523-roborio.local",
+      "port": 8349
     }
   ]
 }
