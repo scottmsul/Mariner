@@ -237,35 +237,35 @@ public class RobotContainer {
     //xboxA.and(leftBumper).onTrue();
     //xboxA.and(noBumper).onTrue(new PrintCommand("no bumper and button pressed"));
 
-    xboxA.and(leftBumper).onTrue(
-      new L1AlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.l1Left, Constants.SetpointConstants.DistanceOffsets.l1, Constants.SetpointConstants.RotOffsets.l1Left));
-    xboxB.and(leftBumper).onTrue(
-      new LeftAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l2));
-    xboxX.and(leftBumper).onTrue(
-      new LeftAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l3));
-    xboxY.and(leftBumper).onTrue(
-      new L4AlignmentSequence(coralArm, algaeArm, elevatorSub,swerveSubsystem,Constants.SetpointConstants.StrafeOffsets.leftL4));
+    xboxA.and(leftBumper.or(rightBumper)).onTrue(
+      new ConfigSystem(Constants.SetpointConstants.Options.l1, coralArm, elevatorSub, algaeArm));
+    xboxB.and(leftBumper.or(rightBumper)).onTrue(
+      new ConfigSystem(Constants.SetpointConstants.Options.l2, coralArm, elevatorSub, algaeArm));
+    xboxX.and(leftBumper.or(rightBumper)).onTrue(
+      new ConfigSystem(Constants.SetpointConstants.Options.l2, coralArm, elevatorSub, algaeArm));
+    xboxY.and(leftBumper.or(rightBumper)).onTrue(
+      new ConfigSystem(Constants.SetpointConstants.Options.l4, coralArm, elevatorSub, algaeArm));
       // new LeftAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l4));
-    xboxA.and(rightBumper).onTrue(
-      new L1AlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.l1Right, Constants.SetpointConstants.DistanceOffsets.l1, Constants.SetpointConstants.RotOffsets.l1Right));
-    xboxB.and(rightBumper).onTrue(
-      new RightAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l2));
-    xboxX.and(rightBumper).onTrue(
-      new RightAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l3));
-    xboxY.and(rightBumper).onTrue(
-      new L4AlignmentSequence(coralArm, algaeArm, elevatorSub,swerveSubsystem,Constants.SetpointConstants.StrafeOffsets.rightL4));
+    // xboxA.and(rightBumper).onTrue(
+    //   new L1AlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.l1Right, Constants.SetpointConstants.DistanceOffsets.l1, Constants.SetpointConstants.RotOffsets.l1Right));
+    // xboxB.and(rightBumper).onTrue(
+    //   new RightAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l2));
+    // xboxX.and(rightBumper).onTrue(
+    //   new RightAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l3));
+    // xboxY.and(rightBumper).onTrue(
+    //   new L4AlignmentSequence(coralArm, algaeArm, elevatorSub,swerveSubsystem,Constants.SetpointConstants.StrafeOffsets.rightL4));
     xboxA.and(noBumper).and(hasAlgae).and(hasTarget).onTrue(
-      new ProcessorAlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+      new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevatorSub, algaeArm));
     xboxA.and(noBumper).and(hasAlgae).and(hasTarget.negate()).onTrue(
       new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevatorSub, algaeArm));
     xboxA.and(noBumper).and(hasAlgae.negate()).onTrue(
       new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevatorSub, algaeArm));
     xboxB.and(noBumper).onTrue(
-        new CoralStationSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+      new ConfigSystem(Constants.SetpointConstants.Options.coralStation, coralArm, elevatorSub, algaeArm));
     xboxX.and(noBumper).onTrue(
-        new AlgaeIntakeAlignmentSequence(coralArm, elevatorSub, algaeArm, swerveSubsystem, Constants.SetpointConstants.Options.algaeLow));
+      new ConfigSystem(Constants.SetpointConstants.Options.algaeLow, coralArm, elevatorSub, algaeArm));
     xboxY.and(noBumper).onTrue(
-        new AlgaeIntakeAlignmentSequence(coralArm, elevatorSub, algaeArm, swerveSubsystem, Constants.SetpointConstants.Options.algaeHigh));
+      new ConfigSystem(Constants.SetpointConstants.Options.algaeHigh, coralArm, elevatorSub, algaeArm));
     //leftBumper.onTrue(new ConfigSystem(, coralArm, elevatorSub, algaeArm))
     
   
