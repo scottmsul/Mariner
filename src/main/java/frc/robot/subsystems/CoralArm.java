@@ -50,12 +50,12 @@ public class CoralArm extends SubsystemBase {
         configWrist.signals
                 .absoluteEncoderPositionAlwaysOn(true);
         configWrist.encoder.positionConversionFactor(1.0 / 100.0);
-        configWrist.absoluteEncoder
-                .zeroOffset(1)
+        configWrist.absoluteEncoder.inverted(true)
+                .zeroOffset(0.593)
                 .zeroCentered(true);
         configWrist.closedLoop
-                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .pid(1.45, 0, 0)
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                .pid(1.5, 0.0001, 0.001)
                 .outputRange(-0.8, 0.7);
         coralWrist.configure(configWrist, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

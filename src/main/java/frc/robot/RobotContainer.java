@@ -28,6 +28,7 @@ import frc.robot.commands.DefaultSwerve;
 import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoAlignReef;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AlgaeIntakeAlignmentSequence;
+import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AutoIntakeAlgae;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.CoralStationSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.L1AlignmentSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.L4AlignmentSequence;
@@ -163,8 +164,13 @@ public class RobotContainer {
       .onTrue(coralArm.outtakeCoralCommand())
       .onFalse(coralArm.stopCoralSpin());
     primaryJoy.button(4)
-      .onTrue(algaeArm.algaeSpinIn())
-      .onFalse(algaeArm.algaeSpinStop());
+      // .onTrue(Commands.print("4 pressed"));
+      .onTrue(new AutoIntakeAlgae(coralArm, elevatorSub, algaeArm, swerveSubsystem));
+      Shuffleboard.getTab("Help"). add(new AutoIntakeAlgae(coralArm, elevatorSub, algaeArm, swerveSubsystem));
+
+      // .onTrue(new AutoIntakeAlgae(coralArm, elevatorSub, algaeArm, swerveSubsystem));
+      // .onTrue(algaeArm.algaeSpinIn())
+      // .onFalse(algaeArm.algaeSpinStop());
     primaryJoy.button(6)
       .onTrue(algaeArm.algaeSpinOut())
       .onFalse(algaeArm.algaeSpinStop());
@@ -219,6 +225,7 @@ public class RobotContainer {
     var xboxY = new JoystickButton(secondaryController, XboxController.Button.kY.value);
     var leftStick = new JoystickButton(secondaryController, XboxController.Button.kLeftStick.value);
     var rightStick = new JoystickButton(secondaryController, XboxController.Button.kRightStick.value);
+    var xboxStart = new JoystickButton(secondaryController, XboxController.Button.kStart.value);
     //var leftPOV = new JoystickButton(secondaryController, XboxController.Button.)
 
     var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevatorSub, algaeArm);
@@ -259,11 +266,13 @@ public class RobotContainer {
     xboxA.and(noBumper).and(hasAlgae.negate()).onTrue(
       new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevatorSub, algaeArm));
     xboxB.and(noBumper).onTrue(
-        new CoralStationSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+      new CoralStationSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem));
     xboxX.and(noBumper).onTrue(
-        new AlgaeIntakeAlignmentSequence(coralArm, elevatorSub, algaeArm, swerveSubsystem, Constants.SetpointConstants.Options.algaeLow));
+      new AlgaeIntakeAlignmentSequence(coralArm, elevatorSub, algaeArm, swerveSubsystem, Constants.SetpointConstants.Options.algaeLow));
     xboxY.and(noBumper).onTrue(
-        new AlgaeIntakeAlignmentSequence(coralArm, elevatorSub, algaeArm, swerveSubsystem, Constants.SetpointConstants.Options.algaeHigh));
+      new AlgaeIntakeAlignmentSequence(coralArm, elevatorSub, algaeArm, swerveSubsystem, Constants.SetpointConstants.Options.algaeHigh));
+    xboxStart.and(noBumper).onTrue(
+      new ConfigSystem(Constants.SetpointConstants.Options.algaeGround, coralArm, elevatorSub, algaeArm)  );
     //leftBumper.onTrue(new ConfigSystem(, coralArm, elevatorSub, algaeArm))
     
   

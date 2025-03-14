@@ -59,6 +59,14 @@ public class ConfigSystem extends Command{
         return isConfigured();
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted)
+            System.out.println("Config Interrupted");
+        else
+            System.out.println("Config Done");
+    }
+
     // public Command configureCommand(int choice){
     //     return run(() -> configure(choice));
     // }

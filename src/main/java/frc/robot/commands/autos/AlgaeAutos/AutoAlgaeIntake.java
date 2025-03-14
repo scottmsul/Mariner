@@ -13,13 +13,19 @@ public class AutoAlgaeIntake extends Command {
 
         @Override
         public void execute() {
+            System.out.println("grab grab grab");
             algaeSub.grab();
         }
 
         @Override
         public void end(boolean interrupted) {
+            if (interrupted)
+                System.out.println("Config Interrupted");
+            else
+                System.out.println("Config Done");
             algaeSub.stop();
         }
+
 
         // @Override
         // public boolean isFinished() {

@@ -21,8 +21,10 @@ public class ProcessorAlignmentSequence extends SequentialCommandGroup{
 
     public ProcessorAlignmentSequence(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerveSubsystem ) {
                 var config = new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevator, algaeArm);
-                var scoreAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorInitial, NTD.of(0), NTD.of(0.04), NTD.of(0.04));
-                var configAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorScore, NTD.of(0), NTD.of(0.04), NTD.of(0.02));
+                var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevator, algaeArm);
+                var scoreAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorScore, NTD.of(0), NTD.of(0.08), NTD.of(0.08));
+                var configAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorInitial, NTD.of(0), NTD.of(0.08), NTD.of(0.06));
+                var configAlign2 = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.processor ,Constants.SetpointConstants.DistanceOffsets.processorInitial, NTD.of(0), NTD.of(0.08), NTD.of(0.06));
                 var scoreAlgae = new AutoAlgaeScore(algaeArm);
         addCommands(
             new ParallelCommandGroup(
@@ -30,7 +32,9 @@ public class ProcessorAlignmentSequence extends SequentialCommandGroup{
                 config
             ),
             scoreAlign,
-            scoreAlgae.until(algaeArm::hasNoAlgae)
+            scoreAlgae.withTimeout(1),
+            configAlign2,
+            stow
         );
     }
 }
