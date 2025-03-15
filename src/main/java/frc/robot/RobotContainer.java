@@ -242,7 +242,7 @@ public class RobotContainer {
     xboxB.and(leftBumper.or(rightBumper)).onTrue(
       new ConfigSystem(Constants.SetpointConstants.Options.l2, coralArm, elevatorSub, algaeArm));
     xboxX.and(leftBumper.or(rightBumper)).onTrue(
-      new ConfigSystem(Constants.SetpointConstants.Options.l2, coralArm, elevatorSub, algaeArm));
+      new ConfigSystem(Constants.SetpointConstants.Options.l3, coralArm, elevatorSub, algaeArm));
     xboxY.and(leftBumper.or(rightBumper)).onTrue(
       new ConfigSystem(Constants.SetpointConstants.Options.l4, coralArm, elevatorSub, algaeArm));
       // new LeftAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l4));
