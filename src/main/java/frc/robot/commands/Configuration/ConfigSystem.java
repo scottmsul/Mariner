@@ -48,16 +48,19 @@ public class ConfigSystem extends Command{
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         coralArm.setCoralWristSetpoint(configOption.coralAngle.get());
         elevator.setPosition(configOption.elevatorSetpoint.get());
         algaeArm.setAlgaeSetpoint(configOption.algaeAngle.get());
     }
 
     @Override
+    public void execute() {
+    }
+
+    @Override
     public boolean isFinished() {
         var done = isConfigured();
-        System.out.println("Config done: " +  done + " coral " + coralArm.isReady() + " algae " + algaeArm.isReady() + " elevator " + elevator.isReady());
         return done;
     }
 
