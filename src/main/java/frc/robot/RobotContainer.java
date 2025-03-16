@@ -6,15 +6,31 @@ package frc.robot;
 
 import javax.print.attribute.standard.JobHoldUntil;
 
-
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 
-//import org.littletonrobotics.urcl.URCL;
+import java.io.IOException;
+import java.util.HashMap;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.urcl.URCL;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -90,9 +106,31 @@ public class RobotContainer {
     // right coral station (2, 1.7)
     // processor (6.3, 1.55)
     // }
-    Utils.makeClassTunable(Constants.SetpointConstants.ElevatorSetpoints.class);
-    Utils.makeClassTunable(Constants.SetpointConstants.CoralPivotAngles.class);
-    Utils.makeClassTunable(Constants.SetpointConstants.AlgaeArmAngles.class);
+      var field = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+      var tag8 = field.getTagPose(8).get().toPose2d();
+
+      var offset = new Transform2d(1, 0, new Rotation2d());
+
+      Pose2d infrontOfTag8 = tag8.plus(offset);
+
+      Shuffleboard.getTab("PathPlanner").add(
+          "Goto Before 8",
+        AutoBuilder.pathfindToPose(infrontOfTag8, new PathConstraints(1.75, 2, 360, 360))
+      );
+
+    try {
+      Shuffleboard.getTab("PathPlanner").add(
+          "Forward",
+          // AutoBuilder.buildAuto("Forward")
+          Commands.sequence(
+
+              Commands.runOnce(() -> swerveSubsystem.resetOmetry(new Pose2d(1, 2, new Rotation2d())), swerveSubsystem),
+              AutoBuilder.followPath(PathPlannerPath.fromPathFile("Forward")))
+      // AutoBuilder.pathfindToPose(, null)
+      );
+    } catch (FileVersionException | IOException | ParseException e) {
+      e.printStackTrace();
+    }
   }
 
   

@@ -117,7 +117,7 @@ public class SwerveSubsystem extends SubsystemBase {
         }
 
         private void doMegatag(String limelight) {
-                boolean useMegaTag2 = true; // set to false to use MegaTag1
+                boolean useMegaTag2 = false; // set to false to use MegaTag1
                 boolean doRejectUpdate = false;
                 if (useMegaTag2 == false) {
                         LimelightHelpers.PoseEstimate mt1 = LimelightHelpers
@@ -176,7 +176,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         @Override
         public void periodic() {
-                doMegatag(Constants.ReefLimelightName);
+                doMegatag(Constants.UpperLimelightName);
 
                 ometry.update(
                                 getRotation(),
@@ -262,7 +262,7 @@ public class SwerveSubsystem extends SubsystemBase {
                                 new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live
                                                                 // in your
                                                                 // Constants class
-                                                new PIDConstants(.5, 0.0, 0.0), // Translation PID constants
+                                                new PIDConstants(5, 0.0, 0.0), // Translation PID constants
                                                 new PIDConstants(3, 0.0, 0.0) // Rotation PID constants
                                 // Max module speed, in m/s // Drive base radius in meters. Distance from robot
                                 // center to
@@ -292,6 +292,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 Shuffleboard.getTab("Debug").addDouble("robot angle from navx",
                                 () -> gyro.getRotation2d().getDegrees());
                 Shuffleboard.getTab("Debug").addDouble("yaw offset", () -> yawOffset.getDegrees());
+                Shuffleboard.getTab("Debug").add("Field", field);
 
         }
 }
