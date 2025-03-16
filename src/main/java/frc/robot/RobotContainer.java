@@ -35,6 +35,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.SetpointConstants.ConfigOption;
 import frc.robot.commands.DefaultSwerve;
 import frc.robot.commands.Configuration.ConfigSystem;
+import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AbortAbortReef;
+import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AbortAbortUpper;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AlgaeIntakeAlignmentSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.CoralStationSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.L1AlignmentSequence;
@@ -121,6 +123,9 @@ public class RobotContainer {
   
   private boolean getUpperTag(){
     return LimelightHelpers.getTV(Constants.UpperLimelightName);
+  }
+  private boolean getLowerTag(){
+    return LimelightHelpers.getTV(Constants.ReefLimelightName);
   }
 
   private void configureBindings() {
@@ -258,7 +263,9 @@ public class RobotContainer {
     var noBumper = leftBumper.or(rightBumper).negate();
     var hasAlgae = new Trigger(algaeArm::hasAlgae);
 
-    var hasTarget = new Trigger(this::getUpperTag);
+    var hasUpperTarget = new Trigger(this::getUpperTag);
+    var hasLowerTarget = new Trigger(this::getLowerTag);
+
   //   //xboxA.and(leftBumper).onTrue();
   //   //xboxA.and(noBumper).onTrue(new PrintCommand("no bumper and button pressed"));
 
@@ -279,9 +286,13 @@ public class RobotContainer {
       new RightAlignmentSequence(coralArm,algaeArm,elevatorSub,swerveSubsystem,Constants.SetpointConstants.Options.l3));
     xboxY.and(rightBumper).onTrue(
       new L4AlignmentSequence(coralArm, algaeArm, elevatorSub,swerveSubsystem,Constants.SetpointConstants.StrafeOffsets.rightL4));
-    xboxA.and(noBumper).and(hasAlgae).and(hasTarget).onTrue(
+    xboxA.and(noBumper).and(hasAlgae).and(hasUpperTarget).onTrue(
       new ProcessorAlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem));
-    xboxA.and(noBumper).and(hasAlgae).and(hasTarget.negate()).onTrue(
+    xboxA.and(noBumper).and(hasAlgae.negate()).and(hasLowerTarget).onTrue(
+      new AbortAbortReef(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+    xboxA.and(noBumper).and(hasAlgae.negate()).and(hasUpperTarget).onTrue(
+      new AbortAbortUpper(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+    xboxA.and(noBumper).and(hasAlgae).and(hasUpperTarget.negate()).onTrue(
       new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevatorSub, algaeArm));
     xboxA.and(noBumper).and(hasAlgae.negate()).onTrue(
       new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevatorSub, algaeArm));

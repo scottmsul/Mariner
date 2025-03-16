@@ -22,7 +22,7 @@ public class RightAlignmentSequence extends SequentialCommandGroup {
                 var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevator, algaeArm);
                 var configureAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.rightReef, Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, NTD.of(0), NTD.of(0.1), NTD.of(0.04));
                 var secondConfigureAlign = new AutoAlignReef(swerveSubsystem, NTD.of(0) ,Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, NTD.of(0), NTD.of(0.1), NTD.of(0.04));
-                var scoreAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.rightReef, Constants.SetpointConstants.DistanceOffsets.rightReefScore, NTD.of(0), NTD.of(0.02), NTD.of(0.06));
+                var scoreAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.rightReef, Constants.SetpointConstants.DistanceOffsets.rightReefScore, NTD.of(0), NTD.of(0.01), NTD.of(0.02));
                 var scoreCoral = new AutoCoralScore(coralArm);
         addCommands(
             new ParallelCommandGroup(

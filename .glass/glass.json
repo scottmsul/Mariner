@@ -5,8 +5,16 @@
     },
     "transitory": {
       "Shuffleboard": {
+        ".metadata": {
+          "open": true
+        },
         "Debug": {
           "PowerDistribution[0]": {
+            "open": true
+          }
+        },
+        "Tune": {
+          "AutoAlignTags": {
             "open": true
           },
           "open": true
@@ -16,15 +24,190 @@
     },
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Debug/Field": "Field2d",
+      "/Shuffleboard/Debug/Rezero climb encoders": "Command",
       "/Shuffleboard/PID/Coral": "PIDController",
+      "/Shuffleboard/SysId/Dynamic Backaward Swerve": "Command",
+      "/Shuffleboard/SysId/Dynamic Forward Swerve": "Command",
+      "/Shuffleboard/SysId/Quasi Backward Swerve": "Command",
+      "/Shuffleboard/SysId/Quasi Forward Swerve": "Command",
+      "/Shuffleboard/Tune/ProfiledPIDController[100]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[101]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[102]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[103]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[104]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[105]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[106]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[107]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[108]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[109]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[10]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[110]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[111]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[11]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[12]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[13]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[14]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[15]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[16]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[17]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[18]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[19]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[1]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[20]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[21]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[22]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[23]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[24]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[25]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[26]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[27]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[28]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[29]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[2]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[30]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[31]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[32]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[33]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[34]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[35]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[36]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[37]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[38]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[39]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[3]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[40]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[41]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[42]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[43]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[44]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[45]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[46]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[47]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[48]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[49]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[4]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[50]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[51]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[52]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[53]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[54]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[55]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[56]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[57]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[58]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[59]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[5]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[60]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[61]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[62]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[63]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[64]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[65]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[66]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[67]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[68]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[69]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[6]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[70]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[71]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[72]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[7]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[88]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[89]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[8]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[90]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[91]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[92]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[93]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[94]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[95]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[96]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[97]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[98]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[99]": "ProfiledPIDController",
+      "/Shuffleboard/Tune/ProfiledPIDController[9]": "ProfiledPIDController",
       "/SmartDashboard/Alerts": "Alerts"
     }
   },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
     "visible": true
   },
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
     "serverTeam": "1523"
+  },
+  "Plots": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 600,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/Tune/AutoAlignTags/PID Distance Setpoint"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/Tune/AutoAlignTags/PID Distance Goal"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/Tune/AutoAlignTags/PID Distance Error"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/Tune/AutoAlignTags/PID Distance Out"
+            },
+            {
+              "color": [
+                0.5058823823928833,
+                0.44705885648727417,
+                0.7019608020782471,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/Tune/AutoAlignTags/LL Distance"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

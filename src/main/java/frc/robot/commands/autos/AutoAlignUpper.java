@@ -36,33 +36,39 @@ public class AutoAlignUpper extends Command {
     private NTDouble distanceError;
     // private static double rot;
     // private static double distanceSpeed;
-
-    // static double getZontal() {
-    // return (LimelightHelpers.getTX("limelight-back") / 27);
-    // // return (x.getDouble(160)/160)-1;
-    // // horizontal offset
-    // }
-
-    static final Optional<Pose3d> getTargetPose() {
-        if (LimelightHelpers.getTV(Constants.UpperLimelightName)) {
-            return Optional.of(LimelightHelpers.getTargetPose3d_RobotSpace(Constants.UpperLimelightName));
-        } else {
-            return Optional.empty();
+        private boolean tune;
+    
+        // static double getZontal() {
+        // return (LimelightHelpers.getTX("limelight-back") / 27);
+        // // return (x.getDouble(160)/160)-1;
+        // // horizontal offset
+        // }
+    
+        static final Optional<Pose3d> getTargetPose() {
+            if (LimelightHelpers.getTV(Constants.UpperLimelightName)) {
+                return Optional.of(LimelightHelpers.getTargetPose3d_RobotSpace(Constants.UpperLimelightName));
+            } else {
+                return Optional.empty();
+            }
+    
+            // Streamllresults.targets_Fiducials[0].getTargetPose_RobotSpace();
+            // return (x.getDouble(160)/160)-1;
+            // whatever the distance is
+            // returns the specific distance value we want so we can pid it???
+            // why is everything so
         }
-
-        // Streamllresults.targets_Fiducials[0].getTargetPose_RobotSpace();
-        // return (x.getDouble(160)/160)-1;
-        // whatever the distance is
-        // returns the specific distance value we want so we can pid it???
-        // why is everything so
-    }
-
-    public static boolean speakerAimReady() {
-        return LimelightHelpers.getTV(Constants.UpperLimelightName);
-    }
-
-    public AutoAlignUpper(SwerveSubsystem swerveSub, NTDouble strafeGoal, NTDouble distanceGoal, NTDouble rotationGoal, NTDouble strafeError, NTDouble distanceError) {
-        addRequirements(swerveSub);
+    
+        public static boolean speakerAimReady() {
+            return LimelightHelpers.getTV(Constants.UpperLimelightName);
+        }
+    
+        public AutoAlignUpper(SwerveSubsystem swerveSub, NTDouble strafeGoal, NTDouble distanceGoal, NTDouble rotationGoal, NTDouble strafeError, NTDouble distanceError) {
+            this(swerveSub, strafeGoal, distanceGoal, rotationGoal, strafeError, distanceError, false);
+        }
+    
+        public AutoAlignUpper(SwerveSubsystem swerveSub, NTDouble strafeGoal, NTDouble distanceGoal, NTDouble rotationGoal, NTDouble strafeError, NTDouble distanceError, boolean tune) {
+            addRequirements(swerveSub);
+            this.tune = tune;
         this.swerveSub = swerveSub;
         this.strafeGoal = strafeGoal;
         this.distanceGoal = distanceGoal;
@@ -70,13 +76,13 @@ public class AutoAlignUpper extends Command {
         this.strafeError = strafeError;
         this.distanceError = distanceError;
 
-        strafePID = new ProfiledPIDController(3.5 * .6, .8 * .5, .8 * .125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
-        distancePID = new ProfiledPIDController(3.5 * .6, .8 * .5, .8 * .125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
-        rotationPID = new ProfiledPIDController(3.5 * .6, .8 * .5, .8 * .125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3,
-                        3 / 1.5));
+        strafePID = new ProfiledPIDController(3.5 * .9, .8 * .5, .8 * .125,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3.0, 3.0 / 1.5));
+        distancePID = new ProfiledPIDController(4, .4, .06,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 2.0, .4));
+        rotationPID = new ProfiledPIDController(3.5 * .9, .8 * .5, .8 * .125,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.0,
+                        3.0 / 1.5));
 
         distanceGoal.subscribe(goal -> distancePID.setGoal(goal));
         strafeGoal.subscribe(goal -> strafePID.setGoal(goal));
@@ -84,9 +90,11 @@ public class AutoAlignUpper extends Command {
         distancePID.setIntegratorRange(-15, 15);
         strafePID.setIntegratorRange(-15, 15);
 
-        Shuffleboard.getTab("Tune").add(distancePID);
-        Shuffleboard.getTab("Tune").add(strafePID);
-        Shuffleboard.getTab("Tune").add(rotationPID);
+        if (tune) {
+            Shuffleboard.getTab("Tune").add(distancePID);
+            Shuffleboard.getTab("Tune").add(strafePID);
+            Shuffleboard.getTab("Tune").add(rotationPID);
+        }
     }
 
     @Override
@@ -148,10 +156,16 @@ public class AutoAlignUpper extends Command {
 
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Distance").setDouble(target.getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Out").setDouble(distanceSpeed);
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Setpoint").setDouble(distancePID.getSetpoint().position);
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Goal").setDouble(distancePID.getGoal().position);
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Error").setDouble(distancePID.getSetpoint().position - target.getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Strafe").setDouble(target.getX());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Out").setDouble(strafeSpeed);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL rotation yaw").setDouble(target.getRotation().getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID rotation out").setDouble(rot);
+
+
+
 
         swerveSub.drive(distanceSpeed / DriveConstants.MaxVelocityMetersPerSecond,
                 strafeSpeed / DriveConstants.MaxVelocityMetersPerSecond,

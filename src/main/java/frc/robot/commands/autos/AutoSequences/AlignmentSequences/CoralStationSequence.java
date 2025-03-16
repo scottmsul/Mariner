@@ -23,10 +23,7 @@ public class CoralStationSequence extends SequentialCommandGroup {
                 var intakeAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.csStrafe, Constants.SetpointConstants.DistanceOffsets.csIntake, NTD.of(0), NTD.of(0.02), NTD.of(0.02));
                 var intakeCoral = new AutoCoralIntake(coralArm);
         addCommands(
-            new ParallelCommandGroup(
-                configureAlign,
-                config
-            ),
+                config,
             intakeAlign,
             Commands.parallel(
                 intakeCoral.until(coralArm::hasCoral),

@@ -36,6 +36,7 @@ public class AutoAlignReef extends Command {
     // private static double rot;
     // private static double distanceSpeed;
 
+    private boolean tune;
     // static double getZontal() {
     // return (LimelightHelpers.getTX("limelight-back") / 27);
     // // return (x.getDouble(160)/160)-1;
@@ -61,6 +62,10 @@ public class AutoAlignReef extends Command {
     }
 
     public AutoAlignReef(SwerveSubsystem swerveSub, NTDouble strafeGoal, NTDouble distanceGoal, NTDouble rotationGoal, NTDouble strafeError, NTDouble distanceError) {
+            this(swerveSub, strafeGoal, distanceGoal, rotationGoal, strafeError, distanceError, false);
+    }
+
+    public AutoAlignReef(SwerveSubsystem swerveSub, NTDouble strafeGoal, NTDouble distanceGoal, NTDouble rotationGoal, NTDouble strafeError, NTDouble distanceError, boolean tune) {
         addRequirements(swerveSub);
         this.swerveSub = swerveSub;
         this.strafeGoal = strafeGoal;
@@ -68,12 +73,13 @@ public class AutoAlignReef extends Command {
         this.rotationGoal = rotationGoal;
         this.strafeError = strafeError;
         this.distanceError = distanceError;
+        this.tune = tune;
 
-        strafePID = new ProfiledPIDController(3.3 * .6, .8 * .5, .8 * .125,
+        strafePID = new ProfiledPIDController(3.5 * .9, .8 * .7, .85 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
-        distancePID = new ProfiledPIDController(3.3 * .6, .8 * .5, .8 * .125,
+        distancePID = new ProfiledPIDController(3.5 * .9, .8 * .7, .85 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
-        rotationPID = new ProfiledPIDController(3.3 * .6, .8 * .5, .8 * .125,
+        rotationPID = new ProfiledPIDController(3.5 * .9, .8 * .7, .85 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3,
                         3 / 1.5));
 
@@ -146,13 +152,23 @@ public class AutoAlignReef extends Command {
         rot = MathUtil.clamp(rot, -DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.5,
                 DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.5);
 
+        // nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Distance").setDouble(target.getZ());
+        // nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Out").setDouble(distanceSpeed);
+        // nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Strafe").setDouble(target.getX());
+        // nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Out").setDouble(strafeSpeed);
+        // nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL rotation yaw").setDouble(target.getRotation().getZ());
+        // nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID rotation out").setDouble(rot);
+
+
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Distance").setDouble(target.getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Out").setDouble(distanceSpeed);
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Setpoint").setDouble(distancePID.getSetpoint().position);
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Goal").setDouble(distancePID.getGoal().position);
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Error").setDouble(distancePID.getSetpoint().position - target.getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Strafe").setDouble(target.getX());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Out").setDouble(strafeSpeed);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL rotation yaw").setDouble(target.getRotation().getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID rotation out").setDouble(rot);
-
         // how do i set a different goal for the distance
 
         // System.out.println(getStance());

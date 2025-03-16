@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.NTDouble.NTD;
 import frc.robot.sds.ModuleConfiguration;
 import frc.robot.sds.SdsModuleConfigurations;
 import frc.robot.subsystems.CoralArm;
@@ -146,9 +147,9 @@ public final class Constants {
 
     public class ElevatorSetpoints {
       public static NTDouble l1 = new NTDouble(0, "l1", "ElevatorSetpoints");
-      public static NTDouble l2 = new NTDouble(0.375, "l2", "ElevatorSetpoints");
-      public static NTDouble l3 = new NTDouble(0.77, "l3", "ElevatorSetpoints");
-      public static NTDouble l4 = new NTDouble(1.32, "l4", "ElevatorSetpoints");
+      public static NTDouble l2 = new NTDouble(0.4, "l2", "ElevatorSetpoints");
+      public static NTDouble l3 = new NTDouble(0.8, "l3", "ElevatorSetpoints");
+      public static NTDouble l4 = new NTDouble(1.36, "l4", "ElevatorSetpoints");
 
       public static NTDouble groundLevel = new NTDouble(0, "groundLevel", "ElevatorSetpoints");
       public static NTDouble algaeLow = new NTDouble(0.85, "algaeLow", "ElevatorSetpoints");
@@ -179,7 +180,7 @@ public final class Constants {
 
     public class StrafeOffsets {
       //static double l1 = 0;
-      public static NTDouble leftReef = new NTDouble(0.13, "leftReef", "StrafeOffsets");
+      public static NTDouble leftReef = new NTDouble(0.12, "leftReef", "StrafeOffsets");
       public static NTDouble leftL4 = new NTDouble(0.11, "leftL4", "StrafeOffsets");
       public static NTDouble rightReef = new NTDouble(-0.21, "rightReef", "StrafeOffsets");
       public static NTDouble rightL4 = new NTDouble(-0.2, "rightL4", "StrafeOffsets");
@@ -192,8 +193,8 @@ public final class Constants {
     }
 
     public class DistanceOffsets {
-      public static NTDouble leftReefScore = new NTDouble(0.51, "leftReefScore", "DistanceOffsets");
-      public static NTDouble rightReefScore = new NTDouble(0.51, "rightReefScore", "DistanceOffsets");
+      public static NTDouble leftReefScore = new NTDouble(0.6, "leftReefScore", "DistanceOffsets");
+      public static NTDouble rightReefScore = new NTDouble(0.6, "rightReefScore", "DistanceOffsets");
       // public static NTDouble L4score = new NTDouble(0.35, "L4score", "DistanceOffsets");
       public static NTDouble algaeReefGrab = new NTDouble(0.42, "algaeReefGrab", "DistanceOffsets");
       public static NTDouble reefCoralConfigure = new NTDouble(0.8, "reefCoralConfigure", "DistanceOffsets");
@@ -216,7 +217,7 @@ public final class Constants {
     public class AlgaeArmAngles {
       public static NTDouble up = new NTDouble(0, "up", "AlgaeArmAngles"); // hold algae in
       public static NTDouble down = new NTDouble(-0.3, "down", "AlgaeArmAngles"); // intake or outtake algae
-      public static NTDouble processor = new NTDouble(-0.15, "processor", "AlgaeArmAngles");
+      public static NTDouble processor = new NTDouble(-0.13, "processor", "AlgaeArmAngles");
       public static NTDouble groundPickUp = new NTDouble(-0.25, "ground pick up", "AlgaeArmAngles");
       public static NTDouble barge = new NTDouble(-0.1, "barge", "AlgaeArmAngles");
     }
@@ -265,6 +266,8 @@ public final class Constants {
       public static ConfigOption algaeGround = new ConfigOption(CoralPivotAngles.down, ElevatorSetpoints.groundAlgae,
           AlgaeArmAngles.down);
       // different spots
+      public static ConfigOption coralPrep = new ConfigOption(CoralPivotAngles.up, NTD.of(ElevatorSetpoints.coralStation.get()+.2),
+          AlgaeArmAngles.up);
       public static ConfigOption coralStation = new ConfigOption(CoralPivotAngles.CoralSt, ElevatorSetpoints.coralStation,
           AlgaeArmAngles.up);
       public static ConfigOption processor = new ConfigOption(CoralPivotAngles.down, ElevatorSetpoints.processor,
