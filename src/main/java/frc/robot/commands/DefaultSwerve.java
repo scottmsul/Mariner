@@ -19,6 +19,7 @@ public class DefaultSwerve extends Command {
         addRequirements(elevator);
         this.swerveSub = swerveSub;
         this.joy = joy;
+        this.elevator = elevator;
     }
 
     private double signedPow(double a, double pow) {
@@ -44,14 +45,14 @@ public class DefaultSwerve extends Command {
 
         xSpeed = signedPow(xSpeed, 2);
         ySpeed = signedPow(ySpeed, 2);
-        rot = signedPow(rot, 2);
+        rot = signedPow(rot * .7, 3);
 
         if (!joy.getTrigger()) {
             xSpeed *= 0.5;
             ySpeed *= 0.5;
-            rot *= 0.4;
+            rot *= 0.8;
         } else {
-            rot *= 0.6;
+            rot *= 1;
             xSpeed *= 0.8;
             ySpeed *= 0.8;
         }
@@ -62,10 +63,20 @@ public class DefaultSwerve extends Command {
             rot *= 0.25;
         }
 
+        if (elevator.elevatorHeightGet() >= 0.4) {
+            xSpeed *= 0.5;
+            ySpeed *= 0.5;
+            rot *= 0.5;
+        } else if (elevator.elevatorHeightGet() >= 0.6) {
+            xSpeed *= 0.35;
+            ySpeed *= 0.35;
+            rot *= 0.5;
+        }
+
         // if (elevator.tooHigh()){
-        //     xSpeed *= 0.75;
-        //     ySpeed *= 0.75;
-        //     rot *= 0.25;
+        // xSpeed *= 0.75;
+        // ySpeed *= 0.75;
+        // rot *= 0.25;
         // }
 
         if (joy.getRawButton(12)) {

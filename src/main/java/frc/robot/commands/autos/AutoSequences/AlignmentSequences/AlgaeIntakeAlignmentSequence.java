@@ -34,7 +34,7 @@ public class AlgaeIntakeAlignmentSequence extends SequentialCommandGroup{
                 config.andThen(Commands.print("configed")),
                 new ParallelRaceGroup(
                     intakeAlign,
-                    intakeAlgae.withTimeout(3)
+                    intakeAlgae.until(algaeArm::hasAlgae)
                 ).andThen(Commands.print("algaeIntaked")),
                 autoDriveBack,
                 stow

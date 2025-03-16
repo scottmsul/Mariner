@@ -13,8 +13,10 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -168,16 +170,47 @@ public class AlgaeArm extends SubsystemBase {
         return runOnce(() -> stopWrist());
     }
 
+    public class AlgaeSpinCommandTest extends Command {
+        private AlgaeArm algaeArm;
+
+        public AlgaeSpinCommandTest(AlgaeArm algaeArm) {
+            this.algaeArm = algaeArm;
+            addRequirements(algaeArm);
+        }
+
+        @Override
+        public void initialize() {
+            System.out.println("Inside spin");
+            algaeArm.grab();
+        }
+
+        @Override
+        public void end(boolean interrupted) {
+            System.out.println("end spin");
+            algaeArm.stop();
+        }
+
+        @Override
+        public boolean isFinished() {
+            boolean v = algaeArm.hasAlgae();
+            System.out.println("has algae " + v);
+            return v;
+        }
+    }
     public Command algaeSpinIn(){
-        return runOnce(() -> grab()).until(this::hasAlgae).finallyDo(this::algaeSpinStop);
+        return run(() -> grab());
+    // return Commands.print("Inside spin").andThen(Commands.startEnd(() -> grab(),
+    // () -> stop(), this)).until(this::hasAlgae).finallyDo((f) ->
+    // System.err.println("algae spin stop " + f));
     }
 
     public Command algaeSpinOut(){
-        return runOnce(()-> release()).until(this::hasNoAlgae).finallyDo(this::algaeSpinStop);
+        // return runOnce(this::release).until(this::hasNoAlgae).finallyDo(this::stop);
+        return run(() -> release());
     }
 
     public Command algaeSpinStop(){
-        return runOnce(()-> stop());
+        return run(() -> stop());
     }
 
     // public Command algaeArmStop(){

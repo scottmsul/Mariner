@@ -21,9 +21,9 @@ public class LeftAlignmentSequence extends SequentialCommandGroup {
     public LeftAlignmentSequence(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerveSubsystem, ConfigOption configOption) {
                 var config = new ConfigSystem(configOption, coralArm, elevator, algaeArm);
                 var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevator, algaeArm);
-                var configureAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.leftReef,Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, NTD.of(0), NTD.of(0.04), NTD.of(0.04));
-                var secondConfigureAlign = new AutoAlignReef(swerveSubsystem, NTD.of(0) ,Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, NTD.of(0), NTD.of(0.04), NTD.of(0.04));
-                var scoreAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.leftReef, Constants.SetpointConstants.DistanceOffsets.leftReefScore, NTD.of(0), NTD.of(0.02), NTD.of(0.02));
+                var configureAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.leftReef,Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, NTD.of(0), NTD.of(0.1), NTD.of(0.04));
+                var secondConfigureAlign = new AutoAlignReef(swerveSubsystem, NTD.of(0) ,Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, NTD.of(0), NTD.of(0.1), NTD.of(0.04));
+                var scoreAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.leftReef, Constants.SetpointConstants.DistanceOffsets.leftReefScore, NTD.of(0), NTD.of(0.02), NTD.of(0.06));
                 var scoreCoral = new AutoCoralScore(coralArm);
         addCommands(
             new ParallelCommandGroup(

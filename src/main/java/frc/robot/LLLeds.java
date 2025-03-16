@@ -23,6 +23,6 @@ public class LLLeds {
     }
 
     public static Command shortBlink(String limelight) {
-        return blink(limelight).withTimeout(1).andThen(off(limelight));
+        return on(limelight).withTimeout(1).andThen(off(limelight));
     }
 }

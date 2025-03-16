@@ -32,7 +32,7 @@ public class ProcessorAlignmentSequence extends SequentialCommandGroup{
                 config
             ),
             scoreAlign,
-            scoreAlgae.withTimeout(1),
+            scoreAlgae.withTimeout(0.7),
             configAlign2,
             stow
         );

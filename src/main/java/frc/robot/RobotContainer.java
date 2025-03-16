@@ -25,10 +25,14 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.SetpointConstants.ConfigOption;
 import frc.robot.commands.DefaultSwerve;
 import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AlgaeIntakeAlignmentSequence;
@@ -183,9 +187,9 @@ public class RobotContainer {
     primaryJoy.button(5)
       .onTrue(coralArm.outtakeCoralCommand())
       .onFalse(coralArm.stopCoralSpin());
-    // primaryJoy.button(4)
-    // .onTrue(algaeArm.algaeSpinIn())
-    // .onFalse(algaeArm.algaeSpinStop());
+    primaryJoy.button(4)
+    .onTrue(algaeArm.algaeSpinIn())
+    .onFalse(algaeArm.algaeSpinStop());
     primaryJoy.button(6)
       .onTrue(algaeArm.algaeSpinOut())
       .onFalse(algaeArm.algaeSpinStop());
@@ -290,14 +294,26 @@ public class RobotContainer {
     xboxStart.and(noBumper).onTrue(
         new ConfigSystem(Constants.SetpointConstants.Options.algaeGround, coralArm, elevatorSub, algaeArm));
 
-    primaryJoy
-        .button(4)
-        // AutoIntakeAlgae(coralArm,elevatorSub,algaeArm,swerveSubsystem));
-        .whileTrue(Commands.sequence(
-            new ConfigSystem(Constants.SetpointConstants.Options.algaeGround, coralArm, elevatorSub, algaeArm),
-            algaeArm.algaeSpinIn().withTimeout(1),
-            new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm,
-                elevatorSub, algaeArm)));
+//         CommandScheduler.getInstance().onCommandInitialize((c) -> System.out.println("initalizing: "+c.getName()));
+//         CommandScheduler.getInstance().onCommandExecute((c) ->{
+//  if (c.getName().equals("DefaultSwerve")) return;
+//  System.out.println("executing: "+c.getName());
+//         });
+//         CommandScheduler.getInstance().onCommandFinish((c) -> System.out.println("finishing: "+c.getName()));
+//         CommandScheduler.getInstance().onCommandInterrupt((c,b) -> System.out.println("finishing: "+c.getName() + " " + b));
+
+    // primaryJoy
+    //     .button(4)
+    //     // AutoIntakeAlgae(coralArm,elevatorSub,algaeArm,swerveSubsystem));
+    //     // .whileTrue(algaeArm.new AlgaeSpinCommandTest(algaeArm));
+    //     // .whileTrue(Commands.sequence(
+    //     //     new ConfigSystem(Constants.SetpointConstants.Options.algaeGround, coralArm, elevatorSub, algaeArm),
+    //     //     Commands.print("Begin Spin"),
+    //     //     algaeArm.new AlgaeSpinCommandTest(algaeArm),
+    //     //     Commands.print("End Spin"),
+    //     //     new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm,
+    //     //         elevatorSub, algaeArm)));
+    //     .whileTrue(new algaeArm);
 
     xboxBack.and(xboxA).onTrue(
         new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevatorSub, algaeArm));
@@ -315,6 +331,25 @@ public class RobotContainer {
     Shuffleboard.getTab("PathPlanner").add(
         "Goto Before 8",
         AutoBuilder.pathfindToPose(infrontOfTag8, constraints));
+  }
+
+  public class MyCommandShouldHaveAName extends SequentialCommandGroup {
+    MyCommandShouldHaveAName(CoralArm coralArm, Elevator elevator, AlgaeArm algaeArm) {
+      addRequirements(algaeArm);
+      addRequirements(coralArm);
+      addRequirements(elevator);
+
+      addCommands(
+            new ConfigSystem(Constants.SetpointConstants.Options.algaeGround, coralArm, elevatorSub, algaeArm),
+            Commands.print("Begin Spin"),
+            algaeArm.new AlgaeSpinCommandTest(algaeArm),
+            Commands.print("End Spin"),
+            new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm,
+                elevatorSub, algaeArm));
+      
+    }
+
+
   }
 
   public Command simple() {
