@@ -23,7 +23,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    LimelightHelpers.getLimelightNTTableEntry(Constants.ReefLimelightName, "throttle_set").setDouble(150);
+    LimelightHelpers.getLimelightNTTableEntry(Constants.UpperLimelightName, "throttle_set").setDouble(150);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -48,6 +51,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    LimelightHelpers.getLimelightNTTableEntry(Constants.ReefLimelightName, "throttle_set").setDouble(0);
+    LimelightHelpers.getLimelightNTTableEntry(Constants.UpperLimelightName, "throttle_set").setDouble(0);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
