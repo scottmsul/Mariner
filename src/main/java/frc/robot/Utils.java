@@ -4,8 +4,19 @@ import java.util.EnumSet;
 
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class Utils {
+  public Command rumble(GenericHID controller, double intensity, double duration) {
+    return Commands.startEnd(
+        () -> controller.setRumble(RumbleType.kBothRumble, intensity),
+        () -> controller.setRumble(RumbleType.kBothRumble, 0))
+        .withTimeout(duration);
+  }
+
   static <T> void makeClassTunable(Class<T> thisClass) {
     try {
       // var thisClass = new Object() {}.getClass().getEnclosingClass();
