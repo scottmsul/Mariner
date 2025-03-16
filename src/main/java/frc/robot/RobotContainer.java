@@ -13,12 +13,17 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -300,6 +305,16 @@ public class RobotContainer {
         new ConfigSystem(Constants.SetpointConstants.Options.l3, coralArm, elevatorSub, algaeArm));
     xboxBack.and(xboxY).onTrue(
         new ConfigSystem(Constants.SetpointConstants.Options.l4, coralArm, elevatorSub, algaeArm));
+
+    var constraints = new PathConstraints(1.75, 2, 360, 360);
+    Transform2d rot180 = new Transform2d(Translation2d.kZero, Rotation2d.k180deg);
+    var field = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+    var tag8 = field.getTagPose(8).get().toPose2d();
+    var offset = new Transform2d(1, 0, new Rotation2d());
+    Pose2d infrontOfTag8 = tag8.plus(offset).transformBy(rot180);
+    Shuffleboard.getTab("PathPlanner").add(
+        "Goto Before 8",
+        AutoBuilder.pathfindToPose(infrontOfTag8, constraints));
   }
 
   public Command simple() {
