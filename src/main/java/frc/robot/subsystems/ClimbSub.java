@@ -198,4 +198,8 @@ public class ClimbSub extends SubsystemBase {
         });
     }
 
+    public void climbWithSpeed(double rightTriggerAxis) {
+        climb1.set(rightTriggerAxis);
+        climb2.set(rightTriggerAxis);
+    }
 }

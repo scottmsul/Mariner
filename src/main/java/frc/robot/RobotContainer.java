@@ -121,6 +121,10 @@ public class RobotContainer {
     // right coral station (2, 1.7)
     // processor (6.3, 1.55)
     // }
+
+    climbSub.setDefaultCommand(Commands.run(() -> {
+      climbSub.climbWithSpeed(secondaryController.getRightTriggerAxis());
+    }, climbSub));
   }  
 
   
@@ -222,6 +226,9 @@ public class RobotContainer {
   primaryJoy.button(11).and(primaryJoy.button(7))
       .onTrue(climbSub.climbSlow().withTimeout(0.5).andThen(climbSub.climb()))
       .onFalse(climbSub.climbStopManual());
+  // primaryJoy.button(10).and(primaryJoy.button(7))
+  //     .onTrue(climbSub.climb())
+  //     .onFalse(climbSub.climbStopManual());
   //   //new JoystickButton(keyboard, 0);
   //   // var button7 = new JoystickButton(primaryJoy, 7);
   //   // var button8 = new JoystickButton(primaryJoy, 8);
