@@ -128,6 +128,16 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
+  public static final class ABSPoseOffset {
+    // should we have a bunch of constant offset transformations?
+    // ooh maybe have an offset class then call an offset pose function that takes
+    // an offset class
+    // that offset pose function then takes an parameter of a constantoffsetclass
+    // and a given pose
+    // then applies that offset transformation to the pose
+    // returns the resultant pose
+  }
+
   public static final class WaypointConstants {
 
     public static Pose2d CoralStationLeft = new Pose2d(11.5, 6.5, new Rotation2d(125));
@@ -158,8 +168,6 @@ public final class Constants {
       public static NTDouble processor = new NTDouble(0.1, "processor", "ElevatorSetpoints");
       public static NTDouble groundAlgae = new NTDouble(0.2, "algaeGround", "ElevatorSetpoints");
 
-
-
     }
     // lowest level
     // L1
@@ -173,13 +181,14 @@ public final class Constants {
       public static NTDouble l1 = new NTDouble(-0.03, "l1", "CoralPivotAngles"); // reef l1
       public static NTDouble lmid = new NTDouble(0.084, "lmid", "CoralPivotAngles"); // reef l2 and l3
       public static NTDouble l4 = new NTDouble(0.1, "l4", "CoralPivotAngles"); // reef l4
-      public static NTDouble CoralSt = new NTDouble(-0.122, "CoralSt", "CoralPivotAngles"); // pointing up to recieve coral from hp
+      public static NTDouble CoralSt = new NTDouble(-0.122, "CoralSt", "CoralPivotAngles"); // pointing up to recieve
+                                                                                            // coral from hp
       public static NTDouble up = new NTDouble(-0.24, "up", "CoralPivotAngles"); // out of the way for intaking algae
       public static NTDouble down = new NTDouble(0.24, "down", "CoralPivotAngles");
     }
 
     public class StrafeOffsets {
-      //static double l1 = 0;
+      // static double l1 = 0;
       public static NTDouble leftReef = new NTDouble(0.12, "leftReef", "StrafeOffsets");
       public static NTDouble leftL4 = new NTDouble(0.11, "leftL4", "StrafeOffsets");
       public static NTDouble rightReef = new NTDouble(-0.20, "rightReef", "StrafeOffsets");
@@ -189,13 +198,14 @@ public final class Constants {
       public static NTDouble l1Left = new NTDouble(0.10, "l1Left", "StrafeOffsets");
       public static NTDouble l1Right = new NTDouble(0.10, "l1Right", "StrafeOffsets");
       public static NTDouble csStrafe = new NTDouble(-0.05, "Coral Station Strafe", "StrafeOffsets");
-      //static double CoralSt = 0;
+      // static double CoralSt = 0;
     }
 
     public class DistanceOffsets {
       public static NTDouble leftReefScore = new NTDouble(0.6, "leftReefScore", "DistanceOffsets");
       public static NTDouble rightReefScore = new NTDouble(0.6, "rightReefScore", "DistanceOffsets");
-      // public static NTDouble L4score = new NTDouble(0.35, "L4score", "DistanceOffsets");
+      // public static NTDouble L4score = new NTDouble(0.35, "L4score",
+      // "DistanceOffsets");
       public static NTDouble algaeReefGrab = new NTDouble(0.42, "algaeReefGrab", "DistanceOffsets");
       public static NTDouble reefCoralConfigure = new NTDouble(0.8, "reefCoralConfigure", "DistanceOffsets");
       public static NTDouble reefAlgaeConfigure = new NTDouble(0.85, "reefAlgaeConfigure", "DistanceOffsets");
@@ -232,33 +242,37 @@ public final class Constants {
     // angle for holding Algae
     public static class ConfigOption {
 
-        public NTDouble algaeAngle;
-        public NTDouble coralAngle;
-        public NTDouble elevatorSetpoint;
+      public NTDouble algaeAngle;
+      public NTDouble coralAngle;
+      public NTDouble elevatorSetpoint;
 
-        public ConfigOption(NTDouble coralAngle, NTDouble elevatorSetpoint, NTDouble algaeAngle) {
+      public ConfigOption(NTDouble coralAngle, NTDouble elevatorSetpoint, NTDouble algaeAngle) {
 
-          this.coralAngle = coralAngle;
-          this.elevatorSetpoint = elevatorSetpoint;
-          this.algaeAngle = algaeAngle;
+        this.coralAngle = coralAngle;
+        this.elevatorSetpoint = elevatorSetpoint;
+        this.algaeAngle = algaeAngle;
 
-        }
+      }
 
     }
 
     public class Options {
 
-      public Options(){
+      public Options() {
 
       }
+
       // reef
       public static ConfigOption l1 = new ConfigOption(CoralPivotAngles.l1, ElevatorSetpoints.l1, AlgaeArmAngles.up);
       public static ConfigOption l2 = new ConfigOption(CoralPivotAngles.lmid, ElevatorSetpoints.l2, AlgaeArmAngles.up);
       public static ConfigOption l3 = new ConfigOption(CoralPivotAngles.lmid, ElevatorSetpoints.l3, AlgaeArmAngles.up);
       public static ConfigOption l4 = new ConfigOption(CoralPivotAngles.l4, ElevatorSetpoints.l4, AlgaeArmAngles.up);
-      //public static ConfigOption l2Right = new ConfigOption(CoralPivotAngles.lmid, ElevatorSetpoints.l2, AlgaeArmAngles.up);
-      //public static ConfigOption l3Right = new ConfigOption(CoralPivotAngles.lmid, ElevatorSetpoints.l3, AlgaeArmAngles.up);
-      //public static ConfigOpt2ion l4Right = new ConfigOption(CoralPivotAngles.l4, ElevatorSetpoints.l4, AlgaeArmAngles.up);
+      // public static ConfigOption l2Right = new ConfigOption(CoralPivotAngles.lmid,
+      // ElevatorSetpoints.l2, AlgaeArmAngles.up);
+      // public static ConfigOption l3Right = new ConfigOption(CoralPivotAngles.lmid,
+      // ElevatorSetpoints.l3, AlgaeArmAngles.up);
+      // public static ConfigOpt2ion l4Right = new ConfigOption(CoralPivotAngles.l4,
+      // ElevatorSetpoints.l4, AlgaeArmAngles.up);
       public static ConfigOption algaeLow = new ConfigOption(CoralPivotAngles.down, ElevatorSetpoints.algaeLow,
           AlgaeArmAngles.down);
       public static ConfigOption algaeHigh = new ConfigOption(CoralPivotAngles.down, ElevatorSetpoints.algaeHigh,
@@ -266,17 +280,20 @@ public final class Constants {
       public static ConfigOption algaeGround = new ConfigOption(CoralPivotAngles.down, ElevatorSetpoints.groundAlgae,
           AlgaeArmAngles.down);
       // different spots
-      public static ConfigOption coralPrep = new ConfigOption(CoralPivotAngles.up, NTD.of(ElevatorSetpoints.coralStation.get()+.2),
+      public static ConfigOption coralPrep = new ConfigOption(CoralPivotAngles.up,
+          NTD.of(ElevatorSetpoints.coralStation.get() + .2),
           AlgaeArmAngles.up);
-      public static ConfigOption coralStation = new ConfigOption(CoralPivotAngles.CoralSt, ElevatorSetpoints.coralStation,
+      public static ConfigOption coralStation = new ConfigOption(CoralPivotAngles.CoralSt,
+          ElevatorSetpoints.coralStation,
           AlgaeArmAngles.up);
       public static ConfigOption processor = new ConfigOption(CoralPivotAngles.down, ElevatorSetpoints.processor,
           AlgaeArmAngles.processor);
-      public static ConfigOption driveConfig = new ConfigOption(CoralPivotAngles.up, ElevatorSetpoints.groundLevel, AlgaeArmAngles.up);
-      public static ConfigOption barge = new ConfigOption(CoralPivotAngles.up, ElevatorSetpoints.l4, AlgaeArmAngles.barge);
+      public static ConfigOption driveConfig = new ConfigOption(CoralPivotAngles.up, ElevatorSetpoints.groundLevel,
+          AlgaeArmAngles.up);
+      public static ConfigOption barge = new ConfigOption(CoralPivotAngles.up, ElevatorSetpoints.l4,
+          AlgaeArmAngles.barge);
 
       // to hold everything in while sitting there
-   
 
       // public static double[] l1 = { CoralPivotAngles.l1, ElevatorSetpoints.l1,
       // XOffset.l1, YOffset.l1, RotOffset.l1,
@@ -313,19 +330,18 @@ public final class Constants {
       // public static double[] AlgaeHigh = { CoralPivotAngles.Out,
       // ElevatorSetpoints.l4, XOffset.none, YOffset.Algae,
       // RotOffset.none, AlgaeArmAngles.up };
-        // positionList.add(l2Left); // 1
-        // positionList.add(l3Left); // 2
-        // positionList.add(l4Left); // 3
-        // positionList.add(l2Right);// 4
-        // positionList.add(l3Right);// 5
-        // positionList.add(l4Right);// 6
-        // positionList.add(CoralStation); // 7
-        // positionList.add(Processor); // 8
-        // positionList.add(AlgaeLow); // 9
-        // positionList.add(AlgaeHigh); // 10
+      // positionList.add(l2Left); // 1
+      // positionList.add(l3Left); // 2
+      // positionList.add(l4Left); // 3
+      // positionList.add(l2Right);// 4
+      // positionList.add(l3Right);// 5
+      // positionList.add(l4Right);// 6
+      // positionList.add(CoralStation); // 7
+      // positionList.add(Processor); // 8
+      // positionList.add(AlgaeLow); // 9
+      // positionList.add(AlgaeHigh); // 10
 
-      }
     }
-
   }
 
+}
