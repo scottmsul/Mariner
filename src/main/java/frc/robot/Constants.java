@@ -14,7 +14,10 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -136,6 +139,17 @@ public final class Constants {
     // and a given pose
     // then applies that offset transformation to the pose
     // returns the resultant pose
+    public static Transform3d l4LeftPoseOffset = new Transform3d(0.0, 0.0, 0.0, new Rotation3d());
+    public static Transform3d l4RightPoseOffset = new Transform3d(0.0, 0.0, 0.0, new Rotation3d());
+    public static Transform3d l3LeftPoseOffset = new Transform3d(0.0, 0.0, 0.0, new Rotation3d());
+    public static Transform3d l3RightPoseOffset = new Transform3d(0.0, 0.0, 0.0, new Rotation3d());
+    public static Transform3d l2LeftPoseOffset = new Transform3d(0.0, 0.0, 0.0, new Rotation3d());
+    public static Transform3d l2RightPoseOffset = new Transform3d(0.0, 0.0, 0.0, new Rotation3d());
+
+    public static Pose3d offsetPose(Pose3d tagPose, Transform3d transform) {
+      Pose3d resultPose = tagPose.transformBy(transform);
+      return resultPose;
+    }
   }
 
   public static final class WaypointConstants {
@@ -264,8 +278,10 @@ public final class Constants {
 
       // reef
       public static ConfigOption l1 = new ConfigOption(CoralPivotAngles.l1, ElevatorSetpoints.l1, AlgaeArmAngles.up);
-      public static ConfigOption l2 = new ConfigOption(CoralPivotAngles.lmid, ElevatorSetpoints.l2, AlgaeArmAngles.up);
-      public static ConfigOption l3 = new ConfigOption(CoralPivotAngles.lmid, ElevatorSetpoints.l3, AlgaeArmAngles.up);
+      public static ConfigOption l2 = new ConfigOption(CoralPivotAngles.lmid, ElevatorSetpoints.l2,
+          AlgaeArmAngles.up);
+      public static ConfigOption l3 = new ConfigOption(CoralPivotAngles.lmid, ElevatorSetpoints.l3,
+          AlgaeArmAngles.up);
       public static ConfigOption l4 = new ConfigOption(CoralPivotAngles.l4, ElevatorSetpoints.l4, AlgaeArmAngles.up);
       // public static ConfigOption l2Right = new ConfigOption(CoralPivotAngles.lmid,
       // ElevatorSetpoints.l2, AlgaeArmAngles.up);
