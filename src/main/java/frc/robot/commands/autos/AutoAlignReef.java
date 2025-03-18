@@ -75,11 +75,11 @@ public class AutoAlignReef extends Command {
         this.distanceError = distanceError;
         this.tune = tune;
 
-        strafePID = new ProfiledPIDController(3.8 * .9, .8 * .7, .85 * .125,
+        strafePID = new ProfiledPIDController(3.85 * .9, .8 * .7, .85 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
-        distancePID = new ProfiledPIDController(3.8 * .9, .8 * .7, .85 * .125,
+        distancePID = new ProfiledPIDController(3.85 * .9, .8 * .7, .85 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
-        rotationPID = new ProfiledPIDController(3.8 * .9, .8 * .7, .85 * .125,
+        rotationPID = new ProfiledPIDController(3.85 * .9, .8 * .7, .85 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3,
                         3 / 1.5));
 

@@ -27,6 +27,8 @@
       "/Shuffleboard/Debug/Field": "Field2d",
       "/Shuffleboard/Debug/Rezero climb encoders": "Command",
       "/Shuffleboard/PID/Coral": "PIDController",
+      "/Shuffleboard/PathPlanner/Goto Before 8": "Command",
+      "/Shuffleboard/PathPlanner/class go to before 8": "Command",
       "/Shuffleboard/SysId/Dynamic Backaward Swerve": "Command",
       "/Shuffleboard/SysId/Dynamic Forward Swerve": "Command",
       "/Shuffleboard/SysId/Quasi Backward Swerve": "Command",
@@ -127,7 +129,8 @@
       "/Shuffleboard/Tune/ProfiledPIDController[98]": "ProfiledPIDController",
       "/Shuffleboard/Tune/ProfiledPIDController[99]": "ProfiledPIDController",
       "/Shuffleboard/Tune/ProfiledPIDController[9]": "ProfiledPIDController",
-      "/SmartDashboard/Alerts": "Alerts"
+      "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/PathPlanner": "Alerts"
     }
   },
   "NetworkTables Info": {
