@@ -362,10 +362,10 @@ public class RobotContainer {
                                                 Constants.SetpointConstants.StrafeOffsets.rightL4));
                 xboxA.and(noBumper).and(hasAlgae).and(hasUpperTarget).onTrue(
                                 new ProcessorAlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem));
-                xboxA.and(noBumper).and(hasAlgae.negate()).and(hasLowerTarget).onTrue(
-                                new AbortAbortReef(coralArm, algaeArm, elevatorSub, swerveSubsystem));
-                xboxA.and(noBumper).and(hasAlgae.negate()).and(hasUpperTarget).onTrue(
-                                new AbortAbortUpper(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                // xboxA.and(noBumper).and(hasAlgae.negate()).and(hasLowerTarget).onTrue(
+                // new AbortAbortReef(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                // xboxA.and(noBumper).and(hasAlgae.negate()).and(hasUpperTarget).onTrue(
+                // new AbortAbortUpper(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 xboxA.and(noBumper).and(hasAlgae).and(hasUpperTarget.negate()).onTrue(
                                 new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevatorSub,
                                                 algaeArm));
