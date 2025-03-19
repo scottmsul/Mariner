@@ -69,7 +69,7 @@ public final class Constants {
     // Distance between left and right wheels
     public static final double kTrackWidthMeters = 0.5842 / 2;
     // Distance between front and back wheels
-    public static final double kTrackBaseMeters = 0.5842 / 2;
+    public static final double kTrackBaseMeters = 0.6096 / 2;
 
     private static final Translation2d kFrontLeftLocation = new Translation2d(kTrackBaseMeters, kTrackWidthMeters);
     private static final Translation2d kFrontRightLocation = new Translation2d(kTrackBaseMeters, -kTrackWidthMeters);
