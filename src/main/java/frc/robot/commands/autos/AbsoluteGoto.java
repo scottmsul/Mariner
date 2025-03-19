@@ -13,39 +13,45 @@ import edu.wpi.first.math.geometry.Pose2d;
 
 public class AbsoluteGoto extends Command {
     private SwerveSubsystem swerveSub;
-    private ProfiledPIDController strafePID;
-    private ProfiledPIDController distancePID;
+    private ProfiledPIDController xPID;
+    private ProfiledPIDController yPID;
     private ProfiledPIDController rotationPID;
-    private boolean lowSpeed;
-    private NTDouble distanceError;
+    private NTDouble translationError;
     private Pose2d goal;
     private double rotationError = 0.02;
 
-    public AbsoluteGoto(SwerveSubsystem swerveSub, Pose2d goal, NTDouble strafeError, NTDouble distanceError) {
+    public AbsoluteGoto(SwerveSubsystem swerveSub, Pose2d goal, NTDouble translationError) {
         addRequirements(swerveSub);
         this.swerveSub = swerveSub;
-        this.distanceError = distanceError;
+        this.translationError = translationError;
 
         this.goal = goal;
 
-        strafePID = new ProfiledPIDController(3.3 * .6, .8 * .5, .8 * .125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
-        distancePID = new ProfiledPIDController(3.3 * .6, .8 * .5, .8 * .125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 3 / 1.5));
-        rotationPID = new ProfiledPIDController(3.3 * .6, .8 * .5, .8 * .125,
+        xPID = new ProfiledPIDController(8, .0, .85 * .125,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 2));
+        yPID = new ProfiledPIDController(8, 0, .85 * .125,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 2));
+        rotationPID = new ProfiledPIDController(3.85 * .9, .8 * .7, .85 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3,
                         3 / 1.5));
 
-        distancePID.setIntegratorRange(-15, 15);
-        strafePID.setIntegratorRange(-15, 15);
+        yPID.setGoal(goal.getY());
+        xPID.setGoal(goal.getX());
+        rotationPID.setGoal(goal.getRotation().getRadians());
+
+        yPID.setIntegratorRange(-1, 1);
+        xPID.setIntegratorRange(-1, 1);
     }
 
     @Override
     public void initialize() {
+        yPID.reset(swerveSub.getPose().getY());
+        xPID.reset(swerveSub.getPose().getX());
+        rotationPID.reset(swerveSub.getPose().getRotation().getRadians());
     }
 
     public boolean isAligned() {
-        if (goal.minus(swerveSub.getPose()).getTranslation().getNorm() < distanceError.get()
+        if (goal.minus(swerveSub.getPose()).getTranslation().getNorm() < translationError.get()
                 && goal.getRotation().minus(swerveSub.getPose().getRotation()).getRadians() < rotationError) {
             return true;
         } else {
@@ -53,39 +59,38 @@ public class AbsoluteGoto extends Command {
         }
     }
 
-    public boolean lowSpeed() {
-        return lowSpeed;
-    }
-
     @Override
     public void execute() {
         var nt = NetworkTableInstance.getDefault();
 
-        double distanceSpeed = -distancePID.calculate(swerveSub.getPose().getX());
-        distanceSpeed = MathUtil.clamp(distanceSpeed, -DriveConstants.MaxVelocityMetersPerSecond / 3.5,
+        double ySpeed = yPID.calculate(swerveSub.getPose().getY());
+        ySpeed = MathUtil.clamp(ySpeed, -DriveConstants.MaxVelocityMetersPerSecond / 3.5,
                 DriveConstants.MaxVelocityMetersPerSecond / 3.5);
 
-        double strafeSpeed = strafePID.calculate(swerveSub.getPose().getY());
-        strafeSpeed = MathUtil.clamp(strafeSpeed, -DriveConstants.MaxVelocityMetersPerSecond / 5,
-                DriveConstants.MaxVelocityMetersPerSecond / 5);
+        double xSpeed = -xPID.calculate(swerveSub.getPose().getX());
+        xSpeed = MathUtil.clamp(xSpeed, -DriveConstants.MaxVelocityMetersPerSecond / 3.5,
+                DriveConstants.MaxVelocityMetersPerSecond / 3.5);
 
         double rot = rotationPID.calculate(swerveSub.getPose().getRotation().getRadians());
-        rot = MathUtil.clamp(rot, -DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.5,
+        rot = MathUtil.clamp(rot, -DriveConstants.MaxAngularVelocityRadiansPerSecond
+                / 3.5,
                 DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.5);
 
-        nt.getEntry("/Tune/AutoAlignAbs/X Goal").setDouble(distancePID.getGoal().position);
-        nt.getEntry("/Tune/AutoAlignAbs/X Setpoint").setDouble(distancePID.getSetpoint().position);
-        nt.getEntry("/Tune/AutoAlignAbs/X CurrentSwerve").setDouble(swerveSub.getPose().getX());
-        nt.getEntry("/Tune/AutoAlignAbs/Y Goal").setDouble(strafePID.getGoal().position);
-        nt.getEntry("/Tune/AutoAlignAbs/Y Setpoint").setDouble(strafePID.getSetpoint().position);
+        nt.getEntry("/Tune/AutoAlignAbs/Y Goal").setDouble(yPID.getGoal().position);
+        nt.getEntry("/Tune/AutoAlignAbs/Y Setpoint").setDouble(yPID.getSetpoint().position);
         nt.getEntry("/Tune/AutoAlignAbs/Y CurrentSwerve").setDouble(swerveSub.getPose().getY());
+        nt.getEntry("/Tune/AutoAlignAbs/Y out").setDouble(ySpeed);
+        nt.getEntry("/Tune/AutoAlignAbs/X Goal").setDouble(xPID.getGoal().position);
+        nt.getEntry("/Tune/AutoAlignAbs/X Setpoint").setDouble(xPID.getSetpoint().position);
+        nt.getEntry("/Tune/AutoAlignAbs/X CurrentSwerve").setDouble(swerveSub.getPose().getX());
+        nt.getEntry("/Tune/AutoAlignAbs/X out").setDouble(xSpeed);
         nt.getEntry("/Tune/AutoAlignAbs/R Goal").setDouble(goal.getRotation().getRadians());
         nt.getEntry("/Tune/AutoAlignAbs/R Setpoint").setDouble(rotationPID.getSetpoint().position);
         nt.getEntry("/Tune/AutoAlignAbs/R CurrentSwerve").setDouble(swerveSub.getPose().getRotation().getRadians());
 
-        swerveSub.drive(distanceSpeed / DriveConstants.MaxVelocityMetersPerSecond,
-                strafeSpeed / DriveConstants.MaxVelocityMetersPerSecond,
-                rot / DriveConstants.MaxAngularVelocityRadiansPerSecond, false);
+        swerveSub.driveAuto(ySpeed / DriveConstants.MaxVelocityMetersPerSecond,
+                xSpeed / DriveConstants.MaxVelocityMetersPerSecond,
+                rot / DriveConstants.MaxAngularVelocityRadiansPerSecond, true);
     }
 
     @Override

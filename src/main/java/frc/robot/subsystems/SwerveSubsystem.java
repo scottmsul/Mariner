@@ -73,6 +73,23 @@ public class SwerveSubsystem extends SubsystemBase {
 
         }
 
+        public void driveAuto(double xPercent, double yPercent, double rotPercent, boolean fieldRelative) {
+
+                var xSpeed = xPercent * Constants.DriveConstants.MaxVelocityMetersPerSecond;
+                var ySpeed = yPercent * Constants.DriveConstants.MaxVelocityMetersPerSecond;
+                var rot = rotPercent * Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond;
+
+                ChassisSpeeds chasSpeed = fieldRelative
+                                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getRotation())
+                                : new ChassisSpeeds(xSpeed, ySpeed, rot);
+
+                // TODO: DEFINE MAX SPEED
+                var swerveModuleStates2 = DriveConstants.kinematics.toSwerveModuleStates(
+                                ChassisSpeeds.discretize(chasSpeed, 0.2));
+
+                driveStates(swerveModuleStates2);
+        }
+
         public void stop() {
                 SwerveModuleState[] states = getModuleStates();
                 for (var state : states) {
@@ -83,7 +100,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         public void xpattern() {
                 SwerveModuleState[] states = getModuleStates();
-                for (var i = 0; i<states.length;i++) {
+                for (var i = 0; i < states.length; i++) {
                         states[i].angle = DriveConstants.kinematics.getModules()[i].getAngle();
                         states[i].speedMetersPerSecond = 0;
                 }
@@ -180,6 +197,7 @@ public class SwerveSubsystem extends SubsystemBase {
         @Override
         public void periodic() {
                 doMegatag(Constants.ReefLimelightName);
+                doMegatag(Constants.UpperLimelightName);
 
                 ometry.update(
                                 getRotation(),
@@ -320,5 +338,5 @@ public class SwerveSubsystem extends SubsystemBase {
                 fRSwerve.runVolts(in);
                 bLSwerve.runVolts(in);
                 bRSwerve.runVolts(in);
-                                                        }
+        }
 }
