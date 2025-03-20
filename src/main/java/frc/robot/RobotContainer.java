@@ -369,7 +369,7 @@ public class RobotContainer {
                 xboxA.and(noBumper).and(hasAlgae).and(hasUpperTarget.negate()).onTrue(
                                 new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevatorSub,
                                                 algaeArm));
-                xboxA.and(noBumper).and(hasAlgae.negate()).and(hasNoTarget).onTrue(
+                xboxA.and(noBumper).and(hasAlgae.negate()).onTrue(
                                 new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevatorSub,
                                                 algaeArm));
                 xboxB.and(noBumper).onTrue(
