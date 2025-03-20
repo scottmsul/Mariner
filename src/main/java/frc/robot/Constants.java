@@ -170,7 +170,7 @@ public final class Constants {
     // here is where we keep all the setpoints for the subsystem pid
 
     public class ElevatorSetpoints {
-      public static NTDouble l1 = new NTDouble(0.2, "l1", "ElevatorSetpoints");
+      public static NTDouble l1 = new NTDouble(0, "l1", "ElevatorSetpoints");
       public static NTDouble l2 = new NTDouble(0.47, "l2", "ElevatorSetpoints");
       public static NTDouble l3 = new NTDouble(0.81, "l3", "ElevatorSetpoints");
       public static NTDouble l4 = new NTDouble(1.36, "l4", "ElevatorSetpoints");
@@ -192,7 +192,7 @@ public final class Constants {
 
     public class CoralPivotAngles {
       // angle of release
-      public static NTDouble l1 = new NTDouble(0.03, "l1", "CoralPivotAngles"); // reef l1
+      public static NTDouble l1 = new NTDouble(-0.03, "l1", "CoralPivotAngles"); // reef l1
       public static NTDouble lmid = new NTDouble(0.084, "lmid", "CoralPivotAngles"); // reef l2 and l3
       public static NTDouble l4 = new NTDouble(0.1, "l4", "CoralPivotAngles"); // reef l4
       public static NTDouble CoralSt = new NTDouble(-0.122, "CoralSt", "CoralPivotAngles"); // pointing up to recieve
