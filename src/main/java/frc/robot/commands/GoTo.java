@@ -30,6 +30,9 @@ public class GoTo {
     Optional<Alliance> alliance = DriverStation.getAlliance();
 
     public GoTo() {
+    }
+
+    public void setAllianceIDs() {
         if (alliance.isPresent()) {
             if (alliance.get() == Alliance.Red) {
                 reefNTagID = 10;
@@ -78,42 +81,52 @@ public class GoTo {
     }
 
     public Command reefN() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(reefNTagID), constraints);
     }
 
     public Command reefNE() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(reefNETagID), constraints);
     }
 
     public Command reefNW() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(reefNWTagID), constraints);
     }
 
     public Command reefS() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(reefSTagID), constraints);
     }
 
     public Command reefSE() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(reefSETagID), constraints);
     }
 
     public Command reefSW() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(reefSWTagID), constraints);
     }
 
     public Command coralStationLeft() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(csLeftTagID), constraints);
     }
 
     public Command coralStationRight() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(csRightTagID), constraints);
     }
 
     public Command processor() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(processorTagID), constraints);
     }
 
     public Command testTag8() {
+        setAllianceIDs();
         return AutoBuilder.pathfindToPose(inFrontOfTag(8), constraints);
     }
 

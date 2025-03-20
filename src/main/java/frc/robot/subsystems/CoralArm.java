@@ -62,7 +62,6 @@ public class CoralArm extends SubsystemBase {
                 .outputRange(-0.8, 0.7);
         coralWrist.configure(configWrist, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        
         // coralWrist.getEncoder().setPosition(coralWrist.getAbsoluteEncoder().getPosition());
 
         // SparkMaxConfig configWheel = new SparkMaxConfig();
@@ -81,19 +80,23 @@ public class CoralArm extends SubsystemBase {
         coralWheel.setInverted(true);
         coralWheel.setSelectedSensorPosition(0);
 
-
         // coralWheel.getSensorCollection().getp
 
-        // Shuffleboard.getTab("Debug").addDouble("cwsetpoint", () -> coralWristSetpoint);
-        // Shuffleboard.getTab("Debug").addDouble("Cweabs", () -> coralWrist.getAbsoluteEncoder().getPosition());
+        // Shuffleboard.getTab("Debug").addDouble("cwsetpoint", () ->
+        // coralWristSetpoint);
+        // Shuffleboard.getTab("Debug").addDouble("Cweabs", () ->
+        // coralWrist.getAbsoluteEncoder().getPosition());
         // Shuffleboard.getTab("Debug").addDouble("test", () -> 0.01);
-        // Shuffleboard.getTab("Debug").addDouble("cwe", () -> coralWrist.getEncoder().getPosition());
-        // Shuffleboard.getTab("Debug").addDouble("Coral Wrist Power", () -> coralWrist.getAppliedOutput());
+        // Shuffleboard.getTab("Debug").addDouble("cwe", () ->
+        // coralWrist.getEncoder().getPosition());
+        // Shuffleboard.getTab("Debug").addDouble("Coral Wrist Power", () ->
+        // coralWrist.getAppliedOutput());
+        Shuffleboard.getTab("Drive").addBoolean("Has Coral", this::hasCoral);
     }
 
     @Override
     public void periodic() {
-        if(!elevator.isReady()) {
+        if (!elevator.isReady()) {
             // if coral arm setpoint is below horizontal and will hit the elevator
             if (!needsRestoreSetpoint && coralWristSetpoint > 0) {
                 System.out.println("Saving setpoint " + coralWristSetpoint);
@@ -111,17 +114,19 @@ public class CoralArm extends SubsystemBase {
         var inst = NetworkTableInstance.getDefault();
         inst.getEntry("/Debug/CoralArm/cwsetpoint").setDouble(coralWristSetpoint);
         inst.getEntry("/Debug/CoralArm/Cweabs").setDouble(coralWrist.getAbsoluteEncoder().getPosition());
-        inst.getEntry("/Debug/CoralArm/test").setDouble( 0.01);
-        inst.getEntry("/Debug/CoralArm/cwe").setDouble( coralWrist.getEncoder().getPosition());
-        inst.getEntry("/Debug/CoralArm/Coral Wrist Power").setDouble( coralWrist.getAppliedOutput());
+        inst.getEntry("/Debug/CoralArm/test").setDouble(0.01);
+        inst.getEntry("/Debug/CoralArm/cwe").setDouble(coralWrist.getEncoder().getPosition());
+        inst.getEntry("/Debug/CoralArm/Coral Wrist Power").setDouble(coralWrist.getAppliedOutput());
 
     }
 
     // @Override
     // public void periodic() {
-    //     // MathUtil.clamp(coralWristSetpoint, -0.25, 0.25);
-    //     double setMotor = MathUtil.clamp(coralWristPID.calculate(coralWheel.getSelectedSensorPosition()), -0.25, 0.25);
-    //     coralWrist.set(setMotor);
+    // // MathUtil.clamp(coralWristSetpoint, -0.25, 0.25);
+    // double setMotor =
+    // MathUtil.clamp(coralWristPID.calculate(coralWheel.getSelectedSensorPosition()),
+    // -0.25, 0.25);
+    // coralWrist.set(setMotor);
     // }
 
     public void intakeCoral() {
@@ -150,27 +155,27 @@ public class CoralArm extends SubsystemBase {
         coralWristController.setReference(setpoint, ControlType.kPosition);
     }
 
-    public boolean isReady(){
+    public boolean isReady() {
         double coralPosition = coralWrist.getAbsoluteEncoder().getPosition();
         return coralPosition > (coralWristSetpoint - 0.1) && coralPosition < (coralWristSetpoint + 0.1);
     }
 
-    public boolean hasCoral(){
+    public boolean hasCoral() {
         return coralWheel.isFwdLimitSwitchClosed() == 1;
     }
 
-    public boolean hasNoCoral(){
+    public boolean hasNoCoral() {
         return coralWheel.isFwdLimitSwitchClosed() == 0;
     }
 
-    //public boolean hasCoral() {
-        // true if has coral
-        // false if not
-        //return coralLimitSwitch.isPressed();
-    //}
+    // public boolean hasCoral() {
+    // true if has coral
+    // false if not
+    // return coralLimitSwitch.isPressed();
+    // }
 
     // public boolean hasNoCoral() {
-    //     //return !coralLimitSwitch.isPressed();
+    // //return !coralLimitSwitch.isPressed();
     // }
 
     public Command l1() {
@@ -186,7 +191,7 @@ public class CoralArm extends SubsystemBase {
         return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.l4.get()));
     }
 
-    public Command coralStation(){
+    public Command coralStation() {
         return run(() -> setCoralWristSetpoint(Constants.SetpointConstants.CoralPivotAngles.CoralSt.get()));
     }
 

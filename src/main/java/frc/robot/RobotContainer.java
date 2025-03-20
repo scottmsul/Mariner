@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -93,6 +94,7 @@ public class RobotContainer {
 
         public RobotContainer() {
                 // if start lowercase, its object
+                LiveWindow.enableTelemetry(CommandScheduler.getInstance());
                 var autoChooser = AutoBuilder.buildAutoChooser();
                 // URCL.start();
                 autoChooser.addOption("left", new LeftAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem));
@@ -103,7 +105,7 @@ public class RobotContainer {
                 swerveSubsystem.setDefaultCommand(swerve);
                 configureBindings();
 
-                if (false) {
+                if (true) {
                         DataLogManager.start();
                         var sparks = new HashMap<Integer, String>();
                         sparks.put(10, "SwerveTurnBR");
