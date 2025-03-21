@@ -208,10 +208,10 @@ public final class Constants {
       public static NTDouble rightReef = new NTDouble(-0.18, "rightReef", "StrafeOffsets");
       public static NTDouble rightL4 = new NTDouble(-0.2, "rightL4", "StrafeOffsets");
       public static NTDouble centerReef = new NTDouble(0.00, "centerReef", "StrafeOffsets");
-      public static NTDouble processor = new NTDouble(0, "processor", "StrafeOffsets");
+      public static NTDouble processor = new NTDouble(0.05, "processor", "StrafeOffsets");
       public static NTDouble l1Left = new NTDouble(0.10, "l1Left", "StrafeOffsets");
       public static NTDouble l1Right = new NTDouble(0.10, "l1Right", "StrafeOffsets");
-      public static NTDouble csStrafe = new NTDouble(-0.05, "Coral Station Strafe", "StrafeOffsets");
+      public static NTDouble csStrafe = new NTDouble(0.00, "Coral Station Strafe", "StrafeOffsets");
       // static double CoralSt = 0;
     }
 
@@ -223,12 +223,12 @@ public final class Constants {
       public static NTDouble algaeReefGrab = new NTDouble(0.42, "algaeReefGrab", "DistanceOffsets");
       public static NTDouble reefCoralConfigure = new NTDouble(0.8, "reefCoralConfigure", "DistanceOffsets");
       public static NTDouble reefAlgaeConfigure = new NTDouble(0.9, "reefAlgaeConfigure", "DistanceOffsets");
-      public static NTDouble reefAlgaeStow = new NTDouble(1.1, "reefAlgaeStow", "DistanceOffsets");
+      public static NTDouble reefAlgaeStow = new NTDouble(1.3, "reefAlgaeStow", "DistanceOffsets");
       public static NTDouble processorInitial = new NTDouble(0.95, "processorInitial", "DistanceOffsets");
-      public static NTDouble processorScore = new NTDouble(0.5, "processorScore", "DistanceOffsets");
+      public static NTDouble processorScore = new NTDouble(0.45, "processorScore", "DistanceOffsets");
       public static NTDouble l1 = new NTDouble(0.5, "l1", "DistanceOffsets");
       public static NTDouble csConfigure = new NTDouble(0.7, "CoralStationConfigure", "DistanceOffsets");
-      public static NTDouble csIntake = new NTDouble(0.7, "CoralStationIntake", "DistanceOffsets");
+      public static NTDouble csIntake = new NTDouble(0.55, "CoralStationIntake", "DistanceOffsets");
     }
 
     public class RotOffsets {

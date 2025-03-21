@@ -45,7 +45,8 @@ import frc.robot.commands.DefaultSwerve;
 import frc.robot.commands.GoTo;
 import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoDrive;
-import frc.robot.commands.autos.AutoSequences.CenterAuto;
+import frc.robot.commands.autos.AutoSequences.CenterAutoLeft;
+import frc.robot.commands.autos.AutoSequences.CenterAutoRight;
 import frc.robot.commands.autos.AutoSequences.Forward;
 import frc.robot.commands.autos.AutoSequences.LeftAuto;
 import frc.robot.commands.autos.AutoSequences.RightAuto;
@@ -115,10 +116,11 @@ public class RobotContainer {
                 Optional<Alliance> alliance = null;
                 LiveWindow.enableTelemetry(CommandScheduler.getInstance());
                 // URCL.start();
-                autoChooser.addOption("left",
-                                new LeftAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
-                autoChooser.addOption("center",
-                                new CenterAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+                autoChooser.addOption("left", new LeftAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+                autoChooser.addOption("center left",
+                                new CenterAutoLeft(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+                autoChooser.addOption("center right",
+                                new CenterAutoRight(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
                 autoChooser.addOption("right", new RightAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("testRight", new Test(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("testRightwithGoTo",

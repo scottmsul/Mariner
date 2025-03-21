@@ -20,13 +20,13 @@ import frc.robot.subsystems.CoralArm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class CenterAuto extends SequentialCommandGroup {
+public class CenterAutoLeft extends SequentialCommandGroup {
         final CoralArm coralArm;
         final AlgaeArm algaeArm;
         final Elevator elevator;
         final SwerveSubsystem swerveSubsystem;
 
-        public CenterAuto(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerve,
+        public CenterAutoLeft(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerve,
                         Optional<Alliance> alliance) {
                 this.coralArm = coralArm;
                 this.algaeArm = algaeArm;

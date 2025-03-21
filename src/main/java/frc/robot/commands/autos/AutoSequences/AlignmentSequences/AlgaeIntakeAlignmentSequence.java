@@ -18,36 +18,45 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class AlgaeIntakeAlignmentSequence extends SequentialCommandGroup {
 
-    public AlgaeIntakeAlignmentSequence(CoralArm coralArm, Elevator elevator, AlgaeArm algaeArm,
-            SwerveSubsystem swerveSubsystem, ConfigOption configOption) {
-        var config = new ConfigSystem(configOption, coralArm, elevator, algaeArm);
-        var stow = new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevator, algaeArm);
-        var configureAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.centerReef,
-                Constants.SetpointConstants.DistanceOffsets.reefAlgaeConfigure, NTD.of(0), NTD.of(0.04), NTD.of(0.04));
-        var secondConfigureAlign = new AutoAlignReef(swerveSubsystem, NTD.of(0),
-                Constants.SetpointConstants.DistanceOffsets.reefAlgaeConfigure, NTD.of(0), NTD.of(0.04), NTD.of(0.04));
-        var stowAlgaeAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.centerReef,
-                Constants.SetpointConstants.DistanceOffsets.reefAlgaeStow, NTD.of(0), NTD.of(0.04), NTD.of(0.04));
-        var intakeAlign = new AutoAlignReef(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.centerReef,
-                Constants.SetpointConstants.DistanceOffsets.algaeReefGrab, NTD.of(0), NTD.of(0.02), NTD.of(0.02));
-        var intakeAlgae = new AutoAlgaeIntake(algaeArm);
-        var autoDriveBack = new AutoDrive(swerveSubsystem, 0.15, -0.1);
-        addCommands(
-                // new ParallelCommandGroup(
-                Commands.print("Start AlgaeIntakeAlighnSeque"),
-                configureAlign.andThen(Commands.print("aligned")),
-                config.andThen(Commands.print("configed")),
-                new ParallelRaceGroup(
-                        intakeAlign,
-                        intakeAlgae.until(algaeArm::hasAlgae)).andThen(Commands.print("algaeIntaked")),
-                autoDriveBack,
-                stow
-        // intakeAlign.andThen(Commands.print("intaked"))
-        // ),
-        // intakeAlign,
-        // intakeAlgae,
-        // secondConfigureAlign,
-        // stow
-        );
-    }
+        public AlgaeIntakeAlignmentSequence(CoralArm coralArm, Elevator elevator, AlgaeArm algaeArm,
+                        SwerveSubsystem swerveSubsystem, ConfigOption configOption) {
+                var config = new ConfigSystem(configOption, coralArm, elevator, algaeArm);
+                var stow = new ConfigSystem(Constants.SetpointConstants.Options.processor, coralArm, elevator,
+                                algaeArm);
+                var configureAlign = new AutoAlignReef(swerveSubsystem,
+                                Constants.SetpointConstants.StrafeOffsets.centerReef,
+                                Constants.SetpointConstants.DistanceOffsets.reefAlgaeConfigure, NTD.of(0), NTD.of(0.04),
+                                NTD.of(0.04));
+                var secondConfigureAlign = new AutoAlignReef(swerveSubsystem, NTD.of(0),
+                                Constants.SetpointConstants.DistanceOffsets.reefAlgaeConfigure, NTD.of(0), NTD.of(0.04),
+                                NTD.of(0.04));
+                var stowAlgaeAlign = new AutoAlignReef(swerveSubsystem,
+                                Constants.SetpointConstants.StrafeOffsets.centerReef,
+                                Constants.SetpointConstants.DistanceOffsets.reefAlgaeStow, NTD.of(0), NTD.of(0.04),
+                                NTD.of(0.04));
+                var intakeAlign = new AutoAlignReef(swerveSubsystem,
+                                Constants.SetpointConstants.StrafeOffsets.centerReef,
+                                Constants.SetpointConstants.DistanceOffsets.algaeReefGrab, NTD.of(0), NTD.of(0.02),
+                                NTD.of(0.02));
+                var intakeAlgae = new AutoAlgaeIntake(algaeArm);
+                var autoDriveBack = new AutoDrive(swerveSubsystem, 0.35, -0.1);
+                addCommands(
+                                // new ParallelCommandGroup(
+                                Commands.print("Start AlgaeIntakeAlighnSeque"),
+                                configureAlign.andThen(Commands.print("aligned")),
+                                config.andThen(Commands.print("configed")),
+                                new ParallelRaceGroup(
+                                                intakeAlign,
+                                                intakeAlgae.until(algaeArm::hasAlgae))
+                                                .andThen(Commands.print("algaeIntaked")),
+                                autoDriveBack,
+                                stow
+                // intakeAlign.andThen(Commands.print("intaked"))
+                // ),
+                // intakeAlign,
+                // intakeAlgae,
+                // secondConfigureAlign,
+                // stow
+                );
+        }
 }
