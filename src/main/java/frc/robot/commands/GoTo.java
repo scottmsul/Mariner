@@ -44,8 +44,7 @@ public class GoTo {
                 csLeftTagID = 1;
                 csRightTagID = 2;
                 processorTagID = 3;
-            }
-            if (alliance.get() == Alliance.Blue) {
+            } else if (alliance.get() == Alliance.Blue) {
                 reefNTagID = 21;
                 reefNETagID = 22;
                 reefNWTagID = 20;

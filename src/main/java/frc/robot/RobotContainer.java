@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -36,9 +37,12 @@ import frc.robot.Constants.SetpointConstants.ConfigOption;
 import frc.robot.commands.DefaultSwerve;
 import frc.robot.commands.GoTo;
 import frc.robot.commands.Configuration.ConfigSystem;
+import frc.robot.commands.autos.AutoDrive;
 import frc.robot.commands.autos.AutoSequences.CenterAuto;
 import frc.robot.commands.autos.AutoSequences.LeftAuto;
 import frc.robot.commands.autos.AutoSequences.RightAuto;
+import frc.robot.commands.autos.AutoSequences.Test;
+import frc.robot.commands.autos.AutoSequences.TestGoTo;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AbortAbortReef;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AbortAbortUpper;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AlgaeIntakeAlignmentSequence;
@@ -92,14 +96,19 @@ public class RobotContainer {
 
         // Elevator elevator = new Elevator();
 
+        SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
+
         public RobotContainer() {
                 // if start lowercase, its object
                 LiveWindow.enableTelemetry(CommandScheduler.getInstance());
-                var autoChooser = AutoBuilder.buildAutoChooser();
                 // URCL.start();
                 autoChooser.addOption("left", new LeftAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("center", new CenterAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("right", new RightAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.addOption("testRight", new Test(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.addOption("testRightwithGoTo",
+                                new TestGoTo(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.setDefaultOption("Do Nothing", Commands.none());
                 Shuffleboard.getTab("auto").add(autoChooser);
 
                 swerveSubsystem.setDefaultCommand(swerve);
@@ -133,9 +142,12 @@ public class RobotContainer {
                 // processor (6.3, 1.55)
                 // }
 
-                climbSub.setDefaultCommand(Commands.run(() -> {
-                        climbSub.climbWithSpeed(secondaryController.getRightTriggerAxis());
-                }, climbSub));
+                // climbSub.setDefaultCommand(Commands.run(() -> {
+                // climbSub.climbWithSpeed(secondaryController.getRightTriggerAxis());
+                // }, climbSub));
+
+                var scheduler = CommandScheduler.getInstance();
+                Shuffleboard.getTab("Drive").addBoolean("Is Auto", () -> !scheduler.isScheduled(swerve));
         }
 
         private boolean getUpperTag() {
@@ -481,6 +493,12 @@ public class RobotContainer {
         }
 
         public Command getAutonomousCommand() {
-                return Commands.print("No autonomous command configured");
+                // return Commands.print("No autonomous command configured");
+                var command = autoChooser.getSelected();
+                if (command != null) {
+                        return command;
+                } else {
+                        return Commands.none();
+                }
         }
 }

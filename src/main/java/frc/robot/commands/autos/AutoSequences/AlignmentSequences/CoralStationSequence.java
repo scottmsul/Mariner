@@ -24,7 +24,7 @@ public class CoralStationSequence extends SequentialCommandGroup {
         var configureAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.csStrafe,
                 Constants.SetpointConstants.DistanceOffsets.csConfigure, NTD.of(0), NTD.of(0.1), NTD.of(0.1));
         var intakeAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.csStrafe,
-                Constants.SetpointConstants.DistanceOffsets.csIntake, NTD.of(0), NTD.of(0.02), NTD.of(0.02));
+                Constants.SetpointConstants.DistanceOffsets.csIntake, NTD.of(0), NTD.of(0.05), NTD.of(0.05));
         var intakeCoral = new AutoCoralIntake(coralArm);
         addCommands(
                 config,

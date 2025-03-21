@@ -2,11 +2,13 @@ package frc.robot.commands.autos.AutoSequences;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.commands.GoTo;
 import frc.robot.commands.Configuration.ConfigSystem;
+import frc.robot.commands.autos.AutoDrive;
+import frc.robot.commands.autos.AutoRotate;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.CoralStationSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.L4AlignmentSequence;
 import frc.robot.commands.autos.CoralAutos.AutoCoralIntake;
@@ -16,32 +18,39 @@ import frc.robot.subsystems.CoralArm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class LeftAuto extends SequentialCommandGroup {
-        final SwerveSubsystem swerveSubsystem;
-        final AlgaeArm algaeArm;
+public class TestGoTo extends SequentialCommandGroup {
         final CoralArm coralArm;
+        final AlgaeArm algaeArm;
         final Elevator elevator;
+        final SwerveSubsystem swerveSubsystem;
 
-        public LeftAuto(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerve) {
+        public TestGoTo(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerve) {
                 this.coralArm = coralArm;
                 this.algaeArm = algaeArm;
                 this.elevator = elevator;
                 this.swerveSubsystem = swerve;
 
                 addCommands(
-                                AutoBuilder.pathfindToPose(Constants.WaypointConstants.ReefNW,
-                                                Constants.AutoConstants.constantConstraints),
+                                new AutoDrive(swerve, 2, 0.5),
+                                new AutoRotate(swerve, 90, 0.5),
+                                new GoTo().reefN(),
                                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
-                                AutoBuilder.pathfindToPose(Constants.WaypointConstants.CoralStationLeft,
-                                                Constants.AutoConstants.constantConstraints),
+                                new GoTo().coralStationLeft(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve),
-                                AutoBuilder.pathfindToPose(Constants.WaypointConstants.ReefSW,
-                                                Constants.AutoConstants.constantConstraints),
+                                new GoTo().reefSW(),
                                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
-                                AutoBuilder.pathfindToPose(Constants.WaypointConstants.CoralStationLeft,
-                                                Constants.AutoConstants.constantConstraints),
-                                new CoralStationSequence(coralArm, algaeArm, elevator, swerve));
+                                new GoTo().coralStationLeft(),
+                                new CoralStationSequence(coralArm, algaeArm, elevator, swerve)
+
+                // new ParallelCommandGroup(new AutoNav(), ConfigSystem)
+                // aim andl score corale
+                // new AutoNav(0) //go to coral station
+                // aim and intake coral
+                // run to reef spot again
+                // aim and score coral
+
+                );
         }
 }

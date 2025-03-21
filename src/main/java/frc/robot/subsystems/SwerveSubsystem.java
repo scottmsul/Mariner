@@ -107,7 +107,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 driveStates(states);
         }
 
-        private Rotation2d yawOffset = new Rotation2d();
+        private Rotation2d yawOffset = Rotation2d.k180deg;
 
         // have we ever seen a tag?
         private boolean seenMT;
@@ -122,7 +122,7 @@ public class SwerveSubsystem extends SubsystemBase {
                                         bRSwerve.getPosition()
                         },
                         // Starting pos
-                        new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                        new Pose2d(7.6, 4, Rotation2d.fromDegrees(0)),
                         VecBuilder.fill(0.1, 0.1, 0.4),
                         VecBuilder.fill(0.9, 0.9, 0.9));
 
