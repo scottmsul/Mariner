@@ -47,9 +47,12 @@ import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoDrive;
 import frc.robot.commands.autos.AutoSequences.CenterAutoLeft;
 import frc.robot.commands.autos.AutoSequences.CenterAutoRight;
+import frc.robot.commands.autos.AutoSequences.CenterScoreOnce;
 import frc.robot.commands.autos.AutoSequences.Forward;
 import frc.robot.commands.autos.AutoSequences.LeftAuto;
+import frc.robot.commands.autos.AutoSequences.LeftScoreOnce;
 import frc.robot.commands.autos.AutoSequences.RightAuto;
+import frc.robot.commands.autos.AutoSequences.RightScoreOnce;
 import frc.robot.commands.autos.AutoSequences.Test;
 import frc.robot.commands.autos.AutoSequences.TestGoTo;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AbortAbortReef;
@@ -127,6 +130,13 @@ public class RobotContainer {
                                 new TestGoTo(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
                 autoChooser.addOption("goforward", new Forward(swerveSubsystem));
                 autoChooser.setDefaultOption("Do Nothing", Commands.none());
+                autoChooser.addOption("score once right",
+                                new RightScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+                autoChooser.addOption("score once right",
+                                new LeftScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+                autoChooser.addOption("score once center",
+                                new CenterScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+
                 Shuffleboard.getTab("auto").add(autoChooser);
 
                 poseChooser.addOption("Left", StartingPlace.Left);
