@@ -163,6 +163,14 @@ public class RobotContainer {
                         sparks.put(16, "SwerveTurnBL");
                         sparks.put(17, "SwerveDriveBL");
 
+                        sparks.put(55, "CoralWrist");
+
+                        sparks.put(56, "AlgaeWrist");
+                        sparks.put(57, "AlgaeIntake");
+
+                        sparks.put(58, "ClimbByBattery");
+                        sparks.put(57, "ClimbByPDH");
+
                         sparks.put(59, "Elevator1");
                         sparks.put(60, "Elevator2");
                         URCL.start(sparks);
@@ -179,9 +187,9 @@ public class RobotContainer {
                 // processor (6.3, 1.55)
                 // }
 
-                // climbSub.setDefaultCommand(Commands.run(() -> {
-                // climbSub.climbWithSpeed(secondaryController.getRightTriggerAxis());
-                // }, climbSub));
+                climbSub.setDefaultCommand(Commands.run(() -> {
+                        climbSub.climbWithSpeed(secondaryController.getRightTriggerAxis());
+                }, climbSub));
 
                 var scheduler = CommandScheduler.getInstance();
                 Shuffleboard.getTab("Drive").addBoolean("Is Auto", () -> !scheduler.isScheduled(swerve));
