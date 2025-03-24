@@ -64,6 +64,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
+        // private boolean isOffset;
         CommandJoystick primaryJoy = new CommandJoystick(0);
         XboxController secondaryController = new XboxController(1);
         // GenericHID keyboard = new GenericHID(1);
@@ -81,9 +82,9 @@ public class RobotContainer {
 
         PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
-        private void isOffset(boolean isOffset) {
-                this.isOffset = isOffset;
-        }
+        // private void isOffset(boolean isOffset) {
+        // this.isOffset = isOffset;
+        // }
 
         // Constants constants = new Constants()
         // SetpointConstants setpointConstants = new SetpointConstants();
