@@ -20,8 +20,7 @@ public class CenterScoreOnce extends SequentialCommandGroup {
     final AlgaeArm algaeArm;
     final SwerveSubsystem swerveSubsystem;
 
-    public CenterScoreOnce(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerveSubsystem,
-            Optional<Alliance> alliance) {
+    public CenterScoreOnce(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerveSubsystem) {
         this.coralArm = coralArm;
         this.algaeArm = algaeArm;
         this.elevator = elevator;
@@ -29,7 +28,7 @@ public class CenterScoreOnce extends SequentialCommandGroup {
 
         addCommands(
                 new AutoDrive(swerveSubsystem, 1, 0.5),
-                new GoTo(alliance).reefN(),
+                new GoTo().reefN(),
                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerveSubsystem,
                         Constants.SetpointConstants.StrafeOffsets.leftL4));
 

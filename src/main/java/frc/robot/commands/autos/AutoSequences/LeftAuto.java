@@ -27,23 +27,22 @@ public class LeftAuto extends SequentialCommandGroup {
         final CoralArm coralArm;
         final Elevator elevator;
 
-        public LeftAuto(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerve,
-                        Optional<Alliance> alliance) {
+        public LeftAuto(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerve) {
                 this.coralArm = coralArm;
                 this.algaeArm = algaeArm;
                 this.elevator = elevator;
                 this.swerveSubsystem = swerve;
 
                 addCommands(
-                                new GoTo(alliance).reefNW(),
+                                new GoTo().reefNW(),
                                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
-                                new GoTo(alliance).coralStationLeft(),
+                                new GoTo().coralStationLeft(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve),
-                                new GoTo(alliance).reefSW(),
+                                new GoTo().reefSW(),
                                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
-                                new GoTo(alliance).coralStationLeft(),
+                                new GoTo().coralStationLeft(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve));
         }
 }

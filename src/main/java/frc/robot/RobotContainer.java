@@ -54,7 +54,6 @@ import frc.robot.commands.autos.AutoSequences.LeftScoreOnce;
 import frc.robot.commands.autos.AutoSequences.RightAuto;
 import frc.robot.commands.autos.AutoSequences.RightScoreOnce;
 import frc.robot.commands.autos.AutoSequences.Test;
-import frc.robot.commands.autos.AutoSequences.TestGoTo;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AbortAbortReef;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AbortAbortUpper;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.AlgaeIntakeAlignmentSequence;
@@ -116,26 +115,22 @@ public class RobotContainer {
         public RobotContainer() {
                 // if start lowercase, its object
                 // NOT USED
-                Optional<Alliance> alliance = null;
                 LiveWindow.enableTelemetry(CommandScheduler.getInstance());
                 // URCL.start();
-                autoChooser.addOption("left", new LeftAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
-                autoChooser.addOption("center left",
-                                new CenterAutoLeft(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
-                autoChooser.addOption("center right",
-                                new CenterAutoRight(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+                autoChooser.addOption("left", new LeftAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.addOption("center left cs",
+                                new CenterAutoLeft(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.addOption("center right cs",
+                                new CenterAutoRight(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("right", new RightAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem));
-                autoChooser.addOption("testRight", new Test(coralArm, algaeArm, elevatorSub, swerveSubsystem));
-                autoChooser.addOption("testRightwithGoTo",
-                                new TestGoTo(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
                 autoChooser.addOption("goforward", new Forward(swerveSubsystem));
                 autoChooser.setDefaultOption("Do Nothing", Commands.none());
                 autoChooser.addOption("score once right",
-                                new RightScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+                                new RightScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("score once right",
-                                new LeftScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+                                new LeftScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("score once center",
-                                new CenterScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem, alliance));
+                                new CenterScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem));
 
                 Shuffleboard.getTab("auto").add(autoChooser);
 

@@ -26,23 +26,22 @@ public class CenterAutoRight extends SequentialCommandGroup {
         final Elevator elevator;
         final SwerveSubsystem swerveSubsystem;
 
-        public CenterAutoRight(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerve,
-                        Optional<Alliance> alliance) {
+        public CenterAutoRight(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerve) {
                 this.coralArm = coralArm;
                 this.algaeArm = algaeArm;
                 this.elevator = elevator;
                 this.swerveSubsystem = swerve;
 
                 addCommands(
-                                new GoTo(alliance).reefN(),
+                                new GoTo().reefN(),
                                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
-                                new GoTo(alliance).coralStationRight(),
+                                new GoTo().coralStationRight(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve),
-                                new GoTo(alliance).reefSW(),
+                                new GoTo().reefSW(),
                                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
-                                new GoTo(alliance).reefSW(),
+                                new GoTo().reefSW(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve)
 
                 // new ParallelCommandGroup(new AutoNav(), ConfigSystem)

@@ -20,8 +20,7 @@ public class RightScoreOnce extends SequentialCommandGroup {
     final SwerveSubsystem swerveSub;
     final AlgaeArm algaeArm;
 
-    public RightScoreOnce(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerveSubsystem,
-            Optional<Alliance> alliance) {
+    public RightScoreOnce(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerveSubsystem) {
         this.coralArm = coralArm;
         this.elevator = elevator;
         this.swerveSub = swerveSubsystem;
@@ -29,7 +28,7 @@ public class RightScoreOnce extends SequentialCommandGroup {
 
         addCommands(
                 new AutoDrive(swerveSubsystem, 1, 0.5),
-                new GoTo(alliance).reefNW(),
+                new GoTo().reefNE(),
                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerveSubsystem,
                         Constants.SetpointConstants.StrafeOffsets.leftL4)
 
