@@ -41,7 +41,7 @@ public class CenterAutoLeft extends SequentialCommandGroup {
                                 new GoTo().reefSW(),
                                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
-                                new GoTo().reefSW(),
+                                new GoTo().coralStationLeft(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve)
 
                 // new ParallelCommandGroup(new AutoNav(), ConfigSystem)

@@ -38,10 +38,10 @@ public class CenterAutoRight extends SequentialCommandGroup {
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
                                 new GoTo().coralStationRight(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve),
-                                new GoTo().reefSW(),
+                                new GoTo().reefSE(),
                                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
-                                new GoTo().reefSW(),
+                                new GoTo().coralStationRight(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve)
 
                 // new ParallelCommandGroup(new AutoNav(), ConfigSystem)
