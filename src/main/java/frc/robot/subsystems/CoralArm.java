@@ -54,7 +54,7 @@ public class CoralArm extends SubsystemBase {
                 .absoluteEncoderPositionAlwaysOn(true);
         configWrist.encoder.positionConversionFactor(1.0 / 100.0);
         configWrist.absoluteEncoder.inverted(true)
-                .zeroOffset(0.412)
+                .zeroOffset(0.501)
                 .zeroCentered(true);
         configWrist.closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
