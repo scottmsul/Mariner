@@ -5,6 +5,9 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import static edu.wpi.first.units.Units.Volts;
+
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -17,6 +20,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.SetpointConstants;
 
@@ -95,6 +99,26 @@ public class Elevator extends SubsystemBase {
         Shuffleboard.getTab("Debug").addDouble("Current elevator setpoint", () -> trapezoidSetpoint.position);
         // Shuffleboard.getTab("Debug").addDouble("Current Setpoint",
         // elevatorController.);
+        var sysIdRoutine = new SysIdRoutine(
+                new SysIdRoutine.Config(),
+                new SysIdRoutine.Mechanism(
+                        (voltage) -> this.runVolts(voltage.in(Volts)),
+                        null, // No log consumer, since data is recorded by URCL
+                        this));
+
+        Shuffleboard.getTab("SysId").add("Quasi Forward Elevator",
+                sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
+        Shuffleboard.getTab("SysId").add("Quasi Backward Elevator",
+                sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
+        Shuffleboard.getTab("SysId").add("Dynamic Forward Elevator",
+                sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
+        Shuffleboard.getTab("SysId").add("Dynamic Backaward Elevator",
+                sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
+    }
+
+    private void runVolts(double in) {
+        elevator1.setVoltage(in);
+        elevator2.setVoltage(in);
     }
 
     // may set motors to follow eachother if there are two motors
