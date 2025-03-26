@@ -176,6 +176,8 @@ public class AutoAlignReef extends Command {
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Error")
                 .setDouble(distancePID.getSetpoint().position - target.getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Strafe").setDouble(target.getX());
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Setpoint")
+                .setDouble(strafePID.getSetpoint().position);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Out").setDouble(strafeSpeed);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL rotation yaw").setDouble(target.getRotation().getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID rotation out").setDouble(rot);
