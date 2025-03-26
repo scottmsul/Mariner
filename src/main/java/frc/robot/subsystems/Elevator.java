@@ -14,6 +14,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -143,8 +145,40 @@ public class Elevator extends SubsystemBase {
         // return tooHigh;
         // }
 
+        enum CalStatus {
+                Uncalibrated, Calibrating, Calibrated
+        }
+
+        Timer calTimer = new Timer();
+
+        CalStatus calStatus = CalStatus.Uncalibrated;
+
         @Override
         public void periodic() {
+                switch (calStatus) {
+                        case Uncalibrated:
+                                if (!DriverStation.isEnabled())
+                                        break;
+                                calTimer.start();
+                                elevator1.set(0.03);
+                                elevator2.set(0.03);
+                                calStatus = CalStatus.Calibrating;
+                                System.out.println("Starting elevator calibration...");
+                                return;
+                        case Calibrating:
+                                if (!calTimer.hasElapsed(1))
+                                        return;
+                                calTimer.stop();
+                                elevator1.getEncoder().setPosition(0);
+                                elevator2.getEncoder().setPosition(0);
+                                elevator1.set(0);
+                                elevator2.set(0);
+                                calStatus = CalStatus.Calibrated;
+                                System.out.println("Done calibrating elevator");
+                                break;
+                        default:
+                                break;
+                }
                 trapezoidSetpoint = trapezoidProfile.calculate(0.2, trapezoidSetpoint,
                                 new TrapezoidProfile.State(currentSetpoint, 0));
                 elevatorController.setReference(trapezoidSetpoint.position, ControlType.kPosition);
