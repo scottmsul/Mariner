@@ -88,7 +88,7 @@ public class AutoAlignUpper extends Command {
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3.0, 3.0 / 1.5));
         distancePID = new ProfiledPIDController(3.65 * .9, .8 * .7, .8 * .1,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3.0, 1.4));
-        rotationPID = new ProfiledPIDController(3.65 * .9, .8 * .7, .8 * .125,
+        rotationPID = new ProfiledPIDController(1 * .5, 0, 0,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.0,
                         3.0 / 1.5));
 
@@ -126,7 +126,7 @@ public class AutoAlignUpper extends Command {
         var target = target_opt.get();
         if ((Math.abs(distanceGoal.get() - target.getX()) < distanceError.get())
                 && (Math.abs(strafeGoal.get() - target.getY()) < strafeError.get())
-                && (Math.abs(rotationGoal.get() - target.getRotation().getX()) < 0.02)
+                && (Math.abs(rotationGoal.get() - target.getRotation().getZ()) < 0.02)
         // && (Math.abs(target.getRotation().getAngle()) < 0.5)
         ) {
             return true;
@@ -188,6 +188,10 @@ public class AutoAlignUpper extends Command {
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Out").setDouble(strafeSpeed);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL rotation yaw").setDouble(target.getRotation().getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID rotation out").setDouble(rot);
+        System.out.println("supposed yaw: " + target.getRotation().getZ());
+        System.out.println("supposed Distance: " + target.getX());
+        System.out.println("supposed Strafe: " + target.getY());
+        System.out.println("supposed Height: " + target.getZ());
 
         swerveSub.drive(distanceSpeed / DriveConstants.MaxVelocityMetersPerSecond,
                 strafeSpeed / DriveConstants.MaxVelocityMetersPerSecond,

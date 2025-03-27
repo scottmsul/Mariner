@@ -3,9 +3,6 @@ package frc.robot;
 import java.util.Collections;
 import java.util.List;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
-
 public class Photon {
     private static Photon instance;
 
