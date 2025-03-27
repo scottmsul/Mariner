@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.util.struct.Struct;
+import edu.wpi.first.util.struct.StructSerializable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
 
 class SuppliedValue<T> {
@@ -28,29 +29,27 @@ class SuppliedValue<T> {
     }
 }
 
-/**
- * set() functions must be called repeatedly to update values
- * track() functions take a callback to repeatedly get new values
- * 
- * Example usage:
- *
- * In periodic:
- * > Souffle.set("Arm/Angle", arm.getAngle());
- * 
- * In constructor:
- * > Souffle.trace("Arm/Angle", () -> arm.getAngle());
- * 
- */
 public class Souffle {
     private static Map<String, StructPublisher<?>> publishers = new ConcurrentHashMap<>();
 
     private static Map<String, SuppliedValue<?>> valueSuppliers = new ConcurrentHashMap<>();
 
-    public static <T> void set(String key, Struct<T> struct, T value) {
+    public static <T extends StructSerializable> void log(String key, T value) {
+        if (value == null) {
+            return;
+        }
+
         var publisher = publishers.get(key);
         if (publisher == null) {
-            publisher = NetworkTableInstance.getDefault().getStructTopic(key, struct).publish();
-            publishers.put(key, publisher);
+            var maybeStruct = StructRegistry.getStruct(value.getClass());
+            if (maybeStruct.isPresent()) {
+                @SuppressWarnings("unchecked")
+                var struct = (Struct<T>) maybeStruct.get();
+                publisher = NetworkTableInstance.getDefault().getStructTopic(key, struct).publish();
+                publishers.put(key, publisher);
+            } else {
+                return;
+            }
         }
 
         @SuppressWarnings("unchecked")
@@ -58,42 +57,55 @@ public class Souffle {
         structPub.set(value);
     }
 
-    public static void set(String key, double value) {
+    public static void log(String key, double value) {
         NetworkTableInstance.getDefault().getEntry(key).setDouble(value);
     }
 
-    public static void set(String key, boolean value) {
+    public static void log(String key, boolean value) {
         NetworkTableInstance.getDefault().getEntry(key).setBoolean(value);
     }
 
-    public static void track(String key, DoubleSupplier supplier) {
+    public static void record(String key, DoubleSupplier supplier) {
         valueSuppliers.put(key,
                 new SuppliedValue<>(
                         supplier::getAsDouble,
                         NetworkTableInstance.getDefault().getEntry(key)::setDouble));
     }
 
-    public static void track(String key, BooleanSupplier supplier) {
+    public static void record(String key, BooleanSupplier supplier) {
         valueSuppliers.put(key,
                 new SuppliedValue<>(
                         supplier::getAsBoolean,
                         NetworkTableInstance.getDefault().getEntry(key)::setBoolean));
     }
 
-    public static <T> void track(String key, Struct<T> struct, Supplier<T> supplier) {
-        var publisher = NetworkTableInstance.getDefault().getStructTopic(key, struct).publish();
-        valueSuppliers.put(key,
-                new SuppliedValue<T>(
-                        supplier::get, publisher::set));
+    public static <T extends StructSerializable> void record(String key, Supplier<T> supplier) {
+        var value = supplier.get();
+
+        var maybeStruct = StructRegistry.getStruct(value.getClass());
+        if (maybeStruct.isPresent()) {
+            @SuppressWarnings("unchecked")
+            var struct = (Struct<T>) maybeStruct.get();
+
+            var publisher = NetworkTableInstance.getDefault().getStructTopic(key,
+                    struct).publish();
+            publisher.set(value);
+            valueSuppliers.put(key,
+                    new SuppliedValue<T>(
+                            supplier::get, publisher::set));
+        } else {
+            return;
+        }
     }
 
     // Very janky, needs review
-    public static <T> void track(String key, Sendable sendable) {
+    public static <T> void record(String key, Sendable sendable) {
         String name = SendableRegistry.getName(sendable);
         var builder = new SendableBuilderImpl();
         builder.setTable(NetworkTableInstance.getDefault().getTable(key).getSubTable(name));
         sendable.initSendable(builder);
         builder.startListeners();
+        valueSuppliers.put(key, new SuppliedValue<Void>(() -> null, (v) -> builder.update()));
         builder.update();
     }
 
