@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -45,6 +46,15 @@ import frc.robot.subsystems.CoralArm;
 public final class Constants {
   public static String ReefLimelightName = "limelight-front";
   public static String UpperLimelightName = "limelight-upper";
+
+  // .2627m forward
+  // .3321m left
+  // 1.016 up
+  public static Translation3d robotToCameraTrl = new Translation3d(.261, .326, 1.016);
+  // and pitched 15 degrees up.
+  public static Rotation3d robotToCameraRot = new Rotation3d(0, Math.toRadians(-35.5),
+      Math.toRadians(-50));
+  public static Transform3d robotToCamera = new Transform3d(robotToCameraTrl, robotToCameraRot);
 
   public static AprilTagFieldLayout kField = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
 
