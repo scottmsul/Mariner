@@ -2,9 +2,13 @@ package frc.robot.commands.autos;
 
 import java.util.Optional;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -14,7 +18,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.NTDouble;
 import frc.robot.NTDouble.NTD;
+import frc.robot.Photon;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.souffle.Souffle;
 
 public class AutoAlignUpper extends Command {
 
@@ -38,19 +44,24 @@ public class AutoAlignUpper extends Command {
     // // return (x.getDouble(160)/160)-1;
     // // horizontal offset
     // }
-
-    static final Optional<Pose3d> getTargetPose() {
+    static final Optional<Pose3d> getTargetPoseLimelight() {
         if (LimelightHelpers.getTV(Constants.UpperLimelightName)) {
-            return Optional.of(LimelightHelpers.getTargetPose3d_RobotSpace(Constants.UpperLimelightName));
+            var pose = LimelightHelpers.getTargetPose3d_RobotSpace(Constants.UpperLimelightName);
+            return Optional.of(new Pose3d(pose.getZ(), pose.getX(), pose.getY(), pose.getRotation()));
         } else {
             return Optional.empty();
         }
+    }
 
-        // Streamllresults.targets_Fiducials[0].getTargetPose_RobotSpace();
-        // return (x.getDouble(160)/160)-1;
-        // whatever the distance is
-        // returns the specific distance value we want so we can pid it???
-        // why is everything so
+    public static final Optional<Pose3d> getTargetPosePhoton() {
+        var results = Photon.getInstance().getLastResult();
+        if (results.hasTargets()) {
+            var cameraToTarget = results.getBestTarget().getBestCameraToTarget();
+            var transform = Constants.robotToCamera.plus(cameraToTarget);
+            return Optional.of(new Pose3d(transform.getTranslation(), transform.getRotation()));
+        } else {
+            return Optional.empty();
+        }
     }
 
     public static boolean speakerAimReady() {
@@ -108,14 +119,14 @@ public class AutoAlignUpper extends Command {
         // if (!LimelightHelpers.getTV("limelight-back")) {
         // return false;
         // }
-        var target_opt = getTargetPose();
+        var target_opt = getTargetPosePhoton();
         if (target_opt.isEmpty()) {
             return false;
         }
         var target = target_opt.get();
-        if ((Math.abs(distanceGoal.get() - target.getZ()) < distanceError.get())
-                && (Math.abs(strafeGoal.get() - target.getX()) < strafeError.get())
-                && (Math.abs(rotationGoal.get() - target.getRotation().getZ()) < 0.02)
+        if ((Math.abs(distanceGoal.get() - target.getX()) < distanceError.get())
+                && (Math.abs(strafeGoal.get() - target.getY()) < strafeError.get())
+                && (Math.abs(rotationGoal.get() - target.getRotation().getX()) < 0.02)
         // && (Math.abs(target.getRotation().getAngle()) < 0.5)
         ) {
             return true;
@@ -132,7 +143,7 @@ public class AutoAlignUpper extends Command {
     public void execute() {
         // if (LimelightHelpers.getTV("limelight-back")) {
         // var id = LimelightHelpers.getFiducialID("limelight-back");
-        var target_opt = getTargetPose();
+        var target_opt = getTargetPosePhoton();
         if (target_opt.isEmpty()) {
             swerveSub.stop();
             return;
@@ -142,33 +153,38 @@ public class AutoAlignUpper extends Command {
         if (firstRun) {
             firstRun = false;
 
-            distancePID.reset(target.getZ());
-            strafePID.reset(target.getX());
+            distancePID.reset(target.getX());
+            strafePID.reset(target.getY());
             rotationPID.reset(target.getRotation().getZ());
         }
 
         var nt = NetworkTableInstance.getDefault();
 
-        double distanceSpeed = -distancePID.calculate(target.getZ());
+        double distanceSpeed = -distancePID.calculate(target.getX());
         distanceSpeed = MathUtil.clamp(distanceSpeed, -DriveConstants.MaxVelocityMetersPerSecond / 3.5,
                 DriveConstants.MaxVelocityMetersPerSecond / 3.5);
 
-        double strafeSpeed = strafePID.calculate(target.getX());
+        double strafeSpeed = -strafePID.calculate(target.getY());
         strafeSpeed = MathUtil.clamp(strafeSpeed, -DriveConstants.MaxVelocityMetersPerSecond / 5,
                 DriveConstants.MaxVelocityMetersPerSecond / 5);
 
         double rot = rotationPID.calculate(target.getRotation().getZ());
         rot = MathUtil.clamp(rot, -DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.5,
                 DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.5);
+        rot = 0;
 
-        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Distance").setDouble(target.getZ());
+        Souffle.log("Poses/PVTuneTarget", target);
+
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Distance").setDouble(target.getX());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Out").setDouble(distanceSpeed);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Setpoint")
                 .setDouble(distancePID.getSetpoint().position);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Goal").setDouble(distancePID.getGoal().position);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Distance Error")
                 .setDouble(distancePID.getSetpoint().position - target.getZ());
-        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Strafe").setDouble(target.getX());
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL Strafe").setDouble(target.getY());
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Setpoint").setDouble(strafePID.getSetpoint().position);
+        nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Goal").setDouble(strafePID.getGoal().position);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID Strafe Out").setDouble(strafeSpeed);
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/LL rotation yaw").setDouble(target.getRotation().getZ());
         nt.getEntry("/Shuffleboard/Tune/AutoAlignTags/PID rotation out").setDouble(rot);
