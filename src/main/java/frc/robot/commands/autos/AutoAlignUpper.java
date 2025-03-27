@@ -1,5 +1,7 @@
 package frc.robot.commands.autos;
 
+import static edu.wpi.first.units.Units.Radians;
+
 import java.util.Optional;
 
 import dev.doglog.DogLog;
@@ -57,7 +59,11 @@ public class AutoAlignUpper extends Command {
         var results = Photon.getInstance().getLastResult();
         if (results.hasTargets()) {
             var cameraToTarget = results.getBestTarget().getBestCameraToTarget();
+            System.out.println("Camera to Target" + cameraToTarget);
             var transform = Constants.robotToCamera.plus(cameraToTarget);
+            System.out.println("robot to camera" + Constants.robotToCamera);
+            System.out.println("final offset: " + transform.getTranslation());
+            System.out.println("final rotation: " + transform.getRotation());
             return Optional.of(new Pose3d(transform.getTranslation(), transform.getRotation()));
         } else {
             return Optional.empty();
@@ -192,6 +198,7 @@ public class AutoAlignUpper extends Command {
         System.out.println("supposed Distance: " + target.getX());
         System.out.println("supposed Strafe: " + target.getY());
         System.out.println("supposed Height: " + target.getZ());
+        System.out.println("camera to target" + target.getZ());
 
         swerveSub.drive(distanceSpeed / DriveConstants.MaxVelocityMetersPerSecond,
                 strafeSpeed / DriveConstants.MaxVelocityMetersPerSecond,
