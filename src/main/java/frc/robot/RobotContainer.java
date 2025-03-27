@@ -238,7 +238,8 @@ public class RobotContainer {
 
                 xboxA.and(leftBumper).onTrue(
                                 new ConfigSystem(Constants.SetpointConstants.Options.l1, coralArm, elevatorSub,
-                                                algaeArm));
+                                                algaeArm)
+                                                .alongWith(Commands.print("a button and left bumper pressed")));
                 xboxB.and(leftBumper).onTrue(
                                 new LeftAlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem,
                                                 Constants.SetpointConstants.Options.l2));
