@@ -2,7 +2,7 @@ package frc.robot.commands.autos;
 
 import java.util.Optional;
 
-// import dev.doglog.DogLog;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
