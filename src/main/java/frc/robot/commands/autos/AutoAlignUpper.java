@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -52,7 +53,7 @@ public class AutoAlignUpper extends Command {
         }
     }
 
-    public final Optional<Pose3d> getTargetPosePhoton() {
+    public final Optional<Transform3d> getTargetPosePhoton() {
         var results = Photon.getInstance().getLastResult();
         if (results.hasTargets()) {
             var cameraToTarget = results.getBestTarget().getBestCameraToTarget();
@@ -65,7 +66,7 @@ public class AutoAlignUpper extends Command {
             // System.out.println("robot to camera" + Constants.robotToCamera);
             // System.out.println("final offset: " + transform.getTranslation());
             // System.out.println("final rotation: " + transform.getRotation());
-            return Optional.of(new Pose3d(transform.getTranslation(), transform.getRotation()));
+            return Optional.of(transform);
         } else {
             return Optional.empty();
         }
@@ -91,11 +92,11 @@ public class AutoAlignUpper extends Command {
         this.strafeError = strafeError;
         this.distanceError = distanceError;
 
-        strafePID = new ProfiledPIDController(3.9, .8 * .7, .1 * .125,
+        strafePID = new ProfiledPIDController(4, .8 * .7, .1 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3.0, 3.0));
         distancePID = new ProfiledPIDController(3.9, .8 * .7, .1 * .1,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3.0, 3.5));
-        rotationPID = new ProfiledPIDController(3.65 * .9, .8 * .7, .8 * .1,
+        rotationPID = new ProfiledPIDController(3.8 * .9, .8 * .7, .8 * .1,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.0,
                         3.0 / 1.5));
         rotationPID.enableContinuousInput(-Math.PI, Math.PI);
@@ -106,12 +107,6 @@ public class AutoAlignUpper extends Command {
         rotationPID.setGoal(Math.PI);
         distancePID.setIntegratorRange(-15, 15);
         strafePID.setIntegratorRange(-15, 15);
-
-        if (tune) {
-            Shuffleboard.getTab("Tune").add(distancePID);
-            Shuffleboard.getTab("Tune").add(strafePID);
-            Shuffleboard.getTab("Tune").add(rotationPID);
-        }
     }
 
     @Override
@@ -138,7 +133,7 @@ public class AutoAlignUpper extends Command {
 
         if ((Math.abs(distanceGoal.get() - target.getX()) < distanceError.get())
                 && (Math.abs(strafeGoal.get() - target.getY()) < strafeError.get())
-                && rotationDelta.getRadians() < 0.02) {
+                && rotationDelta.getRadians() < 0.01) {
             return true;
         } else {
             return false;

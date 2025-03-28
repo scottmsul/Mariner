@@ -74,7 +74,8 @@ public class AutoAlignReefEstimation extends Command {
                     + stringPose(targetAbsPose) + " rel" + stringPose(targetPoseRelativeToRobot));
             // return Optional.of(targetPoseRelativeToRobot);
 
-            // return Optional.of(LimelightHelpers.getTargetPose3d_RobotSpace(Constants.ReefLimelightName));
+            // return
+            // Optional.of(LimelightHelpers.getTargetPose3d_RobotSpace(Constants.ReefLimelightName));
             return Optional.empty();
         } else {
             // var robotAbsPose = swerveSub.getPose();
@@ -120,10 +121,6 @@ public class AutoAlignReefEstimation extends Command {
         rotationGoal.subscribe(goal -> rotationPID.setGoal(goal));
         distancePID.setIntegratorRange(-15, 15);
         strafePID.setIntegratorRange(-15, 15);
-
-        Shuffleboard.getTab("Tune").add(distancePID);
-        Shuffleboard.getTab("Tune").add(strafePID);
-        Shuffleboard.getTab("Tune").add(rotationPID);
     }
 
     @Override
