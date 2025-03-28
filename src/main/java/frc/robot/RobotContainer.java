@@ -4,36 +4,24 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Rotation;
-
-import java.lang.StackWalker.Option;
 import java.util.HashMap;
-import java.util.Optional;
 
 import org.littletonrobotics.urcl.URCL;
 
-import com.ctre.phoenix6.swerve.jni.SwerveJNI.DriveState;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,9 +31,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.NTDouble.NTD;
 import frc.robot.commands.DefaultSwerve;
 import frc.robot.commands.GoTo;
 import frc.robot.commands.Configuration.ConfigSystem;
+import frc.robot.commands.autos.AutoAlignUpper;
 import frc.robot.commands.autos.AutoSequences.CenterAutoLeft;
 import frc.robot.commands.autos.AutoSequences.CenterAutoRight;
 import frc.robot.commands.autos.AutoSequences.CenterScoreOnce;
@@ -83,7 +73,8 @@ public class RobotContainer {
 
         ClimbSub climbSub = new ClimbSub();
 
-        DefaultSwerve swerve = new DefaultSwerve(primaryJoy.getHID(), swerveSubsystem, elevatorSub);
+        DefaultSwerve swerve = new DefaultSwerve(primaryJoy.getHID(), secondaryController, swerveSubsystem,
+                        elevatorSub);
 
         PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
@@ -111,10 +102,31 @@ public class RobotContainer {
         // GoTo goTo = new GoTo(sideChooser);
 
         public RobotContainer() {
-                // if start lowercase, its object
-                // NOT USED
+                DogLog.setOptions(new DogLogOptions().withCaptureDs(true).withCaptureConsole(true).withCaptureNt(true));
+
+                var sparks = new HashMap<Integer, String>();
+                sparks.put(10, "SwerveTurnBR");
+                sparks.put(11, "SwerveDriveBR");
+                sparks.put(12, "SwerveTurnFR");
+                sparks.put(13, "SwerveDriveFR");
+                sparks.put(14, "SwerveTurnFL");
+                sparks.put(15, "SwerveDriveFL");
+                sparks.put(16, "SwerveTurnBL");
+                sparks.put(17, "SwerveDriveBL");
+
+                sparks.put(55, "CoralWrist");
+
+                sparks.put(56, "AlgaeWrist");
+                sparks.put(57, "AlgaeIntake");
+
+                sparks.put(58, "ClimbByBattery");
+                sparks.put(57, "ClimbByPDH");
+
+                sparks.put(59, "Elevator1");
+                sparks.put(60, "Elevator2");
+                URCL.start(sparks);
+
                 LiveWindow.enableTelemetry(CommandScheduler.getInstance());
-                // URCL.start();
                 autoChooser.addOption("left", new LeftAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("center left cs",
                                 new CenterAutoLeft(coralArm, algaeArm, elevatorSub, swerveSubsystem));
@@ -144,30 +156,6 @@ public class RobotContainer {
                 swerveSubsystem.setDefaultCommand(swerve);
                 configureBindings();
 
-                if (true) {
-                        DataLogManager.start();
-                        var sparks = new HashMap<Integer, String>();
-                        sparks.put(10, "SwerveTurnBR");
-                        sparks.put(11, "SwerveDriveBR");
-                        sparks.put(12, "SwerveTurnFR");
-                        sparks.put(13, "SwerveDriveFR");
-                        sparks.put(14, "SwerveTurnFL");
-                        sparks.put(15, "SwerveDriveFL");
-                        sparks.put(16, "SwerveTurnBL");
-                        sparks.put(17, "SwerveDriveBL");
-
-                        sparks.put(55, "CoralWrist");
-
-                        sparks.put(56, "AlgaeWrist");
-                        sparks.put(57, "AlgaeIntake");
-
-                        sparks.put(58, "ClimbByBattery");
-                        sparks.put(57, "ClimbByPDH");
-
-                        sparks.put(59, "Elevator1");
-                        sparks.put(60, "Elevator2");
-                        URCL.start(sparks);
-                }
                 // CameraServer.startAutomaticCapture();
 
                 // Shuffleboard.getTab("Debug").add(pdh);
@@ -185,7 +173,7 @@ public class RobotContainer {
                 }, climbSub));
 
                 var scheduler = CommandScheduler.getInstance();
-                Shuffleboard.getTab("Drive").addBoolean("Is Auto", () -> !scheduler.isScheduled(swerve));
+                Shuffleboard.getTab("Drive").addBoolean("Is Teleop", () -> scheduler.isScheduled(swerve));
         }
 
         public void periodic() {
