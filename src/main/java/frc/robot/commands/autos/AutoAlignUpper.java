@@ -7,10 +7,8 @@ import java.util.Optional;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -22,7 +20,6 @@ import frc.robot.NTDouble;
 import frc.robot.NTDouble.NTD;
 import frc.robot.Photon;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.souffle.Souffle;
 
 public class AutoAlignUpper extends Command {
 
@@ -94,10 +91,10 @@ public class AutoAlignUpper extends Command {
         this.strafeError = strafeError;
         this.distanceError = distanceError;
 
-        strafePID = new ProfiledPIDController(3.65 * .9, .8 * .7, .8 * .125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3.0, 3.0 / 1.5));
-        distancePID = new ProfiledPIDController(3.65 * .9, .8 * .7, .8 * .1,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3.0, 1.4));
+        strafePID = new ProfiledPIDController(3.9, .8 * .7, .1 * .125,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3.0, 3.0));
+        distancePID = new ProfiledPIDController(3.9, .8 * .7, .1 * .1,
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3.0, 3.5));
         rotationPID = new ProfiledPIDController(3.65 * .9, .8 * .7, .8 * .1,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.0,
                         3.0 / 1.5));
@@ -136,11 +133,12 @@ public class AutoAlignUpper extends Command {
             return false;
         }
         var target = target_opt.get();
+
+        var rotationDelta = new Rotation2d(rotationGoal.get()).minus(target.getRotation().toRotation2d());
+
         if ((Math.abs(distanceGoal.get() - target.getX()) < distanceError.get())
                 && (Math.abs(strafeGoal.get() - target.getY()) < strafeError.get())
-                && (Math.abs(rotationGoal.get() - target.getRotation().getZ()) < 0.02)
-        // && (Math.abs(target.getRotation().getAngle()) < 0.5)
-        ) {
+                && rotationDelta.getRadians() < 0.02) {
             return true;
         } else {
             return false;
@@ -201,7 +199,10 @@ public class AutoAlignUpper extends Command {
 
         DogLog.log("AutoAlignTags/StrafeError", strafeGoal.get() - target.getY());
         DogLog.log("AutoAlignTags/DistanceError", distanceGoal.get() - target.getX());
-        DogLog.log("AutoAlignTags/RotationError", rotationGoal.get() - target.getRotation().getZ());
+        var rotationDelta = new Rotation2d(rotationGoal.get()).minus(target.getRotation().toRotation2d());
+        DogLog.log("AutoAlignTags/RotationError", rotationDelta);
+        // DogLog.log("AutoAlignTags/RotationError", rotationGoal.get() -
+        // target.getRotation().getZ());
 
         // System.out.println("supposed Distance: " + target.getX());
         // System.out.println("supposed Strafe: " + target.getY());

@@ -16,22 +16,27 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class CoralStationSequence extends SequentialCommandGroup {
 
-    public CoralStationSequence(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator,
-            SwerveSubsystem swerveSubsystem) {
-        var config = new ConfigSystem(Constants.SetpointConstants.Options.coralStationAuto, coralArm, elevator,
-                algaeArm);
-        var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevator, algaeArm);
-        var configureAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.csStrafe,
-                Constants.SetpointConstants.DistanceOffsets.csConfigure, NTD.of(0), NTD.of(0.1), NTD.of(0.1));
-        var intakeAlign = new AutoAlignUpper(swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.csStrafe,
-                Constants.SetpointConstants.DistanceOffsets.csIntake, NTD.of(0), NTD.of(0.05), NTD.of(0.05));
-        var intakeCoral = new AutoCoralIntake(coralArm);
-        addCommands(
-                config,
-                intakeAlign,
-                Commands.parallel(
-                        intakeCoral.until(coralArm::hasCoral),
-                        LLLeds.shortBlink(Constants.UpperLimelightName)),
-                stow);
-    }
+        public CoralStationSequence(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator,
+                        SwerveSubsystem swerveSubsystem) {
+                var config = new ConfigSystem(Constants.SetpointConstants.Options.coralStationAuto, coralArm, elevator,
+                                algaeArm);
+                var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevator,
+                                algaeArm);
+                var configureAlign = new AutoAlignUpper(swerveSubsystem,
+                                Constants.SetpointConstants.StrafeOffsets.csStrafe,
+                                Constants.SetpointConstants.DistanceOffsets.csConfigure, NTD.of(0), NTD.of(0.1),
+                                NTD.of(0.1));
+                var intakeAlign = new AutoAlignUpper(swerveSubsystem,
+                                Constants.SetpointConstants.StrafeOffsets.csStrafe,
+                                Constants.SetpointConstants.DistanceOffsets.csIntake, NTD.of(Math.PI), NTD.of(0.05),
+                                NTD.of(0.05));
+                var intakeCoral = new AutoCoralIntake(coralArm);
+                addCommands(
+                                config,
+                                intakeAlign,
+                                Commands.parallel(
+                                                intakeCoral.until(coralArm::hasCoral),
+                                                LLLeds.shortBlink(Constants.UpperLimelightName)),
+                                stow);
+        }
 }
