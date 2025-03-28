@@ -233,7 +233,7 @@ public final class Constants {
       public static NTDouble rightReefScore = new NTDouble(0.6, "rightReefScore", "DistanceOffsets");
       // public static NTDouble L4score = new NTDouble(0.35, "L4score",
       // "DistanceOffsets");
-      public static NTDouble algaeReefGrab = new NTDouble(0.42, "algaeReefGrab", "DistanceOffsets");
+      public static NTDouble algaeReefGrab = new NTDouble(0.5, "algaeReefGrab", "DistanceOffsets");
       public static NTDouble reefCoralConfigure = new NTDouble(0.8, "reefCoralConfigure", "DistanceOffsets");
       public static NTDouble reefAlgaeConfigure = new NTDouble(0.9, "reefAlgaeConfigure", "DistanceOffsets");
       public static NTDouble reefAlgaeStow = new NTDouble(1.3, "reefAlgaeStow", "DistanceOffsets");
@@ -241,7 +241,7 @@ public final class Constants {
       public static NTDouble processorScore = new NTDouble(0.55, "processorScore", "DistanceOffsets");
       public static NTDouble l1 = new NTDouble(0.5, "l1", "DistanceOffsets");
       public static NTDouble csConfigure = new NTDouble(0.7, "CoralStationConfigure", "DistanceOffsets");
-      public static NTDouble csIntake = new NTDouble(0.55, "CoralStationIntake", "DistanceOffsets");
+      public static NTDouble csIntake = new NTDouble(0.6, "CoralStationIntake", "DistanceOffsets");
     }
 
     public class RotOffsets {
@@ -255,7 +255,7 @@ public final class Constants {
       public static NTDouble up = new NTDouble(0, "up", "AlgaeArmAngles"); // hold algae in
       public static NTDouble in = new NTDouble(0.05, "in", "AlgaeArmAngles");
       public static NTDouble down = new NTDouble(-0.3, "down", "AlgaeArmAngles"); // intake or outtake algae
-      public static NTDouble processor = new NTDouble(-0.13, "processor", "AlgaeArmAngles");
+      public static NTDouble processor = new NTDouble(-0.16, "processor", "AlgaeArmAngles");
       public static NTDouble groundPickUp = new NTDouble(-0.25, "ground pick up", "AlgaeArmAngles");
       public static NTDouble barge = new NTDouble(-0.1, "barge", "AlgaeArmAngles");
     }
