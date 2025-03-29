@@ -184,8 +184,8 @@ public final class Constants {
 
     public class ElevatorSetpoints {
       public static NTDouble l1 = new NTDouble(0, "l1", "ElevatorSetpoints");
-      public static NTDouble l2 = new NTDouble(0.42, "l2", "ElevatorSetpoints");
-      public static NTDouble l3 = new NTDouble(0.78, "l3", "ElevatorSetpoints");
+      public static NTDouble l2 = new NTDouble(0.4, "l2", "ElevatorSetpoints");
+      public static NTDouble l3 = new NTDouble(0.76, "l3", "ElevatorSetpoints");
       public static NTDouble l4 = new NTDouble(1.36, "l4", "ElevatorSetpoints");
 
       public static NTDouble groundLevel = new NTDouble(0, "groundLevel", "ElevatorSetpoints");
