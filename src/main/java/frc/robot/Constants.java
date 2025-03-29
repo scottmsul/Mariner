@@ -186,7 +186,7 @@ public final class Constants {
       public static NTDouble l1 = new NTDouble(0, "l1", "ElevatorSetpoints");
       public static NTDouble l2 = new NTDouble(0.4, "l2", "ElevatorSetpoints");
       public static NTDouble l3 = new NTDouble(0.76, "l3", "ElevatorSetpoints");
-      public static NTDouble l4 = new NTDouble(1.36, "l4", "ElevatorSetpoints");
+      public static NTDouble l4 = new NTDouble(1.31, "l4", "ElevatorSetpoints");
 
       public static NTDouble groundLevel = new NTDouble(0, "groundLevel", "ElevatorSetpoints");
       public static NTDouble algaeLow = new NTDouble(0.85, "algaeLow", "ElevatorSetpoints");
@@ -207,7 +207,7 @@ public final class Constants {
       // angle of release
       public static NTDouble l1 = new NTDouble(-0.03, "l1", "CoralPivotAngles"); // reef l1
       public static NTDouble lmid = new NTDouble(0.084, "lmid", "CoralPivotAngles"); // reef l2 and l3
-      public static NTDouble l4 = new NTDouble(0.1, "l4", "CoralPivotAngles"); // reef l4
+      public static NTDouble l4 = new NTDouble(0.09, "l4", "CoralPivotAngles"); // reef l4
       public static NTDouble CoralSt = new NTDouble(-0.11, "CoralSt", "CoralPivotAngles"); // pointing up to recieve
                                                                                            // coral from hp
       public static NTDouble up = new NTDouble(-0.24, "up", "CoralPivotAngles"); // out of the way for intaking algae
@@ -216,10 +216,10 @@ public final class Constants {
 
     public class StrafeOffsets {
       // static double l1 = 0;
-      public static NTDouble leftReef = new NTDouble(0.18, "leftReef", "StrafeOffsets");
-      public static NTDouble leftL4 = new NTDouble(0.15, "leftL4", "StrafeOffsets");
-      public static NTDouble rightReef = new NTDouble(-0.16, "rightReef", "StrafeOffsets");
-      public static NTDouble rightL4 = new NTDouble(-0.18, "rightL4", "StrafeOffsets");
+      public static NTDouble leftReef = new NTDouble(0.17, "leftReef", "StrafeOffsets");
+      public static NTDouble leftL4 = new NTDouble(0.18, "leftL4", "StrafeOffsets");
+      public static NTDouble rightReef = new NTDouble(-0.15, "rightReef", "StrafeOffsets");
+      public static NTDouble rightL4 = new NTDouble(-0.16, "rightL4", "StrafeOffsets");
       public static NTDouble centerReef = new NTDouble(0.00, "centerReef", "StrafeOffsets");
       public static NTDouble processor = new NTDouble(-0.05, "processor", "StrafeOffsets");
       public static NTDouble l1Left = new NTDouble(0.10, "l1Left", "StrafeOffsets");

@@ -32,7 +32,7 @@ public class Elevator extends SubsystemBase {
         private SparkClosedLoopController elevatorController;
         private SparkClosedLoopController elevatorController2;
         private double currentSetpoint;
-        private TrapezoidProfile trapezoidProfile = new TrapezoidProfile(new Constraints(1, 1.1 / 60.0));
+        private TrapezoidProfile trapezoidProfile = new TrapezoidProfile(new Constraints(1, 0.9 / 60.0));
         private double positionFactor = (1.0 / 5.0) * Math.PI * 1.0 * 0.0254;
 
         TrapezoidProfile.State trapezoidSetpoint = new TrapezoidProfile.State();
@@ -60,7 +60,7 @@ public class Elevator extends SubsystemBase {
                                 .velocityConversionFactor(positionFactor / 60);
                 configLead.closedLoop
                                 .pid(4, 0, 0)
-                                .outputRange(-0.5, 0.85);
+                                .outputRange(-0.4, 0.85);
                 // .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
                 // configLead.closedLoop.maxMotion
                 // .maxVelocity(1)

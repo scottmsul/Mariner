@@ -42,7 +42,8 @@ public class CenterAutoLeft extends SequentialCommandGroup {
                                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
                                                 Constants.SetpointConstants.StrafeOffsets.leftL4),
                                 GoTo.coralStationLeft(),
-                                new CoralStationSequence(coralArm, algaeArm, elevator, swerve)
+                                new CoralStationSequence(coralArm, algaeArm, elevator, swerve),
+                                GoTo.reefSW()
 
                 // new ParallelCommandGroup(new AutoNav(), ConfigSystem)
                 // aim andl score corale

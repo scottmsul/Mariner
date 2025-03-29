@@ -30,7 +30,7 @@ public class L4AlignmentSequence extends SequentialCommandGroup {
                                 Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, NTD.of(0), NTD.of(0.04),
                                 NTD.of(0.04), true);
                 var scoreAlign = new AutoAlignReef(swerveSubsystem, strafeOffset,
-                                Constants.SetpointConstants.DistanceOffsets.leftReefScore, NTD.of(0), NTD.of(0.01),
+                                Constants.SetpointConstants.DistanceOffsets.leftReefScore, NTD.of(0), NTD.of(0.02),
                                 NTD.of(0.02));
                 var scoreCoral = new AutoCoralScore(coralArm);
 

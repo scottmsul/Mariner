@@ -79,7 +79,7 @@ public class AutoAlignReef extends Command {
         if (slow) {
             maxAccel *= 0.2;
         }
-        strafePID = new ProfiledPIDController(4.1 * .9, 0, .85 * .125,
+        strafePID = new ProfiledPIDController(4.3 * .9, 0, .85 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, maxAccel));
         distancePID = new ProfiledPIDController(4.3 * .9, 0, .85 * .125,
                 new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, maxAccel));

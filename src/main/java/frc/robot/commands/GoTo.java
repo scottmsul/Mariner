@@ -56,7 +56,7 @@ public class GoTo {
         private static Pose2d inFrontOfTag(int id) {
                 Transform2d rot180 = new Transform2d(Translation2d.kZero, Rotation2d.k180deg);
                 var tag = Constants.kField.getTagPose(id).get().toPose2d();
-                var offset = new Transform2d(1, 0, new Rotation2d());
+                var offset = new Transform2d(1.5, 0, new Rotation2d());
                 Pose2d infrontOfTag = tag.plus(offset).transformBy(rot180);
                 return infrontOfTag;
         }
