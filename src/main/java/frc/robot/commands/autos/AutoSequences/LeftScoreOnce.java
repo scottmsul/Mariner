@@ -5,9 +5,11 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.GoTo;
 import frc.robot.commands.autos.AutoDrive;
+import frc.robot.commands.autos.AutoSequences.AlignmentSequences.CoralStationSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.L4AlignmentSequence;
 import frc.robot.subsystems.AlgaeArm;
 import frc.robot.subsystems.CoralArm;
@@ -30,7 +32,10 @@ public class LeftScoreOnce extends SequentialCommandGroup {
                 new AutoDrive(swerveSubsystem, 1, 0.5),
                 GoTo.reefNW(),
                 new L4AlignmentSequence(coralArm, algaeArm, elevator, swerveSubsystem,
-                        Constants.SetpointConstants.StrafeOffsets.leftL4));
+                        Constants.SetpointConstants.StrafeOffsets.leftL4),
+                new WaitCommand(5),
+                GoTo.coralStationLeft(),
+                new CoralStationSequence(coralArm, algaeArm, elevator, swerveSubsystem));
 
     }
 }

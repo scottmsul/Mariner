@@ -41,7 +41,8 @@ import frc.robot.commands.autos.AutoAlignTest;
 import frc.robot.commands.autos.AutoAlignUpper;
 import frc.robot.commands.autos.AutoSequences.CenterAutoLeft;
 import frc.robot.commands.autos.AutoSequences.CenterAutoRight;
-import frc.robot.commands.autos.AutoSequences.CenterScoreOnce;
+import frc.robot.commands.autos.AutoSequences.CenterScoreOnceLeftCS;
+import frc.robot.commands.autos.AutoSequences.CenterScoreOnceRightCS;
 import frc.robot.commands.autos.AutoSequences.Forward;
 import frc.robot.commands.autos.AutoSequences.LeftAuto;
 import frc.robot.commands.autos.AutoSequences.LeftScoreOnce;
@@ -154,8 +155,10 @@ public class RobotContainer {
                                 new RightScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("score once right",
                                 new LeftScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem));
-                autoChooser.addOption("score once center",
-                                new CenterScoreOnce(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.addOption("score once center go left CS",
+                                new CenterScoreOnceLeftCS(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.addOption("score once center go right CS",
+                                new CenterScoreOnceRightCS(coralArm, algaeArm, elevatorSub, swerveSubsystem));
 
                 Shuffleboard.getTab("auto").add(autoChooser);
 
