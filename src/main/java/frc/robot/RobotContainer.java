@@ -220,11 +220,14 @@ public class RobotContainer {
                 primaryJoy.button(7).whileTrue(
                                 new AutoAlignReef(swerveSubsystem, NTD.of(-0.3), NTD.of(0.75), NTD.of(0), NTD.of(0),
                                                 NTD.of(0)));
-                primaryJoy.button(9)
-                                .onTrue(Commands.runOnce(() -> servo.set(0)))
-                                .onFalse(Commands.runOnce(() -> servo.set(1)));
-                primaryJoy.button(11).and(primaryJoy.button(7))
-                                .onTrue(climbSub.climbSlow().withTimeout(0.5).andThen(climbSub.climb()))
+                // primaryJoy.button(9)
+                // .onTrue(Commands.runOnce(() -> servo.set(0)))
+                // .onFalse(Commands.runOnce(() -> servo.set(1)));
+                primaryJoy.button(9).and(primaryJoy.button(7))
+                                .onTrue(climbSub.climbRelease())
+                                .onFalse(climbSub.climbStopManual());
+                primaryJoy.button(11)
+                                .onTrue(climbSub.climb())
                                 .onFalse(climbSub.climbStopManual());
                 primaryJoy.button(10).onTrue(Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll()));
 

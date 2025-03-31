@@ -25,19 +25,22 @@ public class ClimbSub extends SubsystemBase {
     // guy waas here
 
     // Motor pushArm = new Motor();
-    //SparkMax climbMotorOne = new SparkMax(102, MotorType.kBrushless);
-    //SparkMax climbMotorTwo = new SparkMax(103, MotorType.kBrushless);
+    // SparkMax climbMotorOne = new SparkMax(102, MotorType.kBrushless);
+    // SparkMax climbMotorTwo = new SparkMax(103, MotorType.kBrushless);
 
     double climbSetpoint1 = 0;
     double climbSetpoint2 = 0;
     SparkClosedLoopController climbController1;
     SparkClosedLoopController climbController2;
-    private final SparkMax climb1 = new SparkMax(58, MotorType.kBrushless); //short arm
-    private final SparkMax climb2 = new SparkMax(57, MotorType.kBrushless); //long arm
+    private final SparkMax climb1 = new SparkMax(58, MotorType.kBrushless); // short arm
+    // private final SparkMax climb2 = new SparkMax(57, MotorType.kBrushless);
+    // //long arm
     TrapezoidProfile climbTrapezoidProfile1 = new TrapezoidProfile(new Constraints(.2, 40));
     TrapezoidProfile.State climbTrapezoidSetpoint1 = new TrapezoidProfile.State();
-    TrapezoidProfile climbTrapezoidProfile2 = new TrapezoidProfile(new Constraints(.2, 40));
-    TrapezoidProfile.State climbTrapezoidSetpoint2 = new TrapezoidProfile.State();
+    // TrapezoidProfile climbTrapezoidProfile2 = new TrapezoidProfile(new
+    // Constraints(.2, 40));
+    // TrapezoidProfile.State climbTrapezoidSetpoint2 = new
+    // TrapezoidProfile.State();
 
     boolean enabled = false;
 
@@ -58,25 +61,26 @@ public class ClimbSub extends SubsystemBase {
                 .outputRange(0, 1);
         configLeader.smartCurrentLimit(100, 100);
         configLeader.secondaryCurrentLimit(100);
-        configLeader.encoder.positionConversionFactor(1.0 / 60.0);
+        configLeader.encoder.positionConversionFactor(1.0 / 135.0);
         climb1.configure(configLeader, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
-        SparkMaxConfig config2 = new SparkMaxConfig();
-        config2
-                .openLoopRampRate(.5)
-                .inverted(false)
-                .idleMode(SparkMaxConfig.IdleMode.kCoast);
-        config2.closedLoop
-                .pid(5, 0, 0)
-                .outputRange(0, 1);
-        config2.encoder.positionConversionFactor(1.0 / 60.0);
-        config2.smartCurrentLimit(100, 100);
-        config2.secondaryCurrentLimit(100);
-        // config2.follow(climbMotorOne);
-        climb2.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        // SparkMaxConfig config2 = new SparkMaxConfig();
+        // config2
+        // .openLoopRampRate(.5)
+        // .inverted(false)
+        // .idleMode(SparkMaxConfig.IdleMode.kCoast);
+        // config2.closedLoop
+        // .pid(5, 0, 0)
+        // .outputRange(0, 1);
+        // config2.encoder.positionConversionFactor(1.0 / 135.0);
+        // config2.smartCurrentLimit(100, 100);
+        // config2.secondaryCurrentLimit(100);
+        // // config2.follow(climbMotorOne);
+        // climb2.configure(config2, ResetMode.kResetSafeParameters,
+        // PersistMode.kNoPersistParameters);
 
-        climbController1 = climb1.getClosedLoopController();
-        climbController2 = climb2.getClosedLoopController();
+        // climbController1 = climb1.getClosedLoopController();
+        // climbController2 = climb2.getClosedLoopController();
 
         // climbMotorTwo.setControl(new Follower(climbMotorOne.getDeviceId(),true));
         // climbController1.setReference(0, ControlType.kPosition);
@@ -88,21 +92,21 @@ public class ClimbSub extends SubsystemBase {
         // climb2.getEncoder().getPosition());
         Shuffleboard.getTab("Debug").add("Rezero climb encoders", Commands.runOnce(() -> {
             climb1.getEncoder().setPosition(0);
-            climb2.getEncoder().setPosition(0);
+            // climb2.getEncoder().setPosition(0);
             climbSetpoint1 = 0;
-            climbSetpoint2 = 0;
+            // climbSetpoint2 = 0;
             climbTrapezoidSetpoint1 = new TrapezoidProfile.State();
-            climbTrapezoidSetpoint2 = new TrapezoidProfile.State();
+            // climbTrapezoidSetpoint2 = new TrapezoidProfile.State();
         }));
     }
 
     public void periodic() {
         // climbTrapezoidSetpoint1 = climbTrapezoidProfile1.calculate(0.02,
-        //         climbTrapezoidSetpoint1,
-        //         new TrapezoidProfile.State(climbSetpoint1, 0));
+        // climbTrapezoidSetpoint1,
+        // new TrapezoidProfile.State(climbSetpoint1, 0));
         // climbTrapezoidSetpoint2 = climbTrapezoidProfile2.calculate(0.02,
-        //         climbTrapezoidSetpoint2,
-        //         new TrapezoidProfile.State(climbSetpoint2, 0));
+        // climbTrapezoidSetpoint2,
+        // new TrapezoidProfile.State(climbSetpoint2, 0));
         // // System.out.println("Setpoint " + setpoint + " goal "+ trapezoidSetpoint);
         // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Goal1").setDouble(climbTrapezoidSetpoint1.position);
         // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Goal2").setDouble(climbTrapezoidSetpoint2.position);
@@ -113,12 +117,14 @@ public class ClimbSub extends SubsystemBase {
         // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Applied1").setDouble(climb1.getAppliedOutput());
         // NetworkTableInstance.getDefault().getEntry("/Tune/Climb/Applied2").setDouble(climb2.getAppliedOutput());
         // if (!enabled) {
-        //     climbController1.setReference(0, ControlType.kDutyCycle);
-        //     climbController2.setReference(0, ControlType.kDutyCycle);
-        //     return;
+        // climbController1.setReference(0, ControlType.kDutyCycle);
+        // climbController2.setReference(0, ControlType.kDutyCycle);
+        // return;
         // }
-        // climbController1.setReference(climbTrapezoidSetpoint1.position, ControlType.kPosition);
-        // climbController2.setReference(climbTrapezoidSetpoint2.position, ControlType.kPosition);
+        // climbController1.setReference(climbTrapezoidSetpoint1.position,
+        // ControlType.kPosition);
+        // climbController2.setReference(climbTrapezoidSetpoint2.position,
+        // ControlType.kPosition);
 
         // var entryp1 = NetworkTableInstance.getDefault().getEntry("/Tune/ClimbPID/P");
         // entry.setDouble(f.getDouble(thisClass));
@@ -134,26 +140,30 @@ public class ClimbSub extends SubsystemBase {
 
     }
 
+    public void climbLetGo() {
+        // set climb motors to down
+        climb1.set(0.2);
+        // climb2.set(0.9);
+    }
+
     public void climbDown() {
-    // set climb motors to down
-    climb1.set(0.9);
-    climb2.set(0.9);
+        climb1.set(0.2);
     }
 
     public void climbDownSlow() {
-    // set climb motors to down
-    climb1.set(0.333);
-    climb2.set(0.333);
+        // set climb motors to down
+        climb1.set(0.333);
+        // climb2.set(0.333);
     }
     // public void climbUp() {
-    //     // set climb motors up??
-    //     climb1.set(-0.8);
-    //     climb2.set(-0.8);
+    // // set climb motors up??
+    // climb1.set(-0.8);
+    // climb2.set(-0.8);
     // }
 
-    public void climbStop(){
+    public void climbStop() {
         climb1.set(0);
-        climb2.set(0);
+        // climb2.set(0);
         // enabled = false;
         // climbSetpoint1 = 0;
         // climbSetpoint2 = 0;
@@ -175,23 +185,30 @@ public class ClimbSub extends SubsystemBase {
     // that way the drivers can tell it when to stop
 
     // public Command climb(){
-    //     return run(() -> {
-    //         enabled = true;
-    //         setClimbSetpoint1(0.4);
-    //         setClimbSetpoint2(0.4);
-    //     });
+    // return run(() -> {
+    // enabled = true;
+    // setClimbSetpoint1(0.4);
+    // setClimbSetpoint2(0.4);
+    // });
     // }
 
-    public Command climb(){
-    return run(() -> climbDown());
+    public Command climb() {
+        return run(() -> climbDown());
     }
-    public Command climbSlow(){
-    return run(() -> climbDownSlow());
+
+    public Command climbRelease() {
+        return run(() -> climbLetGo());
     }
-    public Command climbStopManual(){
+
+    public Command climbSlow() {
+        return run(() -> climbDownSlow());
+    }
+
+    public Command climbStopManual() {
         return run(() -> climbStop());
     }
-    public Command climbStopCommand(){
+
+    public Command climbStopCommand() {
         return run(() -> {
             setClimbSetpoint1(0);
             setClimbSetpoint2(0);
@@ -200,6 +217,6 @@ public class ClimbSub extends SubsystemBase {
 
     public void climbWithSpeed(double rightTriggerAxis) {
         climb1.set(rightTriggerAxis);
-        climb2.set(rightTriggerAxis);
+        // climb2.set(rightTriggerAxis);
     }
 }
