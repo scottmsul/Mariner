@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.littletonrobotics.urcl.URCL;
 
@@ -63,6 +65,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
 
         // private boolean isOffset;
+        private final List<Commands> chosenAutos = new ArrayList<>();
+        // private boolean isOffset;
         CommandJoystick primaryJoy = new CommandJoystick(0);
         XboxController secondaryController = new XboxController(1);
         // GenericHID keyboard = new GenericHID(1);
@@ -102,10 +106,13 @@ public class RobotContainer {
         }
 
         SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
+        public SendableChooser<Command> chooseAuto1 = AutoBuilder.buildAutoChooser();
+        public SendableChooser<Command> chooseAuto2 = AutoBuilder.buildAutoChooser();
         SendableChooser<StartingPlace> poseChooser = new SendableChooser<>();
         // GoTo goTo = new GoTo(sideChooser);
 
         public RobotContainer() {
+
                 DogLog.setOptions(new DogLogOptions().withCaptureDs(true).withCaptureConsole(true).withCaptureNt(true));
                 // Logging of autonomous paths
                 // Logging callback for current robot pose
@@ -142,6 +149,20 @@ public class RobotContainer {
                 sparks.put(60, "Elevator2");
                 URCL.start(sparks);
 
+                chooseAuto1.setDefaultOption("go to reefS", GoTo.reefS());
+                chooseAuto1.addOption("score left", new L4AlignmentSequence(coralArm, algaeArm, elevatorSub,
+                                swerveSubsystem, Constants.SetpointConstants.StrafeOffsets.leftL4));
+                chooseAuto1.setDefaultOption("print", Commands.print("Auto 1 works!"));
+                chooseAuto1.addOption("config", new ConfigSystem(Constants.SetpointConstants.Options.l2, coralArm,
+                                elevatorSub, algaeArm));
+                chooseAuto2.addOption("print", Commands.print("Auto 2 works!"));
+                chooseAuto2.setDefaultOption("config", new ConfigSystem(Constants.SetpointConstants.Options.l3,
+                                coralArm, elevatorSub, algaeArm));
+                chooseAuto2.addOption("score right",
+                                new L4AlignmentSequence(coralArm, algaeArm, elevatorSub, swerveSubsystem,
+                                                Constants.SetpointConstants.StrafeOffsets.rightL4));
+                chooseAuto2.setDefaultOption("go to csR", GoTo.coralStationRight());
+
                 LiveWindow.enableTelemetry(CommandScheduler.getInstance());
                 autoChooser.addOption("left", new LeftAuto(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("center left cs",
@@ -159,8 +180,15 @@ public class RobotContainer {
                                 new CenterScoreOnceLeftCS(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 autoChooser.addOption("score once center go right CS",
                                 new CenterScoreOnceRightCS(coralArm, algaeArm, elevatorSub, swerveSubsystem));
-
+                autoChooser.addOption("configurable auto",
+                                new FinalAuto(chooseAuto1.getSelected(), chooseAuto2.getSelected()));
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 Shuffleboard.getTab("auto").add(autoChooser);
+
+                Shuffleboard.getTab("auto").add(chooseAuto1);
+                Shuffleboard.getTab("auto").add(chooseAuto2);
+
+                // Shuffleboard.getTab("auto").add("Pick autos?", getFinalAuto());
 
                 poseChooser.addOption("Left", StartingPlace.Left);
                 poseChooser.addOption("Center", StartingPlace.Center);
@@ -203,6 +231,10 @@ public class RobotContainer {
                         DogLog.log("PhotonBestTarget", fieldToRobot.transformBy(transform));
                 }
         }
+
+        // public List getFinalAuto() {
+        // return chosenAutos.add(chooseAuto1.getSelected());
+        // }
 
         private boolean getUpperTag() {
                 return LimelightHelpers.getTV(Constants.UpperLimelightName);
