@@ -18,8 +18,7 @@ public class AbortAbortReef extends SequentialCommandGroup {
     public AbortAbortReef(CoralArm coralArm, AlgaeArm algaeArm, Elevator elevator, SwerveSubsystem swerveSub) {
         var stow = new ConfigSystem(Constants.SetpointConstants.Options.driveConfig, coralArm, elevator, algaeArm);
         var safetyAlign = new AutoAlignReef(swerveSub, NTD.of(0.0),
-                Constants.SetpointConstants.DistanceOffsets.reefAlgaeStow, NTD.of(0.0), NTD.of(0.05), NTD.of(0.05),
-                Constants.ReefLimelightName);
+                Constants.SetpointConstants.DistanceOffsets.reefAlgaeStow, NTD.of(0.0), NTD.of(0.05), NTD.of(0.05));
         addCommands(
                 Commands.print("ABORT ABORT ABORT Started"),
                 new ParallelCommandGroup(

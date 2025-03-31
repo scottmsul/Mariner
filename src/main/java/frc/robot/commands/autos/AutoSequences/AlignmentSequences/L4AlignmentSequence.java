@@ -26,10 +26,10 @@ public class L4AlignmentSequence extends SequentialCommandGroup {
                                 algaeArm);
                 var configureAlign = new AutoAlignReef(swerveSubsystem, strafeOffset,
                                 Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, NTD.of(0), NTD.of(0.1),
-                                NTD.of(0.07), Constants.ReefLimelightName);
+                                NTD.of(0.07));
                 var secondConfigureAlign = new AutoAlignReef(swerveSubsystem, NTD.of(0),
                                 Constants.SetpointConstants.DistanceOffsets.reefCoralConfigure, NTD.of(0), NTD.of(0.04),
-                                NTD.of(0.04), Constants.ReefLimelightName, true);
+                                NTD.of(0.04), true);
                 if (strafeOffset.get() > 0) {
                         llName = Constants.LeftReefLimelightName;
                 } else {
@@ -37,7 +37,7 @@ public class L4AlignmentSequence extends SequentialCommandGroup {
                 }
                 var scoreAlign = new AutoAlignReef(swerveSubsystem, strafeOffset,
                                 Constants.SetpointConstants.DistanceOffsets.leftReefScore, NTD.of(0), NTD.of(0.02),
-                                NTD.of(0.02), llName);
+                                NTD.of(0.02));
 
                 var scoreCoral = new AutoCoralScore(coralArm);
                 addCommands(

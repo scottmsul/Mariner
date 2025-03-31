@@ -56,12 +56,12 @@ public class AutoAlignReef extends Command {
     }
 
     public AutoAlignReef(SwerveSubsystem swerveSub, NTDouble strafeGoal, NTDouble distanceGoal, NTDouble rotationGoal,
-            NTDouble strafeError, NTDouble distanceError, String llName) {
-        this(swerveSub, strafeGoal, distanceGoal, rotationGoal, strafeError, distanceError, llName, false);
+            NTDouble strafeError, NTDouble distanceError) {
+        this(swerveSub, strafeGoal, distanceGoal, rotationGoal, strafeError, distanceError, false);
     }
 
     public AutoAlignReef(SwerveSubsystem swerveSub, NTDouble strafeGoal, NTDouble distanceGoal, NTDouble rotationGoal,
-            NTDouble strafeError, NTDouble distanceError, String llName, boolean slow) {
+            NTDouble strafeError, NTDouble distanceError, boolean slow) {
         addRequirements(swerveSub);
         this.swerveSub = swerveSub;
         this.strafeGoal = strafeGoal;
@@ -69,7 +69,6 @@ public class AutoAlignReef extends Command {
         this.rotationGoal = rotationGoal;
         this.strafeError = strafeError;
         this.distanceError = distanceError;
-        this.llName = llName;
 
         double maxAccel = 3.0 / 1.5;
         if (slow) {
