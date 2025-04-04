@@ -35,8 +35,8 @@ public class CoralStationSequence extends SequentialCommandGroup {
                                 config,
                                 Commands.parallel(
                                                 intakeAlign,
-                                                intakeCoral.until(coralArm::hasCoral),
-                                                LLLeds.shortBlink(Constants.UpperLimelightName)),
+                                                intakeCoral)
+                                                .until(coralArm::hasCoral),
                                 stow);
         }
 }

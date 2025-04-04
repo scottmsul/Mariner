@@ -40,7 +40,7 @@ public class AlgaeIntakeAlignmentSequence extends SequentialCommandGroup {
                                 NTD.of(0.02));
                 var intakeAlgae = new AutoAlgaeIntake(algaeArm);
                 var secondIntakeAlgae = new AutoAlgaeIntake(algaeArm);
-                var autoDriveBack = new AutoDrive(swerveSubsystem, 0.1, -0.1);
+                var autoDriveBack = new AutoDrive(swerveSubsystem, 0.15, -0.3);
                 addCommands(
                                 // new ParallelCommandGroup(
                                 Commands.print("Start AlgaeIntakeAlighnSeque"),

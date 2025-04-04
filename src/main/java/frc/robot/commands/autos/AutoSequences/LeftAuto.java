@@ -14,6 +14,7 @@ import frc.robot.commands.GoTo;
 import frc.robot.commands.Configuration.ConfigSystem;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.CoralStationSequence;
 import frc.robot.commands.autos.AutoSequences.AlignmentSequences.L4AlignmentSequence;
+import frc.robot.commands.autos.AutoSequences.AlignmentSequences.LeftAlignmentSequence;
 import frc.robot.commands.autos.CoralAutos.AutoCoralIntake;
 import frc.robot.commands.autos.CoralAutos.AutoCoralScore;
 import frc.robot.subsystems.AlgaeArm;
@@ -41,9 +42,8 @@ public class LeftAuto extends SequentialCommandGroup {
                                 GoTo.coralStationLeft(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve),
                                 GoTo.reefSW(),
-                                new L4AlignmentSequence(coralArm, algaeArm, elevator, swerve,
-                                                Constants.SetpointConstants.StrafeOffsets.leftL4,
-                                                Constants.SetpointConstants.StrafeOffsets.leftL4),
+                                new LeftAlignmentSequence(coralArm, algaeArm, elevator, swerve,
+                                                Constants.SetpointConstants.Options.l3),
                                 GoTo.coralStationLeft(),
                                 new CoralStationSequence(coralArm, algaeArm, elevator, swerve));
         }
