@@ -115,7 +115,8 @@ public class RobotContainer {
 
         public RobotContainer() {
 
-                DogLog.setOptions(new DogLogOptions().withCaptureDs(true).withCaptureConsole(true).withCaptureNt(true));
+                // DogLog.setOptions(new
+                // DogLogOptions().withCaptureDs(true).withCaptureConsole(true).withCaptureNt(true));
                 // Logging of autonomous paths
                 // Logging callback for current robot pose
                 PathPlannerLogging.setLogCurrentPoseCallback(
@@ -392,6 +393,7 @@ public class RobotContainer {
                 rightStick.and(noBumper).onTrue(
                                 new ConfigSystem(Constants.SetpointConstants.Options.algaeGround, coralArm, elevatorSub,
                                                 algaeArm));
+                rightBumper.and(leftBumper).whileTrue(climbSub.climbRelease());
 
                 // waypoints
                 /*
