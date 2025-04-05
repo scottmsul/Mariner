@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.littletonrobotics.urcl.URCL;
 
+import com.ctre.phoenix.platform.can.AutocacheState;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -195,10 +196,14 @@ public class RobotContainer {
                                 new CenterScoreOnceLeftAlgae(coralArm, elevatorSub, algaeArm, swerveSubsystem));
                 autoChooser.addOption("Once center right algae",
                                 new CenterScoreOnceRightAlgae(coralArm, elevatorSub, algaeArm, swerveSubsystem));
-                autoChooser.addOption("Once right algae",
-                                new RightScoreOnceAlgae(coralArm, algaeArm, elevatorSub, swerveSubsystem));
-                autoChooser.addOption("Once left algae",
+                autoChooser.addOption("Center Right",
+                                new CenterAutoRight(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.addOption("Center Left",
+                                new CenterAutoLeft(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.addOption("Left Side once algae",
                                 new LeftScoreOnceAlgae(coralArm, algaeArm, elevatorSub, swerveSubsystem));
+                autoChooser.addOption("Right Side once algae",
+                                new RightScoreOnceAlgae(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 // autoChooser.addOption("score once center go left CS",
                 // new CenterScoreOnceLeftCS(coralArm, algaeArm, elevatorSub, swerveSubsystem));
                 // autoChooser.addOption("score once center go right CS",
@@ -528,25 +533,25 @@ public class RobotContainer {
                 if (GoTo.getAlliance() == Alliance.Red) {
                         switch (selectedStartingPose) {
                                 case Left:
-                                        swerveSubsystem.resetOmetry(new Pose2d(9.5, 0.7, new Rotation2d(0.58)));
+                                        swerveSubsystem.resetOmetry(new Pose2d(10, 0.7, new Rotation2d(0.58)));
                                         break;
                                 case Center:
-                                        swerveSubsystem.resetOmetry(new Pose2d(9.5, 4, new Rotation2d()));
+                                        swerveSubsystem.resetOmetry(new Pose2d(10, 4, new Rotation2d()));
                                         break;
                                 case Right:
-                                        swerveSubsystem.resetOmetry(new Pose2d(9.5, 7.1, new Rotation2d(-0.58)));
+                                        swerveSubsystem.resetOmetry(new Pose2d(10, 7.1, new Rotation2d(-0.58)));
                                         break;
                         }
                 } else {
                         switch (selectedStartingPose) {
                                 case Left:
-                                        swerveSubsystem.resetOmetry(new Pose2d(8.1, 7.3, new Rotation2d(0.58)));
+                                        swerveSubsystem.resetOmetry(new Pose2d(7.5, 7.3, new Rotation2d(0.58)));
                                         break;
                                 case Center:
-                                        swerveSubsystem.resetOmetry(new Pose2d(8, 4, Rotation2d.k180deg));
+                                        swerveSubsystem.resetOmetry(new Pose2d(7.5, 4, Rotation2d.k180deg));
                                         break;
                                 case Right:
-                                        swerveSubsystem.resetOmetry(new Pose2d(8, 0.7, new Rotation2d(-0.58)));
+                                        swerveSubsystem.resetOmetry(new Pose2d(7.5, 0.7, new Rotation2d(-0.58)));
                                         break;
                         }
                 }

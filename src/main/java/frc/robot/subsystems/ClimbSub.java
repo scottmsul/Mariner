@@ -149,7 +149,7 @@ public class ClimbSub extends SubsystemBase {
         if (overridden) {
             climb1.set(-1);
         } else {
-            if (climb1.getEncoder().getPosition() <= -6.3) {
+            if (climb1.getEncoder().getPosition() <= -4.9) {
                 climb1.set(0);
             } else {
                 climb1.set(-0.95);
@@ -164,16 +164,16 @@ public class ClimbSub extends SubsystemBase {
             if (climb1.getEncoder().getPosition() >= 0.0) {
                 climb1.set(0);
             } else {
-                climb1.set(0.85);
+                climb1.set(0.9);
             }
         } else if (overridden && !overoverridden) {
             if (climb1.getEncoder().getPosition() >= 0.4) {
                 climb1.set(0);
             } else {
-                climb1.set(0.85);
+                climb1.set(0.9);
             }
         } else if (!overridden && overoverridden) {
-            climb1.set(0.7);
+            climb1.set(0.85);
         }
     }
 

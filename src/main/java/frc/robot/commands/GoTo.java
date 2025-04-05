@@ -51,7 +51,7 @@ public class GoTo {
                 return DriverStation.getAlliance().orElse(Alliance.Blue);
         }
 
-        public static PathConstraints constraints = new PathConstraints(3.85, 4.1, 360 * 1.5, 360);
+        public static PathConstraints constraints = new PathConstraints(3.7, 3.9, 360 * 1.5, 360);
 
         private static Pose2d inFrontOfTag(int id) {
                 Transform2d rot180 = new Transform2d(Translation2d.kZero, Rotation2d.k180deg);
