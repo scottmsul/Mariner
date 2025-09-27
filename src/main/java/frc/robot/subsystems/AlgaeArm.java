@@ -48,7 +48,7 @@ public class AlgaeArm extends SubsystemBase {
         configAlgaeWrist.absoluteEncoder
                 .inverted(true)
                 .zeroCentered(true)
-                .zeroOffset(0.16);
+                .zeroOffset(0.65);
         configAlgaeWrist.signals
                 .absoluteEncoderPositionAlwaysOn(true)
                 .absoluteEncoderPositionPeriodMs(100);
@@ -57,7 +57,7 @@ public class AlgaeArm extends SubsystemBase {
                 .velocityConversionFactor((1.0 / 125.0) / 60.0);
         configAlgaeWrist.closedLoop
                 .pid(4.2, 0, 0)
-                .outputRange(-1, 1);
+                .outputRange(-0.6, 0.6);
         algaeWrist.configure(configAlgaeWrist, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
         SparkMaxConfig configAlgaeSpinMotor = new SparkMaxConfig();

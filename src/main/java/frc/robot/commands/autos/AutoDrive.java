@@ -37,7 +37,7 @@ public class AutoDrive extends Command {
         // drive forqard
 
         NetworkTableInstance.getDefault().getEntry("/Shuffleboard/Tune/Commanded Speed").setDouble(speed);
-        var ss=slew.calculate(speed);
+        var ss = slew.calculate(speed);
         NetworkTableInstance.getDefault().getEntry("/Shuffleboard/Tune/Limited Speed").setDouble(ss);
         swerveSub.drive(ss, 0, 0, false);
         // hird
@@ -46,7 +46,7 @@ public class AutoDrive extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        swerveSub.drive(0, 0, 0, false, 0, 0);
+        swerveSub.driveAuto(0, 0, 0, false);
     }
 
     @Override

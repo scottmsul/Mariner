@@ -40,7 +40,7 @@ public class AlgaeIntakeAlignmentSequence extends SequentialCommandGroup {
                                 NTD.of(0.02));
                 var intakeAlgae = new AutoAlgaeIntake(algaeArm);
                 var secondIntakeAlgae = new AutoAlgaeIntake(algaeArm);
-                var autoDriveBack = new AutoDrive(swerveSubsystem, 0.15, -0.3);
+                var autoDriveBack = new AutoDrive(swerveSubsystem, 0.25, -0.3);
                 addCommands(
                                 // new ParallelCommandGroup(
                                 Commands.print("Start AlgaeIntakeAlighnSeque"),
@@ -50,8 +50,12 @@ public class AlgaeIntakeAlignmentSequence extends SequentialCommandGroup {
                                                 intakeAlign,
                                                 intakeAlgae.until(algaeArm::hasAlgae))
                                                 .andThen(Commands.print("algaeIntaked")),
-                                new ParallelCommandGroup(autoDriveBack, secondIntakeAlgae.withTimeout(2)),
-                                stow
+                                autoDriveBack,
+                                // new ParallelCommandGroup(autoDriveBack, secondIntakeAlgae.withTimeout(2)),
+                                Commands.print("autodriveback done"),
+                                stow,
+                                Commands.print("stow done")
+
                 // intakeAlign.andThen(Commands.print("intaked"))
                 // ),
                 // intakeAlign,
