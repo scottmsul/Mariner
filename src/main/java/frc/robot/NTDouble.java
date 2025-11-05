@@ -21,6 +21,22 @@ public class NTDouble {
         this.val = val;
     }
 
+    public NTDouble(double val, String key) {
+        this.val = val;
+
+        var fullkey = "/AutoTune/" + key;
+        var entry = NetworkTableInstance.getDefault().getEntry(fullkey);
+        entry.setDouble(val);
+        NetworkTableInstance.getDefault().addListener(entry, EnumSet.of(NetworkTableEvent.Kind.kValueRemote),
+                e -> {
+                    this.val = e.valueData.value.getDouble();
+                    System.out.println("Updated " + key + " to " + this.val);
+                    for (var l : listeners) {
+                        l.accept(this.val);
+                    }
+                });
+    }
+
     NTDouble(double val, String name, String klass) {
         this.val = val;
 
@@ -28,13 +44,13 @@ public class NTDouble {
         var entry = NetworkTableInstance.getDefault().getEntry(key);
         entry.setDouble(val);
         NetworkTableInstance.getDefault().addListener(entry, EnumSet.of(NetworkTableEvent.Kind.kValueRemote),
-            e -> {
-                this.val = e.valueData.value.getDouble();
-                System.out.println("Updated " +klass + "."+name + " to " + this.val);
-                for (var l : listeners) {
-                    l.accept(this.val);
-                }
-            });
+                e -> {
+                    this.val = e.valueData.value.getDouble();
+                    System.out.println("Updated " + klass + "." + name + " to " + this.val);
+                    for (var l : listeners) {
+                        l.accept(this.val);
+                    }
+                });
     }
 
     public double get() {

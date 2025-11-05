@@ -128,7 +128,10 @@ public class RobotContainer {
 
                 // Logging callback for the active path, this is sent as a list of poses
                 PathPlannerLogging.setLogActivePathCallback(
-                                poses -> Logger.recordOutput("PathFollowing/activePath", poses.toArray(new Pose2d[0])));
+                                poses -> {
+                                        swerveSubsystem.postTrajectory(poses);
+                                        Logger.recordOutput("PathFollowing/activePath", poses.toArray(new Pose2d[0]));
+                                });
 
                 var sparks = new HashMap<Integer, String>();
                 sparks.put(10, "SwerveTurnBR");
