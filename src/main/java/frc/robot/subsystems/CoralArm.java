@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -95,6 +96,10 @@ public class CoralArm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (DriverStation.isDisabled()) {
+            applyWristSetpointToMotor(coralWrist.getAbsoluteEncoder().getPosition());
+        }
+
         if (!elevator.isReady()) {
             // if coral arm setpoint is below horizontal and will hit the elevator
             if (!needsRestoreSetpoint && coralWristSetpoint > 0) {

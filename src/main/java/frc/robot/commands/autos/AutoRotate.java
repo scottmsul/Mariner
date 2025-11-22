@@ -1,7 +1,5 @@
 package frc.robot.commands.autos;
 
-import com.studica.frc.AHRS;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -37,12 +35,12 @@ public class AutoRotate extends Command {
 
     @Override
     public void execute() {
-        swerveSub.drive(0, 0, turnSpeed, false, 0, 0);
+        swerveSub.drive(0, 0, turnSpeed, false);
     }
 
     @Override
     public void end(boolean interrupted) {
-        swerveSub.drive(0, 0, 0, false, 0, 0);
+        swerveSub.drive(0, 0, 0, false);
     }
 
     @Override

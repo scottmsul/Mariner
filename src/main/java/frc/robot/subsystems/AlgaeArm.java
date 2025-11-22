@@ -1,27 +1,23 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLimitSwitch;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.souffle.Souffle;
-
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class AlgaeArm extends SubsystemBase {
     // motors
@@ -132,6 +128,14 @@ public class AlgaeArm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (DriverStation.isDisabled()) {
+            algaeWristSetpoint = algaeWrist.getEncoder().getPosition();
+            trapezoidSetpoint = new TrapezoidProfile.State(
+                    algaeWrist.getEncoder().getPosition(),
+                    algaeWrist.getEncoder().getVelocity());
+            algaeWristController.setReference(trapezoidSetpoint.position, ControlType.kPosition);
+        }
+
         trapezoidSetpoint = trapezoidProfile.calculate(0.02,
                 trapezoidSetpoint,
                 new TrapezoidProfile.State(algaeWristSetpoint, 0));

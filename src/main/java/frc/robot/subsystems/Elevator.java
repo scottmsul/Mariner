@@ -1,11 +1,5 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
 import static edu.wpi.first.units.Units.Volts;
 
 import org.littletonrobotics.junction.Logger;
@@ -13,7 +7,11 @@ import org.littletonrobotics.junction.Logger;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -116,6 +114,7 @@ public class Elevator extends SubsystemBase {
                                 sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
                 Shuffleboard.getTab("SysId").add("Dynamic Backaward Elevator",
                                 sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
+                
         }
 
         private void runVolts(double in) {
@@ -168,6 +167,11 @@ public class Elevator extends SubsystemBase {
 
         @Override
         public void periodic() {
+                if (DriverStation.isDisabled()) {
+                        trapezoidSetpoint = new TrapezoidProfile.State(elevator1.getEncoder().getPosition(), elevator1.getEncoder().getVelocity());
+                        setPosition(elevator1.getEncoder().getPosition());
+                }
+
                 switch (calStatus) {
                         case Uncalibrated:
                                 if (!DriverStation.isEnabled())

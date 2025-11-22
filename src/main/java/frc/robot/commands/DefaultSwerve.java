@@ -79,10 +79,10 @@ public class DefaultSwerve extends Command {
         // }
 
         if (joy.getRawButton(12)) {
-            swerveSub.zeroYaw();
+            swerveSub.zeroDriverRotation();
         }
 
-        swerveSub.drive(xSpeed, ySpeed, rot, !joy.getRawButton(2));
+        swerveSub.driveHuman(xSpeed, ySpeed, rot, !joy.getRawButton(2));
 
     }
 
