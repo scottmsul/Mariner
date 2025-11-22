@@ -1,5 +1,7 @@
 package frc.robot.commands.autos;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import frc.robot.NTDouble;
 import frc.robot.Constants.DriveConstants;
@@ -10,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class AbsoluteGoto extends Command {
     private SwerveSubsystem swerveSub;
@@ -28,12 +31,12 @@ public class AbsoluteGoto extends Command {
         this.goal = goal;
 
         xPID = new ProfiledPIDController(8, .0, .85 * .125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 2));
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 2.5));
         yPID = new ProfiledPIDController(8, 0, .85 * .125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 2));
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxVelocityMetersPerSecond / 3, 2.5));
         rotationPID = new ProfiledPIDController(3.85 * .9, .8 * .7, .85 * .125,
-                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 3,
-                        3 / 1.5));
+                new TrapezoidProfile.Constraints(Constants.DriveConstants.MaxAngularVelocityRadiansPerSecond / 2,
+                        (Math.PI * 2) / 2));
 
         yPID.setGoal(goal.getY());
         xPID.setGoal(goal.getX());
@@ -48,8 +51,11 @@ public class AbsoluteGoto extends Command {
         yPID.reset(swerveSub.getPose().getY());
         xPID.reset(swerveSub.getPose().getX());
         rotationPID.reset(swerveSub.getPose().getRotation().getRadians());
+
+        Logger.recordOutput("/Debug/AutoAlignAbs/Goal", goal);
     }
 
+    // TODO: Avg speed
     public boolean isAligned() {
         if (goal.minus(swerveSub.getPose()).getTranslation().getNorm() < translationError.get()
                 && goal.getRotation().minus(swerveSub.getPose().getRotation()).getRadians() < rotationError) {
@@ -67,7 +73,7 @@ public class AbsoluteGoto extends Command {
         ySpeed = MathUtil.clamp(ySpeed, -DriveConstants.MaxVelocityMetersPerSecond / 3.5,
                 DriveConstants.MaxVelocityMetersPerSecond / 3.5);
 
-        double xSpeed = -xPID.calculate(swerveSub.getPose().getX());
+        double xSpeed = xPID.calculate(swerveSub.getPose().getX());
         xSpeed = MathUtil.clamp(xSpeed, -DriveConstants.MaxVelocityMetersPerSecond / 3.5,
                 DriveConstants.MaxVelocityMetersPerSecond / 3.5);
 
@@ -76,21 +82,28 @@ public class AbsoluteGoto extends Command {
                 / 3.5,
                 DriveConstants.MaxAngularVelocityRadiansPerSecond / 3.5);
 
-        nt.getEntry("/Tune/AutoAlignAbs/Y Goal").setDouble(yPID.getGoal().position);
-        nt.getEntry("/Tune/AutoAlignAbs/Y Setpoint").setDouble(yPID.getSetpoint().position);
-        nt.getEntry("/Tune/AutoAlignAbs/Y CurrentSwerve").setDouble(swerveSub.getPose().getY());
-        nt.getEntry("/Tune/AutoAlignAbs/Y out").setDouble(ySpeed);
-        nt.getEntry("/Tune/AutoAlignAbs/X Goal").setDouble(xPID.getGoal().position);
-        nt.getEntry("/Tune/AutoAlignAbs/X Setpoint").setDouble(xPID.getSetpoint().position);
-        nt.getEntry("/Tune/AutoAlignAbs/X CurrentSwerve").setDouble(swerveSub.getPose().getX());
-        nt.getEntry("/Tune/AutoAlignAbs/X out").setDouble(xSpeed);
-        nt.getEntry("/Tune/AutoAlignAbs/R Goal").setDouble(goal.getRotation().getRadians());
-        nt.getEntry("/Tune/AutoAlignAbs/R Setpoint").setDouble(rotationPID.getSetpoint().position);
-        nt.getEntry("/Tune/AutoAlignAbs/R CurrentSwerve").setDouble(swerveSub.getPose().getRotation().getRadians());
+        // Logger.recordOutput("/Debug/AutoAlignAbs/Y Goal", yPID.getGoal().position);
+        // Logger.recordOutput("/Debug/AutoAlignAbs/Y Setpoint",
+        // yPID.getSetpoint().position);
+        // Logger.recordOutput("/Debug/AutoAlignAbs/Y CurrentSwerve",
+        // swerveSub.getPose().getY());
+        // Logger.recordOutput("/Debug/AutoAlignAbs/Y out", ySpeed);
+        // Logger.recordOutput("/Debug/AutoAlignAbs/X Goal", xPID.getGoal().position);
+        // Logger.recordOutput("/Debug/AutoAlignAbs/X Setpoint",
+        // xPID.getSetpoint().position);
+        // Logger.recordOutput("/Debug/AutoAlignAbs/X CurrentSwerve",
+        // swerveSub.getPose().getX());
+        // Logger.recordOutput("/Debug/AutoAlignAbs/X out", xSpeed);
+        // Logger.recordOutput("/Debug/AutoAlignAbs/R Goal",
+        // goal.getRotation().getRadians());
+        // Logger.recordOutput("/Debug/AutoAlignAbs/R Setpoint",
+        // rotationPID.getSetpoint().position);
+        // Logger.recordOutput("/Debug/AutoAlignAbs/R CurrentSwerve",
+        // swerveSub.getPose().getRotation().getRadians());
 
-        swerveSub.driveAuto(ySpeed / DriveConstants.MaxVelocityMetersPerSecond,
-                xSpeed / DriveConstants.MaxVelocityMetersPerSecond,
-                rot / DriveConstants.MaxAngularVelocityRadiansPerSecond, true);
+        var chas = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, swerveSub.getPose().getRotation());
+        Logger.recordOutput("/Debug/AutoAlignAbs/Speeds", chas);
+        swerveSub.driveSpeeds(chas);
     }
 
     @Override

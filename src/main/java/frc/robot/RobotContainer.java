@@ -9,7 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -86,8 +89,6 @@ public class RobotContainer {
         DefaultSwerve swerve = new DefaultSwerve(primaryJoy.getHID(), swerveSubsystem,
                         elevatorSub);
 
-        PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
-
         // private void isOffset(boolean isOffset) {
         // this.isOffset = isOffset;
         // }
@@ -156,7 +157,11 @@ public class RobotContainer {
 
                 sparks.put(59, "Elevator1");
                 sparks.put(60, "Elevator2");
+
+                LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
                 Logger.registerURCL(URCL.startExternal(sparks));
+                Logger.addDataReceiver(new WPILOGWriter());
+                Logger.addDataReceiver(new NT4Publisher());
                 Logger.start();
 
                 // chooseAuto1.setDefaultOption("go to reefS", GoTo.reefS());

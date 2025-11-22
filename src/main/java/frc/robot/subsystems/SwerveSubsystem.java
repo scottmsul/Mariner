@@ -251,6 +251,13 @@ public class SwerveSubsystem extends SubsystemBase {
                 return DriveConstants.kinematics.toChassisSpeeds(getModuleStates());
         }
 
+        public void driveSpeeds(ChassisSpeeds chassisSpeeds) {
+                var swerveModuleStates = DriveConstants.kinematics.toSwerveModuleStates(
+                                ChassisSpeeds.discretize(chassisSpeeds, .02));
+                driveStates(swerveModuleStates);
+
+        }
+
         public void driveStates(SwerveModuleState[] desiredStates) {
                 SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates,
                                 Constants.DriveConstants.MaxVelocityMetersPerSecond);
@@ -261,6 +268,8 @@ public class SwerveSubsystem extends SubsystemBase {
                                 bLSwerve.optimizeModuleState(desiredStates[2]),
                                 bRSwerve.optimizeModuleState(desiredStates[3]),
                 };
+
+                Logger.recordOutput("Swerve", optimizedSwerveModuleStates);
 
                 fLSwerve.setDesiredState(optimizedSwerveModuleStates[0]);
                 fRSwerve.setDesiredState(optimizedSwerveModuleStates[1]);
