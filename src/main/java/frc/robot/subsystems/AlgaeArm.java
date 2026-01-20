@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -72,7 +72,7 @@ public class AlgaeArm extends SubsystemBase {
         // PersistMode.kNoPersistParameters);
 
         algaeWristController = algaeWrist.getClosedLoopController();
-        algaeWristController.setReference(0, ControlType.kPosition);
+        algaeWristController.setSetpoint(0, ControlType.kPosition);
 
         // algaeWrist.getEncoder().setPosition(0);
 
@@ -131,7 +131,7 @@ public class AlgaeArm extends SubsystemBase {
             trapezoidSetpoint = new TrapezoidProfile.State(
                     algaeWrist.getEncoder().getPosition(),
                     algaeWrist.getEncoder().getVelocity());
-            algaeWristController.setReference(trapezoidSetpoint.position,
+            algaeWristController.setSetpoint(trapezoidSetpoint.position,
                     ControlType.kPosition);
         }
 
@@ -141,7 +141,7 @@ public class AlgaeArm extends SubsystemBase {
         NetworkTableInstance.getDefault()
                 .getEntry("/Shuffleboard/Debug/AlgaeWristGoal")
                 .setDouble(trapezoidSetpoint.position);
-        algaeWristController.setReference(trapezoidSetpoint.position,
+        algaeWristController.setSetpoint(trapezoidSetpoint.position,
                 ControlType.kPosition);
     }
 

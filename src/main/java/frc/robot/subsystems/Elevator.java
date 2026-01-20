@@ -5,8 +5,8 @@ import static edu.wpi.first.units.Units.Volts;
 import org.littletonrobotics.junction.Logger;
 
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -75,9 +75,9 @@ public class Elevator extends SubsystemBase {
         // Constants.configPIDMotor(elevator2, false, 0, 0, 0);
 
         elevatorController = elevator1.getClosedLoopController();
-        elevatorController.setReference(0, ControlType.kPosition);
+        elevatorController.setSetpoint(0, ControlType.kPosition);
         elevatorController2 = elevator2.getClosedLoopController();
-        elevatorController2.setReference(0, ControlType.kPosition);
+        elevatorController2.setSetpoint(0, ControlType.kPosition);
 
         elevator1.getEncoder().setPosition(0);
         elevator2.getEncoder().setPosition(0);
@@ -196,10 +196,10 @@ public class Elevator extends SubsystemBase {
         }
         trapezoidSetpoint = trapezoidProfile.calculate(0.2, trapezoidSetpoint,
                 new TrapezoidProfile.State(currentSetpoint, 0));
-        elevatorController.setReference(
+        elevatorController.setSetpoint(
                 trapezoidSetpoint.position * 1.015503875968992,
                 ControlType.kPosition);
-        elevatorController2.setReference(trapezoidSetpoint.position,
+        elevatorController2.setSetpoint(trapezoidSetpoint.position,
                 ControlType.kPosition);
     }
 

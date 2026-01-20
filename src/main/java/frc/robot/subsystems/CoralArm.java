@@ -2,13 +2,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -70,7 +70,7 @@ public class CoralArm extends SubsystemBase {
         // Constants.configMotor(coralWheel, true);
 
         coralWristController = coralWrist.getClosedLoopController();
-        coralWristController.setReference(
+        coralWristController.setSetpoint(
                 Constants.SetpointConstants.CoralPivotAngles.up.get(),
                 ControlType.kPosition);
 
@@ -158,7 +158,7 @@ public class CoralArm extends SubsystemBase {
     }
 
     private void applyWristSetpointToMotor(double setpoint) {
-        coralWristController.setReference(setpoint, ControlType.kPosition);
+        coralWristController.setSetpoint(setpoint, ControlType.kPosition);
     }
 
     public boolean isReady() {

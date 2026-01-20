@@ -25,6 +25,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -274,7 +275,8 @@ public class SwerveSubsystem extends SubsystemBase {
                     return false;
                 }, this // Reference to this subsystem to set requirements
         );
-        PathfindingCommand.warmupCommand().schedule();
+        CommandScheduler.getInstance()
+                .schedule(PathfindingCommand.warmupCommand());
 
         var sysIdRoutine = new SysIdRoutine(
                 new SysIdRoutine.Config(null, null, null,

@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pathplanner.lib.path.PathConstraints;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
